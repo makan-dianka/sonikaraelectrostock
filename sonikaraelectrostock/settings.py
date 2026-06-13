@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'accounts',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -103,3 +104,7 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
