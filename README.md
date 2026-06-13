@@ -21,6 +21,7 @@ les applications du projet
         payments/
         expenses/
         documents/
+        dashboard/
 
 
 ## installation
