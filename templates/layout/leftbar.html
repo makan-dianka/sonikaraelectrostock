@@ -1,0 +1,159 @@
+{% load static %}
+
+{% block head %}
+    <style>
+        /* LEFT */
+
+        .sidebar-wrapper{
+            padding:20px;
+        }
+
+        .logo-box{
+
+            height:120px;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+        }
+
+        .logo-box img{
+
+            width:180px;
+
+        }
+
+        .sidebar{
+
+            background:#f39b00;
+
+            border-radius:20px;
+
+            padding:25px 0;
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:10px;
+
+        }
+
+        .sidebar a{
+
+            color:white;
+
+            padding:12px 30px;
+
+            text-decoration:none;
+
+            display:flex;
+
+            cursor:pointer;
+            
+            transition:0.2s;
+            
+            gap:12px;
+
+        }
+
+        .sidebar a:hover{
+
+            background:rgba(255,255,255,.15);
+            transform:translateX(4px);
+
+        }
+
+        .sidebar .active{
+
+            font-weight:bold;
+
+        }
+    </style>
+
+{% endblock %}
+
+
+<!-- LEFT -->
+<aside class="sidebar-wrapper">
+
+    <!-- LOGO -->
+    <div class="logo-box">
+        <img src="{% static 'images/sonikara_elec_logo.png' %}" alt="Logo">
+    </div>
+
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+
+        <a href="{% url 'dashboard:dashboard' %}">
+            <i class="fa-solid fa-house"></i>
+            Dashboard
+        </a>
+
+        <a>
+            <i class="fa-solid fa-box"></i>
+            Produits
+        </a>
+
+        <a>
+            <i class="fa-solid fa-cart-shopping"></i>
+            Achats
+        </a>
+
+        <a>
+            <i class="fa-solid fa-sack-dollar"></i>
+            Ventes
+        </a>
+
+        <a>
+            <i class="fa-solid fa-users"></i>
+            Clients
+        </a>
+
+        <a>
+            <i class="fa-solid fa-truck"></i>
+            Fournisseurs
+        </a>
+
+        <a>
+            <i class="fa-solid fa-store"></i>
+            Magasins
+        </a>
+
+        <a>
+            <i class="fa-solid fa-user-tie"></i>
+            Personnel
+        </a>
+
+        <a>
+            <i class="fa-solid fa-building-columns"></i>
+            Paiements
+        </a>
+
+        <a>
+            <i class="fa-solid fa-wallet"></i>
+            Dépenses
+        </a>
+
+        <a>
+            <i class="fa-solid fa-file-invoice"></i>
+            Documents
+        </a>
+
+        <a>
+            <i class="fa-solid fa-credit-card"></i>
+            Crédits
+        </a>
+
+        <a>
+            <i class="fa-solid fa-chart-column"></i>
+            Rapports
+        </a>
+
+    </nav>
+
+</aside>
