@@ -1,1 +1,85 @@
-<h1>Login page</h1>
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Connexion</title>
+        <link rel="stylesheet" href="{% static 'css/login.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    </head>
+
+
+
+    <body>
+        <div class="login-page">
+            <div class="login-card">
+
+                <!-- LOGO -->
+                <div class="logo">
+                    <img
+                    src="{% static 'images/sonikara_elec_logo.png' %}"
+                    alt="logo">
+                </div>
+
+
+                <h1>Connexion</h1>
+                <p class="subtitle">
+                    Connectez-vous pour accéder au tableau de bord
+                </p>
+
+
+                <!-- ---------------------------------  -->
+                <!-- MESSAGES : Identifiants incorrects -->
+                <!-- ---------------------------------  -->
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+
+
+                <form method="POST"> {% csrf_token %}
+
+                    <div class="input-group">
+                        <label for="email">Adresse email</label>
+
+                        <div class="input">
+                            <i class="fa-solid fa-user"></i>
+                            <input
+                            type="email"
+                            name="email"
+                            placeholder="Entrez votre adresse email"
+                            required>
+                        </div>
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label for="password">Mot de passe</label>
+
+                        <div class="input">
+                            <i class="fa-solid fa-lock"></i>
+                            <input
+                            type="password"
+                            name="password"
+                            placeholder="Entrez votre mot de passe"
+                            required>
+                        </div>
+                    </div>
+
+                    <button type="submit">Se connecter</button>
+
+                </form>
+
+            </div>
+        </div>
+    </body>
+
+</html>

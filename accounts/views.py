@@ -13,7 +13,7 @@ def login_page(request):
     # si l'utilisateur est déjà authentifié
     # rediriger vers le tableau de bord
     if request.user.is_authenticated:
-        return redirect("productapp:home")
+        return redirect("dashboard:dashboard")
 
 
 
@@ -34,7 +34,7 @@ def login_page(request):
             # si email validé, alors 
             # connexion autorisé
             login(request, user)
-            return redirect('productapp:home') # -> redirection vers le tableau de bord
+            return redirect('dashboard:dashboard') # -> redirection vers le tableau de bord
         else:
             messages.info(request, 'Votre email ou mot de passe est incorrect')
     return render(request, 'accounts/login.html')
