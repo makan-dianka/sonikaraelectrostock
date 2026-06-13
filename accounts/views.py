@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponseForbidden
+
+from accounts.forms import CreateUserForm
 
 
 
@@ -22,19 +26,40 @@ def login_page(request):
         password = request.POST.get('password')
         user = authenticate(request, username=email, password=password)
         if user is not None:
-
-            # empecher utilisateur de se connecter
-            # si son adresse email n'est pas confirmer
-            if not user.is_email_verified:
-                messages.error(request, 'Veuillez confirmer votre email.')
-                return redirect('accounts:login')
-
-
-            # si email et mdp sont corrects
-            # si email validé, alors 
-            # connexion autorisé
             login(request, user)
             return redirect('dashboard:dashboard') # -> redirection vers le tableau de bord
         else:
             messages.info(request, 'Votre email ou mot de passe est incorrect')
     return render(request, 'accounts/login.html')
+
+
+
+
+
+
+#######################################################################
+# inscription de l'utilisateur à la plateforme -----------------------#
+#######################################################################
+
+@login_required(login_url='accounts:login')
+def register_page(request):
+    # verifier si l'utilisateur a les droits d'accéder à cette page
+    if request.user.role not in ['owner']:
+        return HttpResponseForbidden("Vous n'avez pas la permission de créer un compte utilisateur.")
+
+
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+
+            form = form.save(commit=False)
+            form.created_by = request.user
+            form.save()
+
+            return redirect('accounts:login')
+
+        else:
+            messages.info(request, 'Il y a une erreur dans le formulaire. Merci de corriger ')
+    else:
+        form = CreateUserForm()
+    return render(request, 'accounts/register.html', {'form': form})

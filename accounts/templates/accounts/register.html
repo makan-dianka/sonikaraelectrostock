@@ -1,0 +1,103 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Créer un utilisateur</title>
+        <link rel="stylesheet" href="{% static 'css/register.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    </head>
+
+    <body>
+        <div class="register-container">
+            <div class="register-card">
+
+                <div class="header">
+                    <img src="{% static 'images/sonikara_elec_logo.png' %}" alt="logo">
+                    <h1>Créer un utilisateur</h1>
+                    <p>Ajouter un nouveau collaborateur</p>
+                </div>
+
+
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+
+                <form method="POST"> {% csrf_token %}
+
+
+                    <div class="grid">
+
+                        <div class="field">
+                            <label>{{ form.first_name.label }}</label>
+                            {{ form.first_name }}
+                            {{ form.first_name.errors }}
+                        </div>
+
+
+                        <div class="field">
+                            <label>{{ form.last_name.label }}</label>
+                            {{ form.last_name }}
+                            {{ form.last_name.errors }}
+                        </div>
+
+
+                        <div class="field">
+                            <label>{{ form.role.label }}</label>
+                            {{ form.role }}
+                            {{ form.role.errors }}
+                        </div>
+
+
+                        <div class="field">
+                            <label>{{ form.store.label }}</label>
+                            {{ form.store }}
+                            {{ form.store.errors }}
+                        </div>
+
+
+                        <div class="field full">
+                            <label>{{ form.email.label }}</label>
+                            {{ form.email }}
+                            {{ form.email.errors }}
+                        </div>
+
+
+                        <div class="field full">
+                            <label>{{ form.phone.label }}</label>
+                            {{ form.phone }}
+                            {{ form.phone.errors }}
+                        </div>
+
+
+                        <div class="field">
+                            <label>{{ form.password1.label }}</label>
+                            {{ form.password1 }}
+                            {{ form.password1.errors }}
+                        </div>
+
+
+                        <div class="field">
+                            <label>{{ form.password2.label }}</label>
+                            {{ form.password2 }}
+                            {{ form.password2.errors }}
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <a href="javascript:history.back()" class="btn-secondary">Annuler</a>
+                        <button type="submit">Créer le compte </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
