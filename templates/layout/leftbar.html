@@ -1,81 +1,5 @@
 {% load static %}
 
-{% block head %}
-    <style>
-        /* LEFT */
-
-        .sidebar-wrapper{
-            padding:20px;
-        }
-
-        .logo-box{
-
-            height:120px;
-
-            display:flex;
-
-            align-items:center;
-
-            justify-content:center;
-
-        }
-
-        .logo-box img{
-
-            width:180px;
-
-        }
-
-        .sidebar{
-
-            background:#f39b00;
-
-            border-radius:20px;
-
-            padding:25px 0;
-
-            display:flex;
-
-            flex-direction:column;
-
-            gap:10px;
-
-        }
-
-        .sidebar a{
-
-            color:white;
-
-            padding:12px 30px;
-
-            text-decoration:none;
-
-            display:flex;
-
-            cursor:pointer;
-            
-            transition:0.2s;
-            
-            gap:12px;
-
-        }
-
-        .sidebar a:hover{
-
-            background:rgba(255,255,255,.15);
-            transform:translateX(4px);
-
-        }
-
-        .sidebar .active{
-
-            font-weight:bold;
-
-        }
-    </style>
-
-{% endblock %}
-
 
 <!-- LEFT -->
 <aside class="sidebar-wrapper">
@@ -119,7 +43,7 @@
             Fournisseurs
         </a>
 
-        <a>
+        <a href="{% url 'stores:store_list' %}">
             <i class="fa-solid fa-store"></i>
             Magasins
         </a>

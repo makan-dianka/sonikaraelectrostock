@@ -8,129 +8,120 @@
 
 
 {% block content %}
-    <div class="layout">
-        {% include 'layout/navbar.html' %}
-        {% include 'layout/leftbar.html' %}
+    <!-- CONTENT -->
+    <div class="content container">
+
+        <div class="card title-card">
+            💰 Chiffre d'affaire
+        </div>
 
 
-        <!-- CONTENT -->
-         <div class="container">
-            <main class="content">
-
-                <div class="card title-card">
-                    💰 Chiffre d'affaire
-                </div>
-
-
-                <!-- Total de la valeur du boutique -->
-                <div class="col-md-12 current_ca">
-                    <div class="card p-4 shadow-sm rounded-4" style="background-color: green;">
+        <!-- Total de la valeur du boutique -->
+        <div class="col-md-12 current_ca">
+            <div class="card p-4 shadow-sm rounded-4" style="background-color: green;">
 
 
 
-                        <!-- Stats -->
-                        <div class="row text-center">
+                <!-- Stats -->
+                <div class="row text-center">
 
-                            <div class="col-md-4 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">JOUR</h6>
-                                    <span>+2%</span>
-                                    <h3 class="fw-bold">100 000 FCFA</h3>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">SEMAINE</h6>
-                                    <span>+2%</span>
-                                    <h3 class="fw-bold text-danger">5 000 000 FCFA</h3>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">MOIS</h6>
-                                    <span class="text-danger">-4%</span>
-                                    <h3 class="fw-bold text-success">22 000 000 FCFA</h3>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">ANNÉE</h6>
-                                    <span>+2%</span>
-                                    <h2 class="fw-bold text-success">8 000 000 FCFA</h2>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">Benefice du mois</h6>
-                                    <span>+2%</span>
-                                    <h2 class="fw-bold text-primary">28 000 000 FCFA</h2>
-                                </div>
-                            </div>
-
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">JOUR</h6>
+                            <span>+2%</span>
+                            <h3 class="fw-bold">100 000 FCFA</h3>
                         </div>
                     </div>
-                </div>
 
-
-
-
-                <!-- Total de la valeur du boutique -->
-                <div class="col-md-12 ca_total">
-                    <div class="card p-4 shadow-sm rounded-4" style="background-color: #412018;">
-
-                        <!-- Header -->
-                        <div class="text-center mb-4">
-                            <h4 class="fw-bold" style="color: #F0D79F;">📊 Valeur actuelle du magasin</h4>
-                            <small style="color: #F0D79F;">{% now "d/m/Y H:i" %}</small>
-                        </div>
-
-                        <!-- Stats -->
-                        <div class="row text-center">
-
-                            <div class="col-md-4 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">Stock</h6>
-                                    <h3 class="fw-bold">50</h3>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">Prix d'achat</h6>
-                                    <h3 class="fw-bold text-danger">5 000 000 FCFA</h3>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">Prix de vente</h6>
-                                    <h3 class="fw-bold text-success">22 000 000 FCFA</h3>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">Bénéfice</h6>
-                                    <h2 class="fw-bold text-success">8 000 000 FCFA</h2>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <div class="p-3 border rounded-3 bg-light">
-                                    <h6 class="text-muted">Taux de marge</h6>
-                                    <h2 class="fw-bold text-primary">36%</h2>
-                                </div>
-                            </div>
-
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">SEMAINE</h6>
+                            <span>+2%</span>
+                            <h3 class="fw-bold text-danger">5 000 000 FCFA</h3>
                         </div>
                     </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">MOIS</h6>
+                            <span class="text-danger">-4%</span>
+                            <h3 class="fw-bold text-success">22 000 000 FCFA</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">ANNÉE</h6>
+                            <span>+2%</span>
+                            <h2 class="fw-bold text-success">8 000 000 FCFA</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">Benefice du mois</h6>
+                            <span>+2%</span>
+                            <h2 class="fw-bold text-primary">28 000 000 FCFA</h2>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- Total de la valeur du boutique -->
+        <div class="col-md-12 ca_total">
+            <div class="card p-4 shadow-sm rounded-4" style="background-color: #412018;">
+
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold" style="color: #F0D79F;">📊 Valeur actuelle du magasin</h4>
+                    <small style="color: #F0D79F;">{% now "d/m/Y H:i" %}</small>
                 </div>
 
-            </main>
+                <!-- Stats -->
+                <div class="row text-center">
+
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">Stock</h6>
+                            <h3 class="fw-bold">50</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">Prix d'achat</h6>
+                            <h3 class="fw-bold text-danger">5 000 000 FCFA</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">Prix de vente</h6>
+                            <h3 class="fw-bold text-success">22 000 000 FCFA</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">Bénéfice</h6>
+                            <h2 class="fw-bold text-success">8 000 000 FCFA</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="text-muted">Taux de marge</h6>
+                            <h2 class="fw-bold text-primary">36%</h2>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

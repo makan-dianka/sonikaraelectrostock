@@ -17,6 +17,8 @@
 
     <link rel="icon" type="image/png" sizes="100x100" href="{% static 'images/sonikara_elec_logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/leftbar.css' %}">
 
     {% block head %}{% endblock %}
 
@@ -25,14 +27,16 @@
 
   <body>
 
-    <!-- custom header -->
-    {% block header %}
-    {% endblock %}
+    <div class="layout">
+        {% include 'layout/navbar.html' %}
+        {% include 'layout/leftbar.html' %}
 
 
-    <!-- main block content -->
-    {% block content %}
-    {% endblock %}
+        <main class="content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
 
 
     <!-- commun footer -->

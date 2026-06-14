@@ -1,154 +1,36 @@
-{% block head %}
-    <style>
-        /* NAVBAR */
-
-        .navbar{
-
-            grid-column:1/-1;
-
-            background:#f39b00;
-
-            display:flex;
-
-            justify-content:flex-end;
-
-            align-items:center;
-
-            padding:0 30px;
-
-        }
-
-        .user-menu{
-            color:white;
-        }
-
-                
-
-        /* USER DROPDOWN */
-
-        .dropdown{
-
-            position:relative;
-
-        }
-
-        .dropdown-btn{
-
-            background:none;
-
-            border:none;
-
-            color:white;
-
-            font-size:16px;
-
-            cursor:pointer;
-
-            display:flex;
-
-            align-items:center;
-
-            gap:8px;
-
-        }
-
-        .dropdown-content{
-
-            position:absolute;
-
-            right:0;
-
-            top:25px;
-
-            width:180px;
-
-            background:white;
-
-            border-radius:10px;
-
-            overflow:hidden;
-
-            box-shadow:
-            0 8px 20px rgba(0,0,0,.15);
-
-            display:none;
-
-        }
-
-        .dropdown-content a{
-
-            display:block;
-
-            padding:10px;
-
-            text-decoration:none;
-
-            color: red;
-
-            cursor:pointer;
-
-        }
-
-        .dropdown-content a:hover{
-
-            background:#f5f5f5;
-
-        }
-
-        .dropdown.active .dropdown-content{
-
-            display:block;
-
-        }
-
-    </style>
-
-{% endblock %}
-
-
-<!-- NAVBAR -->
 <header class="navbar">
-
     <div></div>
-
     <div class="dropdown">
-
         <button class="dropdown-btn">
-
             <i class="fa-solid fa-user"></i>
-            FOFANA
+            {{ request.user.first_name }}
             <i class="fa-solid fa-caret-down"></i>
-
         </button>
 
         <div class="dropdown-content">
-
-            <a href="/logout/">
+            <a href="{% url 'accounts:logout' %}">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 Déconnexion
             </a>
-
         </div>
-
     </div>
-
 </header>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
 
-
-{% block custom_javascrpt %}
-    <script>
         const dropdown = document.querySelector('.dropdown');
         const button = document.querySelector('.dropdown-btn');
 
-        button.addEventListener('click',() => {
+        button.addEventListener('click', () => {
             dropdown.classList.toggle('active');
         });
 
-        document.addEventListener('click', (e)=>{
-        if(!dropdown.contains(e.target)) {
-            dropdown.classList.remove('active');
-        }});
-    </script>
-{% endblock %}
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    });
+</script>
