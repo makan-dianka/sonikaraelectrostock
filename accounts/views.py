@@ -63,3 +63,12 @@ def register_page(request):
     else:
         form = CreateUserForm()
     return render(request, 'accounts/register.html', {'form': form})
+
+
+
+########################################################################
+# deconnexion de l'utilisateur ----------------------------------------#
+########################################################################
+def logout_user(request):
+    logout(request)
+    return redirect('accounts:login')
