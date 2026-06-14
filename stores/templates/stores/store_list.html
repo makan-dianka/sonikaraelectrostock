@@ -1,0 +1,56 @@
+{% extends 'layout/base.html' %} {% load static %}
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/store_list.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="page">
+        <div class="top">
+            <h1> 🏪 Magasins </h1>
+            <a href="{% url 'stores:create' %}" class="btn-add"> + Ajouter un magasin</a>
+        </div>
+
+
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Téléphone</th>
+                        <th>Adresse</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for store in stores %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ store.name }}</td>
+                            <td>{{ store.phone }}</td>
+                            <td>{{ store.address }}</td>
+                            <td class="actions">
+                                <a href="{% url 'stores:update' store.id %}" class="edit">
+                                    Modifier
+                                </a>
+
+                                <a href="{% url 'stores:delete' store.id %}" class="delete" onclick="return confirm('Supprimer ce magasin ?')">
+                                    Supprimer
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">Aucun magasin disponible</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

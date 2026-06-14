@@ -1,0 +1,73 @@
+{% extends 'layout/base.html' %} {% load static %}
+
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/store_form.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="form-wrapper">
+
+    <div class="card">
+
+        <h1>
+
+            🏪 Magasin
+
+        </h1>
+
+        <p>
+
+            Créer ou modifier un magasin
+
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {% for field in form %}
+
+            <div class="field">
+
+                <label>
+
+                    {{ field.label }}
+
+                </label>
+
+                {{ field }}
+
+                {{ field.errors }}
+
+            </div>
+
+            {% endfor %}
+
+
+            <div class="buttons">
+
+                <a href="{% url 'stores:store_list' %}" class="cancel">
+
+                    Retour
+
+                </a>
+
+                <button type="submit">
+
+                    Enregistrer
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -10,9 +10,8 @@ class Store(TimeStampedModel):
         blank=True
     )
 
-    address = models.TextField(
-        blank=True
-    )
+    address = models.TextField(blank=True)
+    deleted = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return self.name
