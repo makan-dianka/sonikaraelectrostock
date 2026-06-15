@@ -1,0 +1,170 @@
+.supplier-page {
+
+    padding: 30px;
+
+}
+
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+
+}
+
+
+.header h1 {
+
+    font-size: 34px;
+
+}
+
+
+.btn-add {
+
+    background: #f39b00;
+
+    color: white;
+
+    padding: 16px 24px;
+
+    border-radius: 14px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    transition: .2s;
+
+}
+
+
+.btn-add:hover {
+
+    transform: translateY(-2px);
+
+}
+
+
+.table-card {
+
+    background: white;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    box-shadow:
+
+        0 20px 50px rgba(0,
+            0,
+            0,
+            0.08);
+
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+thead {
+
+    background: #f39b00;
+
+    color: white;
+
+}
+
+
+th {
+
+    padding: 18px;
+
+    text-align: left;
+
+}
+
+
+td {
+
+    padding: 18px;
+
+    border-bottom: 1px solid #eee;
+
+}
+
+
+tbody tr:hover {
+
+    background: #fff8eb;
+
+}
+
+
+.actions {
+
+    display: flex;
+
+    gap: 12px;
+
+}
+
+
+.edit {
+
+    background: #39cc57;
+
+    color: white;
+
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+}
+
+
+.delete {
+
+    background: #ef4444;
+
+    color: white;
+
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+}
+
+
+.edit:hover,
+.delete:hover {
+
+    opacity: .9;
+
+}
+
+
+@media(max-width:900px) {
+
+    .table-card {
+
+        overflow: auto;
+
+    }
+
+}

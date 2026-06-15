@@ -18,3 +18,9 @@ products/migrations/__pycache__
 
 stocks/__pycache__
 stocks/migrations/__pycache__
+
+suppliers/__pycache__
+suppliers/migrations/__pycache__
+
+purchases/__pycache__
+purchases/migrations/__pycache__

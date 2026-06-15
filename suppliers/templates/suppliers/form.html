@@ -1,0 +1,84 @@
+{% extends 'layout/base.html' %}
+
+{% load static %}
+
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/suppliers/supplier_form.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <div class="card">
+
+        <div class="top">
+
+            <h1>
+
+                🚚 Fournisseur
+
+            </h1>
+
+            <p>
+
+                Créer ou modifier un fournisseur
+
+            </p>
+
+        </div>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="grid">
+
+                {% for field in form %}
+
+                <div class="field">
+
+                    <label>
+
+                        {{ field.label }}
+
+                    </label>
+
+                    {{ field }}
+
+                    {{ field.errors }}
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="buttons">
+
+                <a href="{% url 'suppliers:list' %}" class="cancel">
+
+                    Retour
+
+                </a>
+
+
+                <button type="submit">
+
+                    Enregistrer
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
