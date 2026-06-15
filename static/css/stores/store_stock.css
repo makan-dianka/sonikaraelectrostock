@@ -1,0 +1,191 @@
+.stock-page {
+
+    padding: 30px;
+
+}
+
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+
+}
+
+
+.header h1 {
+
+    font-size: 34px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.header p {
+
+    color: #777;
+
+}
+
+
+.back {
+
+    background: #efefef;
+
+    padding: 14px 20px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    color: #333;
+
+}
+
+
+.table-card {
+
+    background: white;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    box-shadow:
+
+        0 20px 50px rgba(0,
+            0,
+            0,
+            0.06);
+
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+thead {
+
+    background: #f39b00;
+
+    color: white;
+
+}
+
+
+th {
+
+    padding: 18px;
+
+    text-align: left;
+
+}
+
+
+td {
+
+    padding: 18px;
+
+    border-bottom: 1px solid #eee;
+
+}
+
+
+tbody tr:hover {
+
+    background: #fff8eb;
+
+}
+
+
+.thumb {
+
+    width: 70px;
+
+    height: 70px;
+
+    border-radius: 14px;
+
+    object-fit: cover;
+
+}
+
+
+.qty {
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+}
+
+
+.success {
+
+    background: #eaf9ee;
+
+    color: #1b8a42;
+
+    padding: 8px 12px;
+
+    border-radius: 10px;
+
+}
+
+
+.danger {
+
+    background: #ffe6e6;
+
+    color: #d32f2f;
+
+    padding: 8px 12px;
+
+    border-radius: 10px;
+
+}
+
+
+.edit {
+
+    background: #f39b00;
+
+    padding: 10px 16px;
+
+    color: white;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+}
+
+
+.edit:hover {
+
+    background: #e58d00;
+
+}
+
+
+@media(max-width:900px) {
+
+    .table-card {
+
+        overflow: auto;
+
+    }
+
+}

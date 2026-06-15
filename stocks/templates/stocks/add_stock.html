@@ -1,0 +1,155 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/stocks/add_stock.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="stock-page">
+
+    <div class="stock-card">
+
+        <div class="header">
+
+            <h1>
+
+                📦 Ajouter du stock
+
+            </h1>
+
+            <p>
+
+                Mettre à jour la quantité disponible
+
+            </p>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="box">
+
+                <label>
+
+                    Produit
+
+                </label>
+
+                <span>
+
+                    {{ stock.product.name }}
+
+                </span>
+
+            </div>
+
+
+            <div class="box">
+
+                <label>
+
+                    Magasin
+
+                </label>
+
+                <span>
+
+                    {{ stock.store.name }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary">
+
+            <div class="summary-card">
+
+                <h3>
+
+                    Stock actuel
+
+                </h3>
+
+                <strong>
+
+                    {{ stock.quantity }}
+
+                    unités
+
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+
+                    Seuil alerte
+
+                </h3>
+
+                <strong>
+
+                    {{ stock.alert_threshold }}
+
+                    unités
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="field">
+
+                <label>
+
+                    Quantité à ajouter
+
+                </label>
+
+                {{ form.quantity }}
+
+                {{ form.quantity.errors }}
+
+            </div>
+
+
+            <div class="buttons">
+
+                <a href="{% url 'products:product_list' %}" class="cancel">
+
+                    Retour
+
+                </a>
+
+
+                <button type="submit">
+
+                    Ajouter
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

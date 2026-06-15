@@ -11,7 +11,7 @@ class Store(TimeStampedModel):
     )
 
     address = models.TextField(blank=True)
-    deleted = models.BooleanField(default=False, blank=True, null=True)
+    is_deleted = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return self.name

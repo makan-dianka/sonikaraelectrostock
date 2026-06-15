@@ -1,0 +1,62 @@
+{% extends 'layout/base.html' %} {% load static %}
+
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/products/product_form.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <div class="form-container">
+        <div class="form-card">
+
+            <h1> 📦 Produit </h1>
+
+            <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+
+                <div class="grid">
+                    {% for field in form %}
+                        <div class="field">
+                            <label>{{ field.label }}</label>
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div id="preview-box">
+                    {% if form.instance.image %}
+                        <img id="preview" src="{{ form.instance.image.url }}">
+                    {% else %}
+                        <img id="preview">
+                    {% endif %}
+                </div>
+
+
+                <div class="buttons">
+                    <a class="cancel" href="{% url 'products:product_list' %}">Retour</a>
+
+                    <button>Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script>
+        const imageInput = document.querySelector('#id_image');
+        const preview = document.querySelector('#preview');
+
+        if (imageInput) {
+            imageInput.addEventListener('change', function () {
+                    const file = this.files[0];
+                    if (file) {
+                        preview.src = URL.createObjectURL(file);
+                    }
+                }
+            );
+        }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends 'layout/base.html' %} {% load static %}
+
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/stores/store_stock.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="stock-page">
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+
+                🏪 {{ store.name }}
+
+            </h1>
+
+            <p>
+
+                Liste des produits disponibles
+
+            </p>
+
+        </div>
+
+
+        <a href="{% url 'stores:store_list' %}" class="back">
+
+            ← Retour
+
+        </a>
+
+    </div>
+
+
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Image</th>
+
+                    <th>Produit</th>
+
+                    <th>Catégorie</th>
+
+                    <th>Quantité</th>
+
+                    <th>Seuil</th>
+
+                    <th>État</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for stock in stocks %}
+
+                <tr>
+
+                    <td>
+
+                        {% if stock.product.image %}
+
+                        <img class="thumb" src="{{ stock.product.image.url }}">
+
+                        {% else %}
+
+                        —
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ stock.product.name }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ stock.product.category }}
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="qty">
+
+                            {{ stock.quantity }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        {{ stock.alert_threshold }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if stock.quantity <= stock.alert_threshold %} <span class="danger">
+
+                            ⚠ Stock faible
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="success">
+
+                                Disponible
+
+                            </span>
+
+                            {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <a class="edit" href="{% url 'stocks:add_stock' stock.product.id stock.store.id %}">
+                            Ajouter
+                        </a>
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="7">
+
+                        Aucun produit dans ce magasin
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
