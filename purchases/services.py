@@ -1,19 +1,44 @@
 from stocks.models import Stock
 
 
+from stocks.models import Stock
+
+
 def receive_purchase(purchase):
 
+    if purchase.status != 'draft':
+        raise Exception(
+            "Achat déjà traité."
+        )
+
+
     for item in purchase.items.all():
+
         stock, created = (
+
             Stock.objects.get_or_create(
-                product=item.product,
                 store=purchase.store,
-                defaults={'quantity':0}
+                product=item.product,
+                defaults={
+                    'quantity':0
+                }
             )
         )
 
-        stock.quantity += (item.quantity)
+        # MAJ stock
+        stock.quantity += (
+            item.quantity
+        )
         stock.save()
 
-    purchase.status = ('received')
+        # MAJ PRIX ACHAT
+        product = item.product
+        product.purchase_price = item.unit_price
+        product.save(update_fields=['purchase_price'])
+
+
+    purchase.status = (
+        'received'
+    )
+
     purchase.save()
