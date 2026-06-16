@@ -1,0 +1,160 @@
+{% extends 'layout/base.html' %}
+
+
+{% load static %}
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/customers/list.css' %}">
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="client-page">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+
+                👥 Clients
+
+            </h1>
+
+            <p>
+
+                Gérer les clients de votre entreprise
+
+            </p>
+
+        </div>
+
+
+        <a
+        href="{% url 'customers:create' %}"
+        class="btn-add"
+        >
+
+            + Ajouter un client
+
+        </a>
+
+    </div>
+
+
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Nom</th>
+
+                    <th>Téléphone</th>
+
+                    <th>Email</th>
+
+                    <th>Adresse</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for customer in customers %}
+
+                <tr>
+
+                    <td>
+
+                        {{ forloop.counter }}
+
+                    </td>
+
+                    <td>
+
+                        {{ customer.name }}
+
+                    </td>
+
+                    <td>
+
+                        {{ customer.phone }}
+
+                    </td>
+
+                    <td>
+
+                        {{ customer.email|default:"—" }}
+
+                    </td>
+
+                    <td>
+
+                        {{ customer.address|default:"—" }}
+
+                    </td>
+
+
+                    <td class="actions">
+
+                        <a
+                        href="{% url 'customers:update' customer.id %}"
+                        class="edit"
+                        >
+
+                            Modifier
+
+                        </a>
+
+
+                        <a
+                        href="{% url 'customers:delete' customer.id %}"
+                        class="delete"
+
+                        onclick="return confirm('Supprimer ce client ?')"
+
+                        >
+
+                            Supprimer
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="6">
+
+                        Aucun client trouvé
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

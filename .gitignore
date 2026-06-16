@@ -24,3 +24,7 @@ suppliers/migrations/__pycache__
 
 purchases/__pycache__
 purchases/migrations/__pycache__
+
+
+customers/__pycache__
+customers/migrations/__pycache__

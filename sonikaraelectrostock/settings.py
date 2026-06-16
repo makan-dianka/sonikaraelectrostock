@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'stocks',
     'purchases',
     'suppliers',
+    'customers',
 
 
     # autre app
