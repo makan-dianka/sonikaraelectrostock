@@ -1,6 +1,9 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 
+{% load humanize %}
+
+
 {% block head%}
     <link rel="stylesheet" href="{% static 'css/products/product_list.css' %}">
 {% endblock %}
@@ -42,8 +45,12 @@
                         <td>{{ product.category }}</td>
                         <td>{{ product.marque }}</td>
                         <td>{{ product.reference }}</td>
-                        <td>{{ product.purchase_price }} FCFA</td>
-                        <td>{{ product.sale_price }} FCFA</td>
+                        {% if product.purchase_price != None %}
+                            <td>{{ product.purchase_price|intcomma }} FCFA</td>
+                        {% else %}
+                            <td> --- </td>
+                        {% endif %}
+                        <td>{{ product.sale_price|intcomma }} FCFA</td>
                         <td class="actions">
                             <a class="edit" href="{% url 'products:update' product.id %}">
                                 Modifier
