@@ -9,7 +9,8 @@ class ProductForm(forms.ModelForm):
         model = Product
 
         exclude = [
-            'is_deleted'
+            'is_deleted',
+            'purchase_price',
         ]
 
         widgets = {
@@ -41,13 +42,6 @@ class ProductForm(forms.ModelForm):
                 }
             ),
 
-            'purchase_price': forms.NumberInput(
-                attrs={
-                    'class':'form-control',
-                    'placeholder':'Prix achat'
-                }
-            ),
-
             'sale_price': forms.NumberInput(
                 attrs={
                     'class':'form-control',
@@ -69,4 +63,13 @@ class ProductForm(forms.ModelForm):
                 }
             ),
 
+        }
+
+
+        labels = {
+            'name': 'Nom du produit',
+            'category': 'Catégorie',
+            'reference': "Référence",
+            'sale_price': "Prix de vente",
+            'image': "Image du produit",
         }
