@@ -1,0 +1,67 @@
+.purchase-card {
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 25px;
+
+}
+
+
+.header-grid {
+
+    display: grid;
+
+    grid-template-columns:
+
+        1fr 1fr;
+
+    gap: 20px;
+
+}
+
+
+.line {
+
+    display: grid;
+
+    grid-template-columns:
+
+        3fr 1fr 1fr auto;
+
+    gap: 15px;
+
+    margin-top: 15px;
+
+}
+
+
+.form-control {
+
+    padding: 16px;
+
+    border-radius: 12px;
+
+    border: 2px solid #eee;
+
+    width: 100%;
+
+}
+
+
+button {
+
+    padding: 15px 20px;
+
+    border: none;
+
+    background: #f39b00;
+
+    color: white;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+}

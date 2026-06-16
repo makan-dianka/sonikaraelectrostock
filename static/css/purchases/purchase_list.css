@@ -1,0 +1,122 @@
+.page {
+
+    padding: 30px;
+
+}
+
+.top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+
+}
+
+.add {
+
+    background: #f39b00;
+
+    padding: 15px 20px;
+
+    color: white;
+
+    border-radius: 14px;
+
+    text-decoration: none;
+
+}
+
+.card {
+
+    background: white;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+}
+
+table {
+
+    width: 100%;
+
+}
+
+th,
+td {
+
+    padding: 18px;
+
+}
+
+
+
+
+
+.draft {
+
+    background: #fff8eb;
+
+    color: #e58d00;
+
+    padding: 8px 12px;
+
+    border-radius: 10px;
+
+}
+
+.received {
+
+    background: #e8fff0;
+
+    color: #23a64f;
+
+    padding: 8px 12px;
+
+    border-radius: 10px;
+
+}
+
+.cancelled {
+
+    background: #ffeaea;
+
+    color: #e53935;
+
+    padding: 8px 12px;
+
+    border-radius: 10px;
+
+}
+
+.receive {
+
+    background: #39cc57;
+
+    color: white;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    margin: 8px;
+
+}
+
+.cancel {
+
+    background: #ef4444;
+
+    color: white;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+}

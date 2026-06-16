@@ -1,0 +1,155 @@
+{% extends 'layout/base.html' %} {% load static %}
+
+{% load humanize %}
+
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/purchases/purchase_list.css' %}">
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<div class="page">
+
+    <div class="top">
+
+        <h1>
+
+            🛒 Achats
+
+        </h1>
+
+        <a href="{% url 'purchases:create' %}" class="add">
+
+            + Nouvel achat
+
+        </a>
+
+    </div>
+
+
+    <div class="card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Fournisseur</th>
+
+                    <th>Magasin</th>
+
+                    <th>Facture</th>
+
+                    <th>Total</th>
+
+                    <th>
+
+                    Statut
+
+                    </th>
+
+                    <th>
+
+                    Actions
+
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for purchase in purchases %}
+
+                <tr>
+
+                    <td>
+
+                        {{ purchase.purchase_date }}
+
+                    </td>
+
+                    <td>
+
+                        {{ purchase.supplier }}
+
+                    </td>
+
+                    <td>
+
+                        {{ purchase.store }}
+
+                    </td>
+
+                    <td>
+
+                        {{ purchase.invoice_number }}
+
+                    </td>
+
+                    <td>
+
+                        {{ purchase.total_amount|intcomma }}
+
+                        FCFA
+
+                    </td>
+
+                    <td>
+                        {% if purchase.status == 'draft' %}
+                            <span class="draft">
+                                Brouillon
+                            </span>
+                        {% elif purchase.status == 'received' %}
+                            <span class="received">
+                                Réceptionné
+                            </span>
+                        {% else %}
+
+                            <span class="cancelled">
+                                Annulé
+                            </span>
+                        {% endif %}
+                    </td>
+
+
+                    <td>
+                        {% if purchase.status == 'draft' %}
+                            <a class="receive" href="{% url 'purchases:update_status' purchase.id 'received' %}"
+                            onclick="return confirm('Confirmer la réception ?')">
+                                Réceptionner
+                            </a>
+
+                            <a class="cancel" href="{% url 'purchases:update_status' purchase.id 'cancelled' %}"
+                            onclick="return confirm('Annuler cet achat ?')">
+                                Annuler
+                            </a>
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
