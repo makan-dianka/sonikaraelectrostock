@@ -1,0 +1,621 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+
+        Facture {{ document.reference }}
+
+    </title>
+
+    <style>
+@page{
+    size:A4;
+
+    margin-top:10mm;
+
+    margin-bottom:12mm;
+
+    margin-left:8mm;
+
+    margin-right:8mm;
+}
+
+
+body{
+
+    margin:0;
+
+    padding:0;
+
+    font-family:Arial,sans-serif;
+
+    font-size:15px;
+
+    color:#222;
+
+    line-height:1.4;
+
+}
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* HEADER */
+
+.top-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    margin-bottom:10px;
+
+}
+
+
+        .logo img {
+
+            width: 180px;
+
+        }
+
+
+        .document-ref {
+
+            text-align: right;
+
+        }
+
+
+        .document-ref .label {
+
+            color: #777;
+
+            font-size: 11px;
+
+        }
+
+
+        .document-ref .value {
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            color: #02407F;
+
+        }
+
+
+
+        /* COMPANY */
+
+.company{
+
+    margin-bottom:14px;
+
+}
+
+
+        .company-name {
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            color: #02407F;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .company p {
+
+            margin: 3px 0;
+
+        }
+
+
+
+        /* TITLE */
+
+.invoice-title{
+
+    margin-bottom:18px;
+
+}
+
+
+        .invoice-title h1 {
+
+            margin: 0;
+
+            font-size: 32px;
+
+            color: #02407F;
+
+        }
+
+
+        .sale-ref {
+
+            margin-top: 8px;
+
+            font-size: 14px;
+
+            color: #555;
+
+        }
+
+
+
+        /* INFO */
+
+.info-row{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    margin-bottom:28px;
+
+}
+
+
+.info-box:first-child{
+
+    width:55%;
+
+}
+
+
+.info-box:last-child{
+
+    width:45%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-end;
+
+    text-align:right;
+
+}
+
+
+        .box-title {
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            color: #02407F;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .info-box p {
+
+            margin: 4px 0;
+
+        }
+
+
+
+        /* TABLE */
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+        }
+
+
+        thead {
+
+            background: #02407F;
+
+            color: white;
+
+        }
+
+
+        th {
+
+            padding: 12px;
+
+            text-align: left;
+
+            font-size: 12px;
+
+        }
+
+
+        td {
+
+            padding: 11px;
+
+            border-bottom: 1px solid #DDD;
+
+        }
+
+
+        tbody tr:nth-child(even) {
+
+            background: #fafafa;
+
+        }
+
+
+        .text-right {
+
+            text-align: right;
+
+        }
+
+
+
+        /* TOTAL */
+
+        .total-area {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            margin-top: 30px;
+
+        }
+
+
+        .total-card {
+
+            width: 300px;
+
+        }
+
+
+        .total-line {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .total-final {
+
+            border-top: 2px solid #02407F;
+
+            padding-top: 12px;
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            color: #02407F;
+
+        }
+
+
+
+        /* FOOTER */
+
+        .footer {
+
+            margin-top: 50px;
+
+            text-align: center;
+
+            color: #777;
+
+            font-size: 11px;
+
+        }
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <!-- HEADER -->
+
+    <div class="top-header">
+
+        <div class="logo">
+
+            <img src="{{ logo_path }}" alt="test">
+
+        </div>
+
+
+        <div class="document-ref">
+
+            <div class="label">
+
+                Référence document
+
+            </div>
+
+            <div class="value">
+
+                {{ document.reference }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- COMPANY -->
+
+    <div class="company">
+
+        <p>
+            Mali, Bamako Coura
+        </p>
+
+        <p>
+            Imm. Pendourou, En face de Moov Africa
+        </p>
+
+        <p>
+            Boutique N°5
+        </p>
+
+        <p>
+            (+223) 74 44 44 75 / 61 54 54 34
+        </p>
+
+    </div>
+
+
+
+    <!-- TITLE -->
+
+    <div class="invoice-title">
+
+        <h1>
+
+            FACTURE
+
+        </h1>
+
+        <div class="sale-ref">
+
+            Vente :
+            <strong>
+
+                {{ sale.reference }}
+
+            </strong>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CLIENT -->
+
+    <div class="info-row">
+
+        <div class="info-box">
+
+            <div class="box-title">
+
+                Client
+
+            </div>
+
+            <p>
+
+                {{ sale.customer }}
+
+            </p>
+
+        </div>
+
+
+
+        <div class="info-box">
+
+            <div class="box-title">
+
+                Informations
+
+            </div>
+
+            <p>
+
+                Date :
+                {{ sale.created_at|date:"d/m/Y H:i" }}
+
+            </p>
+
+            <p>
+
+                Magasin :
+                {{ sale.store }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TABLE -->
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+
+                    Produit
+
+                </th>
+
+                <th>
+
+                    Qté
+
+                </th>
+
+                <th>
+
+                    Prix unitaire
+
+                </th>
+
+                <th class="text-right">
+
+                    Montant
+
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for item in sale.items.all %}
+
+            <tr>
+
+                <td>
+
+                    {{ item.product.name }}
+
+                </td>
+
+                <td>
+
+                    {{ item.quantity }}
+
+                </td>
+
+                <td>
+
+                    {{ item.unit_price }}
+
+                    FCFA
+
+                </td>
+
+                <td class="text-right">
+
+                    {{ item.subtotal }}
+
+                    FCFA
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+
+    <!-- TOTAL -->
+
+    <div class="total-area">
+
+        <div class="total-card">
+
+            <div class="total-line">
+
+                <span>
+
+                    Total payé
+
+                </span>
+
+                <span>
+
+                    {{ sale.paid_amount }}
+
+                    FCFA
+
+                </span>
+
+            </div>
+
+
+            <div class="total-line">
+
+                <span>
+
+                    Reste
+
+                </span>
+
+                <span>
+
+                    {{ sale.remaining_amount }}
+
+                    FCFA
+
+                </span>
+
+            </div>
+
+
+            <div class="total-line total-final">
+
+                <span>
+
+                    TOTAL
+
+                </span>
+
+                <span>
+
+                    {{ sale.total }}
+
+                    FCFA
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

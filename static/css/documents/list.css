@@ -1,0 +1,200 @@
+.document-page {
+
+    padding: 30px;
+
+}
+
+
+.page-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+
+}
+
+
+.page-header h1 {
+
+    font-size: 34px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.page-header p {
+
+    color: #888;
+
+}
+
+
+.btn-add {
+
+    background: #f39b00;
+
+    color: white;
+
+    padding: 14px 22px;
+
+    border-radius: 14px;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+}
+
+
+.table-card {
+
+    background: white;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    box-shadow:
+
+        0 20px 60px rgba(0,
+            0,
+            0,
+            0.08);
+
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+thead {
+
+    background: #f39b00;
+
+    color: white;
+
+}
+
+
+th,
+td {
+
+    padding: 18px;
+
+    text-align: left;
+
+}
+
+
+tbody tr {
+
+    border-bottom: 1px solid #eee;
+
+}
+
+
+tbody tr:hover {
+
+    background: #fff9ef;
+
+}
+
+
+.actions {
+
+    display: flex;
+
+    gap: 10px;
+
+}
+
+
+.view {
+
+    background: #22c55e;
+
+    color: white;
+
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+}
+
+
+.delete {
+
+    background: #ef4444;
+
+    color: white;
+
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+}
+
+
+.invoice {
+
+    background: #eaf7ff;
+
+    color: #0066cc;
+
+    padding: 8px 14px;
+
+    border-radius: 20px;
+
+}
+
+
+.purchase {
+
+    background: #fff5d8;
+
+    color: #b77a00;
+
+    padding: 8px 14px;
+
+    border-radius: 20px;
+
+}
+
+
+.delivery {
+
+    background: #ecfff0;
+
+    color: #228b22;
+
+    padding: 8px 14px;
+
+    border-radius: 20px;
+
+}
+
+
+.empty {
+
+    text-align: center;
+
+    padding: 50px;
+
+    color: #777;
+
+}

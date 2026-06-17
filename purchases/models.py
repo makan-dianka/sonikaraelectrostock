@@ -49,7 +49,7 @@ class Purchase(TimeStampedModel):
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return f"Achat #{self.id}"
+        return self.invoice_number
 
     def update_total(self):
         total = sum(item.quantity * item.unit_price for item in self.items.all())

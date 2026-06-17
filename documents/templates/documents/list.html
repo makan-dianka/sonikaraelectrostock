@@ -1,0 +1,199 @@
+{% extends 'layout/base.html' %} {% load static %}
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/documents/list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="document-page">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+
+                📄 Documents
+
+            </h1>
+
+            <p>
+
+                Tous les documents générés
+
+            </p>
+
+        </div>
+
+
+        <a href="{% url 'documents:create' %}" class="btn-add">
+
+            + Générer
+
+        </a>
+
+    </div>
+
+
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+
+                        Référence
+
+                    </th>
+
+                    <th>
+
+                        Type
+
+                    </th>
+
+                    <th>
+
+                        Document lié
+
+                    </th>
+
+                    <th>
+
+                        Date
+
+                    </th>
+
+
+                    <th>
+
+                        Actions
+
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for document in documents %}
+
+                <tr>
+
+                    <td>
+
+                        {{ document.reference }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if document.document_type == 'invoice' %}
+
+                        <span class="invoice">
+
+                            Facture
+
+                        </span>
+
+                        {% elif document.document_type == 'purchase_order' %}
+
+                        <span class="purchase">
+
+                            Bon achat
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="delivery">
+
+                            Livraison
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if document.purchase %}
+
+                        {{ document.purchase.invoice_number }}
+
+                        {% endif %}
+
+
+                        {% if document.sale %}
+
+                        {{ document.sale.reference }}
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ document.created_at|date:"d/m/Y H:i" }}
+
+                    </td>
+
+
+                    <td class="actions">
+
+                        {% if document.pdf %}
+
+                        <a href="{{ document.pdf.url }}" target="_blank" class="view">
+
+                            Voir PDF
+
+                        </a>
+
+                        {% endif %}
+
+
+                        <a href="{% url 'documents:delete' document.id %}" class="delete"
+                            onclick="return confirm('Supprimer ce document ?')">
+
+                            Supprimer
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="6" class="empty">
+
+                        Aucun document
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
