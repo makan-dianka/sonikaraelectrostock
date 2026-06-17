@@ -1,0 +1,99 @@
+.page {
+
+    padding: 30px;
+
+}
+
+
+.top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+
+}
+
+
+.add {
+
+    background: #f39b00;
+
+    padding: 15px 20px;
+
+    color: white;
+
+    border-radius: 14px;
+
+    text-decoration: none;
+
+}
+
+
+.table-card {
+
+    background: white;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+}
+
+
+table {
+
+    width: 100%;
+
+}
+
+
+th,
+td {
+
+    padding: 18px;
+
+}
+
+
+
+.draft{
+
+background:#fff8eb;
+
+color:#f39b00;
+
+padding:8px 12px;
+
+border-radius:10px;
+
+}
+
+
+.validated{
+
+background:#e9fff0;
+
+color:#1d8d4a;
+
+padding:8px 12px;
+
+border-radius:10px;
+
+}
+
+
+.validate{
+
+background:#39cc57;
+
+padding:10px 16px;
+
+border-radius:10px;
+
+color:white;
+
+text-decoration:none;
+
+}

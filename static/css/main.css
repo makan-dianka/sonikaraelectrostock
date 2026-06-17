@@ -94,3 +94,125 @@ body {
     }
 
 }
+
+
+
+
+
+/* ALERT MESSAGE */
+
+.messages-container {
+
+    position: fixed;
+
+    top: 90px;
+
+    right: 30px;
+
+    z-index: 9999;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+}
+
+
+.alert {
+
+    min-width: 320px;
+
+    padding: 18px 22px;
+
+    border-radius: 16px;
+
+    color: white;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    box-shadow:
+
+        0 10px 30px rgba(0,
+            0,
+            0,
+            0.15);
+
+    animation:
+
+        slideIn .25s;
+
+}
+
+
+.success {
+
+    background: #28a745;
+
+}
+
+
+.error {
+
+    background: #e53935;
+
+}
+
+
+.warning {
+
+    background: #f39b00;
+
+}
+
+
+.info {
+
+    background: #2196f3;
+
+}
+
+
+.close-message {
+
+    background: none;
+
+    border: none;
+
+    color: white;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+}
+
+
+@keyframes slideIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+
+            translateX(40px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+
+            translateX(0);
+
+    }
+
+}

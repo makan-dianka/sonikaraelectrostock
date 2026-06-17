@@ -8,7 +8,11 @@
 {% endblock %}
 
 
+    <h1>
 
+        💳 Nouvelle vente
+
+    </h1>
 
 {% block content %}
 
@@ -97,10 +101,13 @@
                     </td>
 
                     <td>
+                        {% if purchase.total_amount <= 0 %}
+                            xxx
+                        {% else %}
+                            {{ purchase.total_amount|intcomma }}
 
-                        {{ purchase.total_amount|intcomma }}
-
-                        FCFA
+                            FCFA
+                        {% endif %}
 
                     </td>
 

@@ -1,0 +1,145 @@
+from django.shortcuts import render, redirect
+
+from django.utils import timezone
+
+from .models import Sale
+
+from .forms import SaleForm, SaleItemFormSet
+
+from django.contrib import messages
+
+from .services import validate_sale
+
+from django.contrib.auth.decorators import login_required
+
+
+
+
+# Generation of reference number
+def generate_reference():
+
+    """Generation of reference number
+
+    Returns:
+        str: reference number
+    """
+
+    now = timezone.now()
+
+    prefix = (
+        f"VTE-"
+        f"{now:%Y%m}"
+    )
+
+    count = Sale.objects.count() + 1
+
+    return (
+
+        f"{prefix}"
+
+        f"-{count:04d}"
+    )
+
+
+
+
+
+
+@login_required(login_url='accounts:login')
+def sale_list(request):
+
+    sales = Sale.objects.select_related('customer', 'store').order_by('-created_at')
+
+    return render(request, 'sales/list.html', {'sales':sales})
+
+
+
+@login_required(login_url='accounts:login')
+def create_sale(request):
+
+    if request.method == 'POST':
+
+        form = SaleForm(request.POST)
+
+        sale = Sale()
+
+        formset = SaleItemFormSet(request.POST, instance=sale, prefix='items')
+
+        if form.is_valid() and formset.is_valid():
+            sale = form.save(commit=False)
+            sale.reference = generate_reference()
+            sale.user = request.user
+            sale.save()
+
+            formset.instance = sale
+
+            items = formset.save(commit=False)
+
+            total = 0
+
+            for item in items:
+
+                item.subtotal = item.quantity * item.unit_price
+                total += item.subtotal
+                item.save()
+
+
+            sale.total = total
+            sale.save()
+            return redirect('sales:list')
+
+    else:
+
+        form = SaleForm()
+
+        formset = (
+            SaleItemFormSet(
+                prefix='items'
+                )
+            )
+
+    return render(request, 'sales/form.html', {'form':form, 'formset':formset})
+
+
+
+
+
+
+@login_required(login_url='accounts:login')
+def validate_sale_view(request, pk):
+
+    sale = (
+
+        Sale.objects.get(
+            id=pk
+        )
+
+    )
+
+    try:
+
+        validate_sale(
+            sale
+        )
+
+        messages.success(
+
+            request,
+
+            "Vente validée."
+
+        )
+
+    except Exception as e:
+
+        messages.error(
+
+            request,
+
+            str(e)
+
+        )
+
+    return redirect(
+        'sales:list'
+    )

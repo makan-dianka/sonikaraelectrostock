@@ -48,6 +48,15 @@ class PurchaseForm(forms.ModelForm):
         }
 
 
+        labels = {
+            'supplier': "Choisir un fournisseur",
+            'store': "Choisir un magasin",
+            'purchase_date': "Date d'achat",
+            'notes': 'Note',
+        }
+
+
+
 class PurchaseItemForm(forms.ModelForm):
 
     class Meta:
@@ -62,13 +71,14 @@ class PurchaseItemForm(forms.ModelForm):
             'product': forms.Select(
                 attrs={
                     'class':'form-control',
+                    'required' :'required'
                 }
             ),
 
             'quantity': forms.NumberInput(
                 attrs={
                     'class':'form-control',
-                    'placeholder' : "Quantité"
+                    'placeholder' : "Quantité",
                 }
             ),
 

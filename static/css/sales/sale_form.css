@@ -1,0 +1,50 @@
+.sale-card {
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 24px;
+
+}
+
+
+.header-grid {
+
+    display: grid;
+
+    grid-template-columns:
+
+        1fr 1fr;
+
+    gap: 20px;
+
+}
+
+
+.line {
+
+    display: grid;
+
+    grid-template-columns:
+
+        3fr 1fr 1fr;
+
+    gap: 15px;
+
+    margin-top: 20px;
+
+}
+
+
+.form-control {
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    border: 2px solid #eee;
+
+    width: 100%;
+
+}

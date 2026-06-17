@@ -1,0 +1,161 @@
+{% extends 'layout/base.html' %}
+
+
+{% load static %}
+
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/sales/sale_list.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page">
+
+    <div class="top">
+
+        <h1>
+
+            💳 Ventes
+
+        </h1>
+
+        <a href="{% url 'sales:create' %}" class="add">
+
+            + Nouvelle vente
+
+        </a>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date de vente</th>
+
+                    <th>Référence</th>
+
+                    <th>Client</th>
+
+                    <th>Magasin</th>
+
+                    <th>Total</th>
+
+                    <th>Créé par</th>
+
+                    <th>Statut</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for sale in sales %}
+
+                <tr>
+
+                    <td>
+
+                        {{ sale.created_at }}
+
+                    </td>
+
+                    <td>
+
+                        {{ sale.reference }}
+
+                    </td>
+
+                    <td>
+
+                        {{ sale.customer|default:'Client libre' }}
+
+                    </td>
+
+                    <td>
+
+                        {{ sale.store }}
+
+                    </td>
+
+                    <td>
+
+                        {{ sale.total }}
+
+                        FCFA
+
+                    </td>
+
+                    <td>
+
+                        {{ sale.user }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if sale.status == 'draft' %}
+
+                        <span class="draft">
+
+                            Brouillon
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="validated">
+
+                            Validée
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if sale.status == 'draft' %}
+
+                        <a class="validate" href="{% url 'sales:validate' sale.id %}"
+                            onclick="return confirm('Valider la vente ?')">
+
+                            Valider
+
+                        </a>
+
+                        {% else %}
+
+                        —
+
+                        {% endif %}
+
+                    </td>
+
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
