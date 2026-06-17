@@ -31,3 +31,6 @@ customers/migrations/__pycache__
 
 sales/__pycache__
 sales/migrations/__pycache__
+
+payments/__pycache__
+payments/migrations/__pycache__

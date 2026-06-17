@@ -71,7 +71,6 @@ class PurchaseItemForm(forms.ModelForm):
             'product': forms.Select(
                 attrs={
                     'class':'form-control',
-                    'required' :'required'
                 }
             ),
 

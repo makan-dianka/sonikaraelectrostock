@@ -86,7 +86,7 @@ class Purchase(TimeStampedModel):
         today = timezone.now()
 
 
-        prefix = (f"FACT-ACH-" f"{today:%Y%m}-")
+        prefix = (f"ACH-" f"{today:%Y%m}-")
 
         last = (
             Purchase.objects.filter(

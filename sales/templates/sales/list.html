@@ -47,11 +47,13 @@
 
                     <th>Total</th>
 
-                    <th>Créé par</th>
+                    <th>Reste à payer</th>
 
                     <th>Statut</th>
 
                     <th>Actions</th>
+
+                    <th>Comptoir</th>
 
                 </tr>
 
@@ -98,7 +100,7 @@
 
                     <td>
 
-                        {{ sale.user }}
+                        {{ sale.remaining_amount }} FCFA
 
                     </td>
 
@@ -145,6 +147,21 @@
 
                     </td>
 
+                    <td>
+                        {% if sale.status == 'validated' %}
+                            {% if sale.payment_status == 'paid' %}
+                                <span class="validated">
+                                    Payé
+                                </span>
+                            {% else %}
+                                <a class="pay" href="{% url 'payments:create' sale.id %}">
+                                    Payer
+                                </a>
+                            {% endif %}
+                        {% else %}
+                         —
+                        {% endif %}
+                    </td>
 
                 </tr>
 

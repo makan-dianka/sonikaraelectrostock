@@ -44,6 +44,32 @@ class Sale(TimeStampedModel):
         default='draft'
     )
 
+    payment_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('unpaid', 'Non payé'),
+            ('partial', 'Partiel'),
+            ('paid', 'Payé')
+        ],
+        default='unpaid'
+    )
+
+
+    def __str__(self):
+        return self.reference
+
+
+    @property
+    def paid_amount(self):
+        return (self.payments.aggregate(total=models.Sum('amount')) ['total'] or 0)
+
+
+    @property
+    def remaining_amount(self):
+        return (self.total - self.paid_amount)
+
+
+
 
 
 

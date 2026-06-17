@@ -58,42 +58,59 @@ td {
 
 
 
-.draft{
+.draft {
 
-background:#fff8eb;
+    background: #fff8eb;
 
-color:#f39b00;
+    color: #f39b00;
 
-padding:8px 12px;
+    padding: 8px 12px;
 
-border-radius:10px;
-
-}
-
-
-.validated{
-
-background:#e9fff0;
-
-color:#1d8d4a;
-
-padding:8px 12px;
-
-border-radius:10px;
+    border-radius: 10px;
 
 }
 
 
-.validate{
+.validated {
 
-background:#39cc57;
+    background: #e9fff0;
 
-padding:10px 16px;
+    color: #1d8d4a;
 
-border-radius:10px;
+    padding: 8px 12px;
 
-color:white;
+    border-radius: 10px;
 
-text-decoration:none;
+}
+
+
+.validate {
+
+    background: #39cc57;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    color: white;
+
+    text-decoration: none;
+
+}
+
+
+
+
+.pay {
+
+    background: #f39b00;;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    color: white;
+
+    text-decoration: none;
 
 }
