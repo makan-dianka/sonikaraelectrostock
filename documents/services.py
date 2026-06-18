@@ -31,10 +31,15 @@ def generate_pdf(document):
 
 
     if document.document_type == 'invoice':
-
         template = 'documents/pdf/invoice.html'
-
         context['sale'] = document.sale
+    elif document.document_type == 'purchase_order':
+        template = 'documents/pdf/purchase_order.html'
+        context['purchase'] = document.purchase
+    elif document.document_type == 'delivery_note':
+        template = 'documents/pdf/delivery_note.html'
+        context['sale'] = document.sale
+
 
     html = (
 

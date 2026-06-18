@@ -1,0 +1,358 @@
+{% load humanize %}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+
+    <style>
+        @page {
+            size: A4;
+            margin: 8mm;
+        }
+
+        body {
+
+            font-family: Arial;
+
+            font-size: 14px;
+
+            color: #222;
+
+            margin: 0;
+
+        }
+
+
+        .header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .logo img {
+
+            width: 180px;
+
+        }
+
+
+        .doc-ref {
+
+            text-align: right;
+
+        }
+
+
+        .doc-ref .ref {
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            color: #f39b00;
+
+        }
+
+
+        .title {
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .title h1 {
+
+            margin: 0;
+
+            color: #f39b00;
+
+            font-size: 30px;
+
+        }
+
+
+        .purchase-ref {
+
+            margin-top: 5px;
+
+            color: #666;
+
+        }
+
+
+        .info {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+        }
+
+
+        th {
+
+            background: #f39b00;
+
+            color: white;
+
+            padding: 12px;
+
+            text-align: left;
+
+        }
+
+
+        td {
+
+            padding: 10px;
+
+            border-bottom: 1px solid #ddd;
+
+        }
+
+
+        .total {
+
+            margin-top: 30px;
+
+            text-align: right;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            color: #f39b00;
+
+        }
+
+        .company{
+
+            margin-bottom:14px;
+
+        }
+
+        .company p {
+
+            margin: 3px 0;
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="header">
+
+        <div class="logo">
+
+            <img src="{{ logo_path }}">
+
+        </div>
+
+
+        <div class="doc-ref">
+
+            Référence document
+
+            <div class="ref">
+
+                {{ document.reference }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- COMPANY -->
+
+    <div class="company">
+
+        <p>
+            Mali, Bamako Coura <br />
+            Imm. Pendourou, En face de Moov Africa <br />
+            Boutique N°5
+        </p>
+
+        <p>
+            (+223) 74 44 44 75 / 61 54 54 34
+        </p>
+
+    </div>
+
+
+
+
+
+    <br />
+    <div class="title">
+
+        <h1>
+
+            BON D'ACHAT
+
+        </h1>
+
+        <div class="purchase-ref">
+
+            Achat :
+
+            <strong>
+
+                {{ purchase.invoice_number }}
+
+            </strong>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="info">
+
+        <div>
+
+            <strong>
+
+                Fournisseur
+
+            </strong>
+
+            <br>
+
+            {{ purchase.supplier }}
+
+        </div>
+
+
+        <div>
+
+            Date
+
+            <br>
+
+            {{ purchase.created_at|date:"d/m/Y" }}
+
+        </div>
+
+    </div>
+
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+
+                    Produit
+
+                </th>
+
+                <th>
+
+                    Qté
+
+                </th>
+
+                <th>
+
+                    Prix achat
+
+                </th>
+
+                <th>
+
+                    Total
+
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for item in purchase.items.all %}
+
+            <tr>
+
+                <td>
+
+                    {{ item.product }}
+
+                </td>
+
+                <td>
+
+                    {{ item.quantity }}
+
+                </td>
+
+                <td>
+
+                    {{ item.unit_price|intcomma }}
+
+                    FCFA
+
+                </td>
+
+                <td>
+
+                    {{ item.total|intcomma }}
+
+                    FCFA
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    <div class="total">
+
+        TOTAL :
+
+        {{ purchase.total_amount|intcomma }}
+
+        FCFA
+
+    </div>
+
+</body>
+
+</html>

@@ -1,4 +1,7 @@
 {% load static %}
+
+{% load humanize %}
+
 <!DOCTYPE html>
 
 <html lang="fr">
@@ -92,7 +95,7 @@ body{
 
             font-weight: bold;
 
-            color: #02407F;
+            color: green;
 
         }
 
@@ -113,7 +116,7 @@ body{
 
             font-weight: bold;
 
-            color: #02407F;
+            color: green;
 
             margin-bottom: 8px;
 
@@ -132,7 +135,7 @@ body{
 
 .invoice-title{
 
-    margin-bottom:18px;
+    margin-bottom:15px;
 
 }
 
@@ -143,14 +146,14 @@ body{
 
             font-size: 32px;
 
-            color: #02407F;
+            color: green;
 
         }
 
 
         .sale-ref {
 
-            margin-top: 8px;
+            margin-top: 0px;
 
             font-size: 14px;
 
@@ -201,9 +204,9 @@ body{
 
             font-weight: bold;
 
-            color: #02407F;
+            color: black;
 
-            margin-bottom: 8px;
+            margin-bottom: 0px;
 
         }
 
@@ -229,7 +232,7 @@ body{
 
         thead {
 
-            background: #02407F;
+            background: green;
 
             color: white;
 
@@ -304,7 +307,7 @@ body{
 
         .total-final {
 
-            border-top: 2px solid #02407F;
+            border-top: 2px solid green;
 
             padding-top: 12px;
 
@@ -312,7 +315,7 @@ body{
 
             font-weight: bold;
 
-            color: #02407F;
+            color: green;
 
         }
 
@@ -443,25 +446,12 @@ body{
 
         <div class="info-box">
 
-            <div class="box-title">
-
-                Informations
-
-            </div>
-
-            <p>
+            <div>
 
                 Date :
-                {{ sale.created_at|date:"d/m/Y H:i" }}
+                {{ sale.created_at|date:"d/m/Y" }}
 
-            </p>
-
-            <p>
-
-                Magasin :
-                {{ sale.store }}
-
-            </p>
+            </div>
 
         </div>
 
@@ -526,7 +516,7 @@ body{
 
                 <td>
 
-                    {{ item.unit_price }}
+                    {{ item.unit_price|intcomma }}
 
                     FCFA
 
@@ -534,7 +524,7 @@ body{
 
                 <td class="text-right">
 
-                    {{ item.subtotal }}
+                    {{ item.subtotal|intcomma }}
 
                     FCFA
 
@@ -566,7 +556,7 @@ body{
 
                 <span>
 
-                    {{ sale.paid_amount }}
+                    {{ sale.paid_amount|intcomma }}
 
                     FCFA
 
@@ -585,7 +575,7 @@ body{
 
                 <span>
 
-                    {{ sale.remaining_amount }}
+                    {{ sale.remaining_amount|intcomma }}
 
                     FCFA
 
@@ -604,7 +594,7 @@ body{
 
                 <span>
 
-                    {{ sale.total }}
+                    {{ sale.total|intcomma }}
 
                     FCFA
 
