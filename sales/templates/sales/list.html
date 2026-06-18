@@ -1,5 +1,6 @@
 {% extends 'layout/base.html' %}
 
+{% load humanize %}
 
 {% load static %}
 
@@ -92,7 +93,7 @@
 
                     <td>
 
-                        {{ sale.total }}
+                        {{ sale.total|intcomma }}
 
                         FCFA
 
@@ -100,7 +101,7 @@
 
                     <td>
 
-                        {{ sale.remaining_amount }} FCFA
+                        {{ sale.remaining_amount|intcomma }} FCFA
 
                     </td>
 

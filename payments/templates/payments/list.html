@@ -1,5 +1,6 @@
 {% extends 'layout/base.html' %}
 
+{% load humanize %}
 
 {% load static %}
 
@@ -39,10 +40,10 @@
                     <td>{{ payment.id }}</td>
                     <td>{{ payment.sale.reference }}</td>
                     <td class="amount">
-                        {{ payment.amount|floatformat:0 }} FCFA
+                        {{ payment.amount|intcomma }} FCFA
                     </td>
                     <td class="text-danger">
-                        {{ payment.sale.remaining_amount|floatformat:0 }} FCFA
+                        {{ payment.sale.remaining_amount|intcomma }} FCFA
                     </td>
                     <td>
                         <span class="badge method">
