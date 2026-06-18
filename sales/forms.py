@@ -21,7 +21,9 @@ class SaleForm(forms.ModelForm):
 
             'total',
 
-            'status'
+            'status',
+
+            'payment_status',
 
         ]
 
