@@ -3,6 +3,7 @@ brotli==1.2.0
 cffi==2.0.0
 cssselect2==0.9.0
 Django==6.0.6
+django-user-agents==0.4.0
 dotenv==0.9.9
 fonttools==4.63.0
 pillow==12.2.0
@@ -13,6 +14,9 @@ python-dotenv==1.2.2
 sqlparse==0.5.5
 tinycss2==1.5.1
 tinyhtml5==2.1.0
+ua-parser==1.0.2
+ua-parser-builtins==202606
+user-agents==2.2.0
 weasyprint==69.0
 webencodings==0.5.1
 zopfli==0.4.3
