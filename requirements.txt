@@ -6,6 +6,7 @@ Django==6.0.6
 django-user-agents==0.4.0
 dotenv==0.9.9
 fonttools==4.63.0
+mysqlclient==2.2.8
 pillow==12.2.0
 pycparser==3.0
 pydyf==0.12.1
