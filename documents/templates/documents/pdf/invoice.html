@@ -17,34 +17,34 @@
     </title>
 
     <style>
-@page{
-    size:A4;
+        @page {
+            size: A4;
 
-    margin-top:10mm;
+            margin-top: 10mm;
 
-    margin-bottom:12mm;
+            margin-bottom: 12mm;
 
-    margin-left:8mm;
+            margin-left: 8mm;
 
-    margin-right:8mm;
-}
+            margin-right: 8mm;
+        }
 
 
-body{
+        body {
 
-    margin:0;
+            margin: 0;
 
-    padding:0;
+            padding: 0;
 
-    font-family:Arial,sans-serif;
+            font-family: Arial, sans-serif;
 
-    font-size:15px;
+            font-size: 15px;
 
-    color:#222;
+            color: #222;
 
-    line-height:1.4;
+            line-height: 1.4;
 
-}
+        }
 
 
         * {
@@ -53,17 +53,17 @@ body{
 
         /* HEADER */
 
-.top-header{
+        .top-header {
 
-    display:flex;
+            display: flex;
 
-    justify-content:space-between;
+            justify-content: space-between;
 
-    align-items:flex-start;
+            align-items: flex-start;
 
-    margin-bottom:10px;
+            margin-bottom: 10px;
 
-}
+        }
 
 
         .logo img {
@@ -103,11 +103,11 @@ body{
 
         /* COMPANY */
 
-.company{
+        .company {
 
-    margin-bottom:14px;
+            margin-bottom: 14px;
 
-}
+        }
 
 
         .company-name {
@@ -133,11 +133,11 @@ body{
 
         /* TITLE */
 
-.invoice-title{
+        .invoice-title {
 
-    margin-bottom:15px;
+            margin-bottom: 15px;
 
-}
+        }
 
 
         .invoice-title h1 {
@@ -165,37 +165,37 @@ body{
 
         /* INFO */
 
-.info-row{
+        .info-row {
 
-    display:flex;
+            display: flex;
 
-    align-items:flex-start;
+            align-items: flex-start;
 
-    margin-bottom:28px;
+            margin-bottom: 28px;
 
-}
-
-
-.info-box:first-child{
-
-    width:55%;
-
-}
+        }
 
 
-.info-box:last-child{
+        .info-box:first-child {
 
-    width:45%;
+            width: 55%;
 
-    display:flex;
+        }
 
-    flex-direction:column;
 
-    align-items:flex-end;
+        .info-box:last-child {
 
-    text-align:right;
+            width: 45%;
 
-}
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: flex-end;
+
+            text-align: right;
+
+        }
 
 
         .box-title {
@@ -334,6 +334,49 @@ body{
             font-size: 11px;
 
         }
+
+        /* signature */
+        .signature {
+
+            margin-top: 100px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+        }
+
+
+        .signature .title {
+
+            font-weight: bold;
+
+            margin-bottom: 70px;
+
+        }
+
+        /* informations bancaires */
+        .bank-footer {
+
+            position: fixed;
+
+            bottom: 10px;
+
+            left: 0;
+
+            right: 0;
+
+            text-align: center;
+
+            font-size: 12px;
+
+            color: black;
+
+            padding-top: 10px;
+
+            border-top: 1px solid #ddd;
+
+        }
     </style>
 
 </head>
@@ -390,7 +433,7 @@ body{
         </p>
 
         <p>
-            (+223) 74 44 44 75 / 61 54 54 34
+            (+223) 79 76 76 13 / 61 54 54 34
         </p>
 
     </div>
@@ -547,65 +590,58 @@ body{
         <div class="total-card">
 
             <div class="total-line">
-
-                <span>
-
-                    Total payé
-
-                </span>
-
-                <span>
-
-                    {{ sale.paid_amount|intcomma }}
-
-                    FCFA
-
-                </span>
-
+                <span>Total</span>
+                <span>{{ sale.total|intcomma }} FCFA</span>
             </div>
 
+            {% if sale.apply_vat %}
+                <div class="total-line">
+                    <span>TVA (18%)</span>
+                    <span>{{ sale.vat_amount|intcomma }} FCFA</span>
+                </div>
+            {% endif %}
+
+            {% if sale.delivery_fee != 0 %}
+                <div class="total-line">
+                    <span>Frais livraison</span>
+                    <span>{{ sale.delivery_fee|intcomma }} FCFA</span>
+                </div>
+            {% endif %}
 
             <div class="total-line">
-
-                <span>
-
-                    Reste
-
-                </span>
-
-                <span>
-
-                    {{ sale.remaining_amount|intcomma }}
-
-                    FCFA
-
-                </span>
-
+                <span>Reste</span>
+                <span style="color: red;">{{ sale.remaining_amount|intcomma }} FCFA</span>
             </div>
 
 
             <div class="total-line total-final">
-
-                <span>
-
-                    TOTAL
-
-                </span>
-
-                <span>
-
-                    {{ sale.total|intcomma }}
-
-                    FCFA
-
-                </span>
-
+                <span>TTC</span>
+                <span>{{ sale.total_ttc|intcomma }} FCFA</span>
             </div>
 
         </div>
 
     </div>
 
+    <div class="signature">
+        <div>
+            <div class="title">Pour Acquit</div>
+            <div class="line"></div>
+        </div>
+
+
+        <div>
+            <div class="title">Le Fournisseur</div>
+            <!-- <div class="line"></div> -->
+        </div>
+    </div>
+
+
+    <!-- information bancaire -->
+    <div class="bank-footer">
+        <span><strong>Infos Bancaires</strong></span> <br /> <br />
+        NIF : 083342654T / RIB 50 ; Cpte Bancaire : N 62622302201 BMS.SA
+    </div>
 </body>
 
 </html>
