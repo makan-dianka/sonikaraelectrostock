@@ -18,6 +18,7 @@ class Category(TimeStampedModel):
 
 class Marque(TimeStampedModel):
     name = models.CharField(max_length=255, unique=True)
+    note = models.CharField(max_length=255, null=True, blank=True)
     class Meta:
         verbose_name_plural = "Marques"
 
