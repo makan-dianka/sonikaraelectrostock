@@ -131,19 +131,7 @@ def document_list(
 
     )
 
-    return render(
-
-        request,
-
-        'documents/list.html',
-
-        {
-
-            'documents':documents
-
-        }
-
-    )
+    return render(request, 'documents/list.html', {'documents':documents})
 
 
 

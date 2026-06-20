@@ -37,6 +37,9 @@ class Sale(TimeStampedModel):
     )
 
     total = models.IntegerField(default=0)
+    apply_vat = models.BooleanField(default=False)
+    vat_rate = models.IntegerField(default=18)
+    delivery_fee = models.IntegerField(default=0)
 
     status = models.CharField(
         max_length=20,
@@ -63,10 +66,24 @@ class Sale(TimeStampedModel):
     def paid_amount(self):
         return (self.payments.aggregate(total=models.Sum('amount')) ['total'] or 0)
 
+    @property
+    def vat_amount(self):
+        if not self.apply_vat:
+            return 0
+        return round(self.total * self.vat_rate / 100)
+
+
+    @property
+    def total_ttc(self):
+        return self.total + self.vat_amount + self.delivery_fee
+
 
     @property
     def remaining_amount(self):
-        return (self.total - self.paid_amount)
+        return (self.total_ttc - self.paid_amount)
+
+
+
 
 
 
