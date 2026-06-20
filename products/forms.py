@@ -10,7 +10,7 @@ class ProductForm(forms.ModelForm):
 
         exclude = [
             'is_deleted',
-            'purchase_price',
+            # 'purchase_price',
         ]
 
         widgets = {
@@ -49,6 +49,13 @@ class ProductForm(forms.ModelForm):
                 }
             ),
 
+            'purchase_price': forms.NumberInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder': "Prix d'achat"
+                }
+            ),
+
             'description': forms.Textarea(
                 attrs={
                     'class':'form-control',
@@ -71,5 +78,6 @@ class ProductForm(forms.ModelForm):
             'category': 'Catégorie',
             'reference': "Référence",
             'sale_price': "Prix de vente",
+            'purchase_price': "Prix d'achat",
             'image': "Image du produit",
         }
