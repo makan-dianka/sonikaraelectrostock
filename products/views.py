@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 
 from . models import Product
-from .forms import ProductForm
+from .forms import ProductForm, MarqueForm
 
 
 
@@ -47,6 +47,38 @@ def create_product(request):
     return render(
         request,
         'products/product_form.html',
+        {
+            'form': form
+        }
+    )
+
+
+
+# creation d'un marque
+@login_required(login_url='accounts:login')
+def create_marque(request):
+
+    if request.user.role not in ['owner']:
+        return HttpResponseForbidden(
+            "Vous n'avez pas la permission d'ajouter une marque."
+        )
+
+    if request.method == 'POST':
+
+        form = MarqueForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                'products:create'
+            )
+
+    else:
+
+        form = MarqueForm()
+
+    return render(
+        request,
+        'products/marque_form.html',
         {
             'form': form
         }

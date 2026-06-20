@@ -14,15 +14,28 @@
 
             <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
 
-                <div class="grid">
-                    {% for field in form %}
-                        <div class="field">
-                            <label>{{ field.label }}</label>
-                            {{ field }}
-                            {{ field.errors }}
-                        </div>
-                    {% endfor %}
-                </div>
+            <div class="grid">
+                {% for field in form %}
+                    <div class="field">
+                        {% if field.name == 'marque' %}
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                                <a href="{% url 'products:create_marque' %}" title="Ajouter une marque" class="add-marque-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                </a>
+                            </label>
+                        {% else %}
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% endif %}
+
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+            </div>
 
                 <div id="preview-box">
                     {% if form.instance.image %}

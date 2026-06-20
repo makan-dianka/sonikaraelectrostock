@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product
+from .models import Product, Marque
 
 
 class ProductForm(forms.ModelForm):
@@ -80,4 +80,44 @@ class ProductForm(forms.ModelForm):
             'sale_price': "Prix de vente",
             'purchase_price': "Prix d'achat",
             'image': "Image du produit",
+        }
+
+
+
+
+class MarqueForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Marque
+
+
+        fields = [
+
+            'name',
+            'note'
+
+        ]
+
+        widgets = {
+
+            'name': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Nom du marque'
+                }
+            ),
+
+            'note': forms.TextInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ajouter un commentaire (optionnel)'
+                }
+            ),
+
+        }
+
+
+        labels = {
+            'name': 'Marque',
         }
