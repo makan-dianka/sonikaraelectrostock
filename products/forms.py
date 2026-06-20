@@ -28,7 +28,7 @@ class ProductForm(forms.ModelForm):
                 }
             ),
 
-            'marque': forms.TextInput(
+            'marque': forms.Select(
                 attrs={
                     'class':'form-control',
                     'placeholder':'Marque'

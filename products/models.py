@@ -16,11 +16,23 @@ class Category(TimeStampedModel):
 
 
 
+class Marque(TimeStampedModel):
+    name = models.CharField(max_length=255, unique=True)
+    class Meta:
+        verbose_name_plural = "Marques"
+
+    def __str__(self):
+        return self.name
+
+
+
 class Product(TimeStampedModel):
 
     name = models.CharField(max_length=250)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    marque = models.CharField(max_length=100)
+    marque = models.ForeignKey(
+        Marque, on_delete=models.PROTECT, null=True, blank=True, related_name='products'
+    )
     reference = models.CharField(max_length=100, unique=True)
     purchase_price = models.IntegerField(null=True, blank=True)
     sale_price = models.IntegerField(null=True, blank=True)
