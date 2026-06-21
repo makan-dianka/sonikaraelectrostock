@@ -22,6 +22,7 @@
                 <tr>
                     <th>Image</th>
                     <th>Produit</th>
+                    <th>Magasin(Stock)</th>
                     <th>Catégorie</th>
                     <th>Marque</th>
                     <th>Référence produit</th>
@@ -42,6 +43,15 @@
                             {% endif %}
                         </td>
                         <td>{{ product.name }}</td>
+                        <td>
+
+                            {% for stock in product.stocks.all %}
+                                {{ stock.store }}({{ stock.quantity }}) <br />
+                            {% empty %}
+                                —
+                            {% endfor %}
+
+                        </td>
                         <td>{{ product.category }}</td>
                         <td>{{ product.marque }}</td>
                         <td>{{ product.reference }}</td>
