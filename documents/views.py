@@ -62,13 +62,7 @@ def create_document(request):
 
     if form.is_valid():
 
-        document = (
-
-            form.save(
-                commit=False
-            )
-
-        )
+        document = form.save(commit=False)
 
         document.generated_by = request.user
         document.reference = generate_reference()

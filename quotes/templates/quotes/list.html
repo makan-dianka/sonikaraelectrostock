@@ -1,0 +1,124 @@
+{% extends 'layout/base.html' %} {% load static %}
+
+{% load humanize %}
+
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/purchases/purchase_list.css' %}">
+{% endblock %}
+
+
+    <h1>
+
+        + Nouveau devis
+
+    </h1>
+
+{% block content %}
+
+<div class="page">
+
+    <div class="top">
+
+        <h1>
+
+            Devis
+
+        </h1>
+
+        <a href="{% url 'quotes:create_quote' %}" class="add">
+
+            + Nouveau Devis
+
+        </a>
+
+    </div>
+
+
+    <div class="card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Client</th>
+
+                    <th>Magasin</th>
+
+                    <th>Référence </th>
+
+                    <th>Total</th>
+
+                    <th>
+
+                    Actions
+
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for quote in quotes %}
+
+                <tr>
+
+                    <td>
+
+                        {{ quote.created_at }}
+
+                    </td>
+
+                    <td>
+
+                        {{ quote.customer }}
+
+                    </td>
+
+                    <td>
+
+                        {{ quote.store }}
+
+                    </td>
+
+                    <td>
+
+                        {{ quote.reference }}
+
+                    </td>
+
+                    <td>
+
+                        {{ quote.total_ttc|intcomma }}
+
+                        FCFA
+                    </td>
+
+                    <td>
+                        {% if quote.pdf %}
+                            <a class="receive" href="{{ quote.pdf.url }}" target="_blank">
+                                Imprimer
+                            </a>
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

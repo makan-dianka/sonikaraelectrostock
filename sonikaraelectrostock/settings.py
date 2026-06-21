@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'sales',
     'payments',
     'documents',
+    'quotes',
 
 
     # autre app
