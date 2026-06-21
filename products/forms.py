@@ -1,17 +1,79 @@
 from django import forms
 from .models import Product, Marque
+from stores.models import Store
 
 
 class ProductForm(forms.ModelForm):
+
+    store = forms.ModelChoiceField(
+
+        queryset=Store.objects.all(),
+
+        required=False,
+
+        label="Magasin",
+
+        widget=forms.Select(
+
+            attrs={
+
+                'class':'form-control'
+
+            }
+
+        )
+
+    )
+
+
+    initial_stock = forms.IntegerField(
+
+        required=False,
+
+        initial=0,
+
+        label="Stock initial",
+
+        widget=forms.NumberInput(
+
+            attrs={
+
+                'class':'form-control',
+
+                'min':0
+
+            }
+
+        )
+
+    )
+
 
     class Meta:
 
         model = Product
 
-        exclude = [
-            'is_deleted',
-            # 'purchase_price',
+        fields = [
+
+            'name',
+
+            'category',
+
+            'marque',
+
+            'reference',
+
+            'purchase_price',
+
+            'sale_price',
+
+            'description',
+
+            'image',
+
         ]
+
+
 
         widgets = {
 

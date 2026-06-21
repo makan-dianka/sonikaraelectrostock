@@ -4,6 +4,7 @@ from django.http import HttpResponseForbidden
 
 from . models import Product
 from .forms import ProductForm, MarqueForm
+from stocks.models import Stock
 
 
 
@@ -20,36 +21,78 @@ def product_list(request):
 @login_required(login_url='accounts:login')
 def create_product(request):
 
-    if request.user.role not in ['owner']:
-        return HttpResponseForbidden(
-            "Vous n'avez pas la permission d'ajouter un produit."
+    form = ProductForm(
+
+        request.POST or None,
+
+        request.FILES or None
+
+    )
+
+
+    if form.is_valid():
+
+        store = (
+
+            form.cleaned_data.pop(
+                'store'
+            )
         )
 
-    if request.method == 'POST':
+        quantity = (
 
-        form = ProductForm(
-            request.POST,
-            request.FILES
+            form.cleaned_data.pop(
+                'initial_stock'
+            )
         )
 
-        if form.is_valid():
+
+        product = (
 
             form.save()
+        )
 
-            return redirect(
-                'products:product_list'
+
+        if (
+
+            store
+
+            and
+
+            quantity
+
+        ):
+
+            Stock.objects.create(
+
+                product=product,
+
+                store=store,
+
+                quantity=quantity
+
             )
 
-    else:
 
-        form = ProductForm()
+        return redirect(
+
+            'products:product_list'
+
+        )
+
 
     return render(
+
         request,
+
         'products/product_form.html',
+
         {
-            'form': form
+
+            'form':form
+
         }
+
     )
 
 
@@ -101,6 +144,26 @@ def update_product(request, pk):
         id=pk
     )
 
+
+    initial = {}
+
+    stock = product.stocks.first()
+    if stock:
+        initial = {
+            'store': stock.store,
+            'initial_stock': stock.quantity
+        }
+
+
+    form = ProductForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=product,
+        initial=initial
+    )
+
+
+
     if request.method == 'POST':
 
         form = ProductForm(
@@ -110,18 +173,20 @@ def update_product(request, pk):
         )
 
         if form.is_valid():
+            store = form.cleaned_data.pop('store')
+            quantity = form.cleaned_data.pop('initial_stock')
+            product = form.save()
 
-            form.save()
+            if store:
+                Stock.objects.update_or_create(
+                    product=product,
+                    store=store,
+                    defaults={
+                        'quantity':quantity
+                    }
+                )
 
-            return redirect(
-                'products:product_list'
-            )
-
-    else:
-
-        form = ProductForm(
-            instance=product
-        )
+            return redirect('products:product_list')
 
     return render(
         request,
