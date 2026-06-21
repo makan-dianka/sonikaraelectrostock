@@ -7,7 +7,7 @@ from django.conf import settings
 app_name = "accounts"
 urlpatterns = [
     path('', include("dashboard.urls")),
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('accounts/', include("accounts.urls")),
     path('stores/', include("stores.urls")),
     path('products/', include("products.urls")),
