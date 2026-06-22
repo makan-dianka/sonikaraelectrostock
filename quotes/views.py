@@ -117,6 +117,11 @@ def create_quote(request):
 
     ):
 
+        print("data posted :", request.POST)
+        print("form error : ", formset.errors)
+        print("Non form", formset.non_form_errors())
+
+
         quote = (
 
             form.save(
@@ -133,36 +138,29 @@ def create_quote(request):
 
         quote.save()
 
-
-        formset.instance = quote
-
         items = formset.save(
             commit=False
         )
 
-
         total = 0
-
 
         for item in items:
 
+            item.quote = quote
+
             item.subtotal = (
-
                 item.quantity
-
                 *
-
                 item.unit_price
-
             )
 
-            total += (
-
-                item.subtotal
-
-            )
+            total += item.subtotal
 
             item.save()
+
+
+        for deleted in formset.deleted_objects:
+            deleted.delete()
 
 
         quote.total = total

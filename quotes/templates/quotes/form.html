@@ -105,41 +105,39 @@
 
         <!-- TEMPLATE VIDE -->
 
-        <div id="empty-form" style="display:none;">
+<template id="empty-form">
 
-            <div class="line">
+<div class="line">
 
-                {{ formset.empty_form.id }}
+    {{ formset.empty_form.id }}
 
-                <div>
+    <div>
 
-                    <label>Produit</label>
+        <label>Produit</label>
 
-                    {{ formset.empty_form.product }}
+        {{ formset.empty_form.product }}
 
-                </div>
+    </div>
 
-                <div>
+    <div>
 
-                    <label>Quantité</label>
+        <label>Quantité</label>
 
-                    {{ formset.empty_form.quantity }}
+        {{ formset.empty_form.quantity }}
 
-                </div>
+    </div>
 
-                <div>
+    <div>
 
-                    <label>Prix unité</label>
+        <label>Prix unité</label>
 
-                    {{ formset.empty_form.unit_price }}
+        {{ formset.empty_form.unit_price }}
 
-                </div>
+    </div>
 
-                <div></div>
+</div>
 
-            </div>
-
-        </div>
+</template>
 
 
         <br />
@@ -172,79 +170,61 @@
 
 <script>
 
-    const addButton =
-        document.getElementById(
-            'add-line'
-        )
+const addButton =
+document.getElementById(
+'add-line'
+)
 
-    const container =
-        document.getElementById(
-            'lines'
-        )
+const container =
+document.getElementById(
+'lines'
+)
 
-    const totalForms =
-        document.getElementById(
-            'id_items-TOTAL_FORMS'
-        )
-        ||
-        document.getElementById(
-            'id_purchaseitem_set-TOTAL_FORMS'
-        )
+const totalForms =
+document.getElementById(
+'id_items-TOTAL_FORMS'
+)
 
 
+addButton.addEventListener(
 
-    addButton.addEventListener(
-        'click',
+'click',
 
-        function () {
+function(){
 
-            let formIndex =
+const index =
+parseInt(
+totalForms.value
+)
 
-                parseInt(
-                    totalForms.value
-                )
+let html =
 
-
-
-            let template =
-
-                document
-                    .getElementById(
-                        'empty-form'
-                    )
-                    .innerHTML
+document
+.getElementById(
+'empty-form'
+)
+.innerHTML
 
 
-
-            template =
-
-                template.replace(
-
-                    /__prefix__/g,
-
-                    formIndex
-
-                )
+html =
+html.replace(
+/__prefix__/g,
+index
+)
 
 
-
-            container.insertAdjacentHTML(
-
-                'beforeend',
-
-                template
-
-            )
+container.insertAdjacentHTML(
+'beforeend',
+html
+)
 
 
+totalForms.value =
+index + 1
 
-            totalForms.value =
+}
 
-                formIndex + 1
-
-        }
-
-    )
+)
 
 </script>
 

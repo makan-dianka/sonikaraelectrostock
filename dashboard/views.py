@@ -85,9 +85,28 @@ def dashboard(request, store_id=None):
 
     # calcul du chiffres d'affaires
     # additionner le prix de toute les ventes du jour
-    Sale._meta.db_table
-    print("sale query :", sales.query)
-    print("sale object5 :", Sale.objects.values("id","created_at")[:5])
+    from django.conf import settings
+    print("USE_TZ =", settings.USE_TZ)
+    print("TIME_ZONE =", settings.TIME_ZONE)
+
+    today1 = timezone.now().date()
+    today2 = timezone.localdate()
+
+    print("timezone.now().date():", today1)
+    print("timezone.localdate():", today2)
+
+    print(
+        Sale.objects.filter(
+            created_at__date=today1
+        ).count()
+    )
+
+    print(
+        Sale.objects.filter(
+            created_at__date=today2
+        ).count()
+    )
+
     ca_day = (sales.filter(created_at__date=today).aggregate(total=Sum('total'))['total'] or 0)
     print("compteur", sales.filter(created_at__date=today).values('id', 'total'))
 
