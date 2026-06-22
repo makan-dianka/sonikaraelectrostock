@@ -1,0 +1,130 @@
+{% extends 'layout/base.html' %}
+
+{% load humanize %}
+
+{% load static %}
+
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/credits/payment_list.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+
+    <div class="header">
+
+        <div>
+
+            <h1>💰 Paiements de crédits</h1>
+
+            <p>Historique des remboursements enregistrés</p>
+
+        </div>
+
+        <a
+        href="{% url 'credits:create_credit_payment' %}"
+        class="btn">
+
+            + Nouveau paiement
+
+        </a>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Référence</th>
+
+                    <th>Client</th>
+
+                    <th>Méthode</th>
+
+                    <th>Montant payé</th>
+
+                    <th>Date de paiement</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for payment in payments %}
+
+                <tr>
+
+                    <td>
+
+                        {{ payment.reference }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ payment.credit.customer }}
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="method">
+
+                            {{ payment.payment_method }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td class="amount">
+
+                        {{ payment.amount|intcomma }}
+
+                        FCFA
+
+                    </td>
+
+
+                    <td>
+
+                        {{ payment.created_at|date:"d/m/Y H:i" }}
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                    colspan="6"
+                    class="empty">
+
+                    Aucun paiement trouvé
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+{% endblock %}

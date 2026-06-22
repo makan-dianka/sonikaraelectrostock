@@ -1,0 +1,111 @@
+{% extends 'layout/base.html' %}
+
+{% load humanize %}
+
+{% load static %}
+
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/credits/list.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+
+    <div class="header">
+        <div>
+            <h2>💳 Crédits clients</h2>
+            <p>Suivi des crédits et échéances</p>
+        </div>
+
+        <a href="{% url 'credits:create_credit' %}" class="btn-primary">
+            + Nouveau crédit
+        </a>
+    </div>
+
+    <div class="card">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Référence</th>
+                    <th>Client</th>
+                    <th>Magasin</th>
+                    <th>Montant</th>
+                    <th>Reste à payer</th>
+                    <th>Taux</th>
+                    <th>Échéance</th>
+                    <th>Statut</th>
+                    <th>Comptoir</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for credit in credits %}
+                <tr>
+
+                    <td>{{ credit.reference }}</td>
+
+                    <td class="strong">
+                        {{ credit.customer }}
+                    </td>
+
+                    <td>
+                        {{ credit.store }}
+                    </td>
+
+                    <td class="amount">
+                        {{ credit.total_with_interest_rate_amount|intcomma }} FCFA
+                    </td>
+
+                    <td class="amount text-danger">
+                        {{ credit.remaining|intcomma }} FCFA
+                    </td>
+
+                    <td>
+                        {{ credit.interest_rate }}%
+                    </td>
+
+                    <td>
+                        {{ credit.due_date|date:"d/m/Y" }}
+                    </td>
+
+                    <td>
+                        {% if credit.status == "PAID" %}
+                            <span class="badge paid">Payé</span>
+
+                        {% elif credit.status == "LATE" %}
+                            <span class="badge late">En retard</span>
+
+                        {% else %}
+                            <span class="badge pending">En cours</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if credit.status == 'paid' %}
+                            <span class="validated">
+                                Payé
+                            </span>
+                        {% else %}
+                            <a href="{% url 'credits:create_credit_payment' %}">Payer</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty">
+                        Aucun crédit enregistré
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

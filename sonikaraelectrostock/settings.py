@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'payments',
     'documents',
     'quotes',
+    'credits',
 
 
     # autre app

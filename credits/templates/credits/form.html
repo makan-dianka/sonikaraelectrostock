@@ -1,0 +1,64 @@
+{% extends 'layout/base.html' %} {% load static %}
+
+{% block head%}
+    <link rel="stylesheet" href="{% static 'css/credits/form.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+
+    <div class="card">
+
+        <div class="header">
+            <h2>💳 Nouveau crédit</h2>
+            <p>Créer un crédit client rapidement</p>
+        </div>
+
+        <form method="post" class="form">
+            {% csrf_token %}
+
+            <div class="grid">
+
+                <div class="form-group">
+                    <label>{{ form.customer.label }}</label>
+                    {{ form.customer }}
+                </div>
+
+                <div class="form-group">
+                    <label>{{ form.store.label }}</label>
+                    {{ form.store }}
+                </div>
+
+                <div class="form-group">
+                    <label>{{ form.amount.label }}</label>
+                    {{ form.amount }}
+                </div>
+
+                <div class="form-group">
+                    <label>{{ form.interest_rate.label }}</label>
+                    {{ form.interest_rate }}
+                </div>
+
+                <div class="form-group">
+                    <label>{{ form.due_date.label }}</label>
+                    {{ form.due_date }}
+                </div>
+
+            </div>
+
+            <div class="form-group full">
+                <label>{{ form.note.label }}</label>
+                {{ form.note }}
+            </div>
+
+            <button type="submit" class="btn">
+                Enregistrer le crédit
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+{% endblock %}
