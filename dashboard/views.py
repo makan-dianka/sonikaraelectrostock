@@ -29,7 +29,7 @@ from sales.models import (
 def dashboard(request, store_id=None):
 
     today = timezone.now().date()
-
+    print("aujourd'hui:", today)
     # debut de la semaine
     start_week = today - timedelta(days=today.weekday())
 
@@ -84,6 +84,7 @@ def dashboard(request, store_id=None):
     # calcul du chiffres d'affaires
     # additionner le prix de toute les ventes du jour
     ca_day = sales.filter(created_at__date=today).aggregate(total=Sum('total'))['total'] or 0
+    print("compteur", sales.filter(created_at__date=today).values('id', 'total'))
 
     ca_week = sales.filter(created_at__date__gte=start_week).aggregate(total=Sum('total'))['total'] or 0
 
