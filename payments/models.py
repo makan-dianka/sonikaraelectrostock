@@ -9,7 +9,6 @@ class Payment(TimeStampedModel):
         ('vir', 'Virement'),
         ('cheque', 'Chèque'),
         ('om', 'Orange Money'),
-        ('credit', 'Crédit'),
     ]
 
 
