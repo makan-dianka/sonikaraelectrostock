@@ -1,127 +1,195 @@
 {% extends 'layout/base.html' %} {% load static %}
 
+{% load humanize %}
 
 {% block head%}
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
 
 
 
 {% block content %}
-    <!-- CONTENT -->
-    <div class="content container">
+<!-- CONTENT -->
+<div class="content container">
 
-        <div class="card title-card">
-            💰 Chiffre d'affaire
-        </div>
+    <div class="card title-card">
+        💰 Chiffre d'affaire
+    </div>
+
+    <div class="store_selector col-md-3">
+        <select onchange=" location=this.value" class="form-control">
+            <option value="{% url 'dashboard:dashboard' %}">
+                Tous magasins
+            </option>
+
+            {% for store in stores %}
+            <option value="{% url 'dashboard:dashboard_store' store.id %}" {% if selected_store == store %} selected {% endif %}>
+                {{ store.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
 
 
-        <!-- Total de la valeur du boutique -->
-        <div class="col-md-12 current_ca">
-            <div class="card p-4 shadow-sm rounded-4" style="background-color: green;">
+    <!-- Total de la valeur du boutique -->
+    <div class="col-md-12 current_ca">
+        <div class="card p-4 shadow-sm rounded-4" style="background-color: green;">
 
 
 
-                <!-- Stats -->
-                <div class="row text-center">
+            <!-- Stats -->
+            <div class="row text-center">
 
-                    <div class="col-md-4 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">JOUR</h6>
-                            <span>+2%</span>
-                            <h3 class="fw-bold">100 000 FCFA</h3>
-                        </div>
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">JOUR</h6>
+
+
+                        <span class="{% if ca_day_change >= 0 %} positive {% else %} negative {% endif %}">
+
+                            {% if ca_day_change > 0 %}
+                                +
+                            {% endif %}
+
+                            {{ ca_day_change }}%
+
+                        </span>
+
+
+
+                        <h3 class="fw-bold">{{ ca_day|intcomma }} FCFA</h3>
                     </div>
-
-                    <div class="col-md-4 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">SEMAINE</h6>
-                            <span>+2%</span>
-                            <h3 class="fw-bold text-danger">5 000 000 FCFA</h3>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">MOIS</h6>
-                            <span class="text-danger">-4%</span>
-                            <h3 class="fw-bold text-success">22 000 000 FCFA</h3>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">ANNÉE</h6>
-                            <span>+2%</span>
-                            <h2 class="fw-bold text-success">8 000 000 FCFA</h2>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">Benefice du mois</h6>
-                            <span>+2%</span>
-                            <h2 class="fw-bold text-primary">28 000 000 FCFA</h2>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <!-- Total de la valeur du boutique -->
-        <div class="col-md-12 ca_total">
-            <div class="card p-4 shadow-sm rounded-4" style="background-color: #412018;">
-
-                <!-- Header -->
-                <div class="text-center mb-4">
-                    <h4 class="fw-bold" style="color: #F0D79F;">📊 Valeur actuelle du magasin</h4>
-                    <small style="color: #F0D79F;">{% now "d/m/Y H:i" %}</small>
                 </div>
 
-                <!-- Stats -->
-                <div class="row text-center">
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">SEMAINE</h6>
+                        <span class="{% if ca_week_change >= 0 %} positive {% else %} negative {% endif %}">
 
-                    <div class="col-md-4 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">Stock</h6>
-                            <h3 class="fw-bold">50</h3>
-                        </div>
+                            {% if ca_week_change > 0 %}
+                                +
+                            {% endif %}
+
+                            {{ ca_week_change }}%
+
+                        </span>
+                        <h3 class="fw-bold text-danger">{{ ca_week|intcomma }} FCFA</h3>
                     </div>
-
-                    <div class="col-md-4 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">Prix d'achat</h6>
-                            <h3 class="fw-bold text-danger">5 000 000 FCFA</h3>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">Prix de vente</h6>
-                            <h3 class="fw-bold text-success">22 000 000 FCFA</h3>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">Bénéfice</h6>
-                            <h2 class="fw-bold text-success">8 000 000 FCFA</h2>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="p-3 border rounded-3 bg-light">
-                            <h6 class="text-muted">Taux de marge</h6>
-                            <h2 class="fw-bold text-primary">36%</h2>
-                        </div>
-                    </div>
-
                 </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">MOIS</h6>
+                        <span class="{% if ca_month_change >= 0 %} positive {% else %} negative {% endif %}">
+
+                            {% if ca_month_change > 0 %}
+                                +
+                            {% endif %}
+
+                            {{ ca_month_change }}%
+
+                        </span>
+                        <h3 class="fw-bold text-success">{{ ca_month|intcomma }} FCFA</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">ANNÉE</h6>
+                        <span class="{% if ca_year_change >= 0 %} positive {% else %} negative {% endif %}">
+
+                            {% if ca_year_change > 0 %}
+                                +
+                            {% endif %}
+
+                            {{ ca_year_change }}%
+
+                        </span>
+                        <h2 class="fw-bold text-success">{{ ca_year|intcomma }} FCFA</h2>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">Benefice du mois</h6>
+                        <span class="{% if profit_month_change >= 0 %} positive {% else %} negative {% endif %}">
+
+                            {% if profit_month_change > 0 %}
+                                +
+                            {% endif %}
+
+                            {{ profit_month_change }}%
+
+                        </span>
+                        <h2 class="fw-bold text-primary">{{ profit_month|intcomma }} FCFA</h2>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
+
+
+
+
+    <!-- Total de la valeur du boutique -->
+    <div class="col-md-12 ca_total">
+        <div class="card p-4 shadow-sm rounded-4" style="background-color: #412018;">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h4 class="fw-bold" style="color: #F0D79F;">📊 Valeur actuelle du magasin</h4>
+                <small style="color: #F0D79F;">{% now "d/m/Y H:i" %}</small>
+            </div>
+
+            <!-- Stats -->
+            <div class="row text-center">
+
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">Stock</h6>
+                        <h3 class="fw-bold">{{ total_stock }}</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">Prix d'achat</h6>
+                        <h3 class="fw-bold text-danger">{{ total_purchase|intcomma }} FCFA</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">Prix de vente</h6>
+                        <h3 class="fw-bold text-success">{{ total_sale|intcomma }} FCFA</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">Bénéfice</h6>
+                        <h2 class="fw-bold text-success">{{ total_profit|intcomma }} FCFA</h2>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">Taux de marge</h6>
+                        {% if total_taux_moyen >= 0 %}
+                            <h2 class="fw-bold text-success">
+                                +{{ total_taux_moyen }}%
+                            </h2>
+                        {% else %}
+                            <h2 class="fw-bold text-danger">
+                                {{ total_taux_moyen }}%
+                            </h2>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
