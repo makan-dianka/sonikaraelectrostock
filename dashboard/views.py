@@ -57,11 +57,6 @@ def dashboard(request, store_id=None):
         stocks = stocks.filter(store=selected_store)
 
 
-
-    if request.user.role not in ['owner']:
-        sales = sales.filter(user=request.user)
-
-
     total_stock = stocks.aggregate(total=Sum('quantity'))['total'] or 0
 
 
@@ -85,30 +80,7 @@ def dashboard(request, store_id=None):
 
     # calcul du chiffres d'affaires
     # additionner le prix de toute les ventes du jour
-    from django.conf import settings
-    print("USE_TZ =", settings.USE_TZ)
-    print("TIME_ZONE =", settings.TIME_ZONE)
-
-    today1 = timezone.now().date()
-    today2 = timezone.localdate()
-
-    print("timezone.now().date():", today1)
-    print("timezone.localdate():", today2)
-
-    print(
-        Sale.objects.filter(
-            created_at__date=today1
-        ).count()
-    )
-
-    print(
-        Sale.objects.filter(
-            created_at__date=today2
-        ).count()
-    )
-
-    ca_day = (sales.filter(created_at__date=today).aggregate(total=Sum('total'))['total'] or 0)
-    print("compteur", sales.filter(created_at__date=today).values('id', 'total'))
+    ca_day = sales.filter(created_at__date=today).aggregate(total=Sum('total'))['total'] or 0
 
     ca_week = sales.filter(created_at__date__gte=start_week).aggregate(total=Sum('total'))['total'] or 0
 
