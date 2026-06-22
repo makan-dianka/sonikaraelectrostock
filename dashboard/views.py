@@ -28,7 +28,7 @@ from sales.models import (
 @login_required(login_url='accounts:login')
 def dashboard(request, store_id=None):
 
-    today = timezone.now().date()
+    today = timezone.localdate()
     print("aujourd'hui:", today)
     # debut de la semaine
     start_week = today - timedelta(days=today.weekday())
