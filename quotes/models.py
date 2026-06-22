@@ -34,6 +34,8 @@ class Quote(TimeStampedModel):
     store = models.ForeignKey("stores.Store", on_delete=models.CASCADE)
     labor_cost = models.IntegerField(default=0, verbose_name="Coût main d'œuvre")
     vat_rate = models.IntegerField(default=18)
+    reduction = models.IntegerField(default=10)
+    delivery_fee = models.IntegerField(default=0)
     notes = models.TextField(blank=True)
     total = models.IntegerField(default=0)
     is_deleted = models.BooleanField(default=False, blank=True, null=True)
@@ -52,11 +54,18 @@ class Quote(TimeStampedModel):
     @property
     def vat_amount(self):
         return round(self.total * self.vat_rate / 100)
+    
+    def reduction_amount(self):
+        return int(self.total_ttc / 100 * self.reduction)
+
+
+    def total_amount(self):
+        return self.total_ttc - self.reduction_amount()
 
 
     @property
     def total_ttc(self):
-        return self.total + self.labor_cost + self.vat_amount
+        return self.total + self.labor_cost + self.vat_amount + self.delivery_fee
 
 
 

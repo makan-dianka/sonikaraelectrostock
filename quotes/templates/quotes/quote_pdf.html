@@ -241,6 +241,25 @@
             border-top: 1px solid #ddd;
 
         }
+
+        .signature {
+
+            margin-top: 100px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+        }
+
+
+        .signature .title {
+
+            font-weight: bold;
+
+            margin-bottom: 70px;
+
+        }
     </style>
 
 </head>
@@ -444,7 +463,34 @@
 
 
 
-          
+            <div class="line">
+
+                Frais de livraison
+
+                <span>
+
+                    {{ quote.delivery_fee|intcomma }}
+
+                    FCFA
+
+                </span>
+
+            </div>
+
+            <div class="line">
+
+                Réduction ({{ quote.reduction }}%)
+
+                <span>
+
+                    {{ quote.reduction_amount|intcomma }}
+
+                    FCFA
+
+                </span>
+
+            </div>
+
 
             <div class="line">
 
@@ -470,7 +516,7 @@
 
                 <span>
 
-                    {{ quote.total_ttc|intcomma }}
+                    {{ quote.total_amount|intcomma }}
 
                     FCFA
 
@@ -497,6 +543,24 @@
     {{ quote.notes }}
 
     {% endif %}
+
+
+
+    <div class="signature">
+
+        <div>
+
+            <div class="title">
+
+                Fournisseur
+
+            </div>
+
+            <!-- <div class="line"></div> -->
+
+        </div>
+
+    </div>
 
 
 

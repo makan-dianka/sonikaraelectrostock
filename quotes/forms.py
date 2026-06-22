@@ -50,6 +50,20 @@ class QuoteForm(forms.ModelForm):
                 }
             ),
 
+            'reduction':
+            forms.NumberInput(
+                attrs={
+                    'class':'form-control',
+                }
+            ),
+
+            'delivery_fee':
+            forms.NumberInput(
+                attrs={
+                    'class':'form-control',
+                }
+            ),
+
             'notes':
             forms.Textarea(
                 attrs={
@@ -64,7 +78,9 @@ class QuoteForm(forms.ModelForm):
             'customer': 'Choisir un client',
             'store': 'Choisir un magasin',
             'labor_cost': "Main d'oeuvre",
-            'vat_rate': "Pourcentage TVA",
+            'vat_rate': "Pourcentage TVA (%)",
+            'reduction': "Réduction (%)",
+            'delivery_fee': "Frais de livraison",
         }
 
 
