@@ -25,7 +25,7 @@ from sales.models import (
 # ---------->>----------->>------------> Tableau de bord <<---------<<--------------<<-----------------#
 ################################################## #####################################################
 ########################################################################################################
-@login_required(login_url='account:login')
+@login_required(login_url='accounts:login')
 def dashboard(request, store_id=None):
 
     today = timezone.now().date()
