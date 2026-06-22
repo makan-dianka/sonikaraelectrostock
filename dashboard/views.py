@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from datetime import timedelta
-import calendar
 from django.contrib.auth.decorators import login_required
 
 
@@ -13,7 +12,6 @@ from django.db.models import (
 )
 
 from . import services
-from products.models import Product
 from stores.models import Store
 from stocks.models import Stock
 from sales.models import (
@@ -32,7 +30,7 @@ def dashboard(request, store_id=None):
 
     today = timezone.now().date()
 
-    # depuis de la semaine
+    # debut de la semaine
     start_week = today - timedelta(days=today.weekday())
 
 
@@ -64,6 +62,13 @@ def dashboard(request, store_id=None):
 
     total_stock = stocks.aggregate(total=Sum('quantity'))['total'] or 0
 
+
+    # calcul = sum(quantité x prix d'achat)
+    # ex: quantité de chaque ligne x son prix d'achat
+    # puis on addition le tout
+    # e.g : id=1, quantité=2, prix d'achat unitaire=10000
+    # e.g : id=2, quantité=5, prix d'achat unitaire=2000
+    #  la valeur du prix d'achat total du magasin = 2 x 10000 + 5 x 2000
     total_purchase = stocks.aggregate(total=Sum(
         ExpressionWrapper(F('quantity') * F('product__purchase_price'), output_field=IntegerField())
         ))['total'] or 0
@@ -77,6 +82,7 @@ def dashboard(request, store_id=None):
 
 
     # calcul du chiffres d'affaires
+    # additionner le prix de toute les ventes du jour
     ca_day = sales.filter(created_at__date=today).aggregate(total=Sum('total'))['total'] or 0
 
     ca_week = sales.filter(created_at__date__gte=start_week).aggregate(total=Sum('total'))['total'] or 0
