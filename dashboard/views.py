@@ -45,6 +45,7 @@ def dashboard(request, store_id=None):
 
 
     sales = Sale.objects.all()
+
     stocks = Stock.objects.all()
 
     # si un magasin est selectionné
@@ -52,11 +53,12 @@ def dashboard(request, store_id=None):
     # et achats de ce magasin
     if selected_store:
         sales = sales.filter(store=selected_store)
+
         stocks = stocks.filter(store=selected_store)
 
 
 
-    if request.user.role != 'owner':
+    if request.user.role not in ['owner']:
         sales = sales.filter(user=request.user)
 
 
@@ -83,7 +85,10 @@ def dashboard(request, store_id=None):
 
     # calcul du chiffres d'affaires
     # additionner le prix de toute les ventes du jour
-    ca_day = sales.filter(created_at__date=today).aggregate(total=Sum('total'))['total'] or 0
+    Sale._meta.db_table
+    print("sale query :", sales.query)
+    print("sale object5 :", Sale.objects.values("id","created_at")[:5])
+    ca_day = (sales.filter(created_at__date=today).aggregate(total=Sum('total'))['total'] or 0)
     print("compteur", sales.filter(created_at__date=today).values('id', 'total'))
 
     ca_week = sales.filter(created_at__date__gte=start_week).aggregate(total=Sum('total'))['total'] or 0
