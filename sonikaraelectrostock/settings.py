@@ -132,7 +132,7 @@ AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
 
 LANGUAGE_CODE = 'fr-fr'
 
-TIME_ZONE = 'Europe/Paris'
+TIME_ZONE = 'Africa/Bamako'
 
 USE_I18N = True
 
