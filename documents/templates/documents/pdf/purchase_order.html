@@ -1,39 +1,77 @@
+{% load static %}
+
 {% load humanize %}
 
 <!DOCTYPE html>
 
-<html>
+<html lang="fr">
 
 <head>
 
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+
+    <title>
+
+        Bon D'ACHAT {{ document.reference }}
+
+    </title>
 
     <style>
         @page {
             size: A4;
-            margin: 8mm;
+            margin-top: 10mm;
+            margin-bottom: 45mm;  /* on augmente un peu pour laisser de la place au footer */
+            margin-left: 8mm;
+            margin-right: 8mm;
+
+            @bottom-center {
+                content: element(bankfooter);
+            }
         }
+
+
+        .bank-footer {
+            position: running(bankfooter);
+            text-align: center;
+            font-size: 12px;
+            color: black;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
 
         body {
 
-            font-family: Arial;
+            margin: 0;
 
-            font-size: 14px;
+            padding: 0;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 15px;
 
             color: #222;
 
-            margin: 0;
+            line-height: 1.4;
 
         }
 
 
-        .header {
+        * {
+            box-sizing: border-box;
+        }
+
+        /* HEADER */
+
+        .top-header {
 
             display: flex;
 
             justify-content: space-between;
 
-            margin-bottom: 25px;
+            align-items: flex-start;
+
+            margin-bottom: 10px;
 
         }
 
@@ -45,14 +83,23 @@
         }
 
 
-        .doc-ref {
+        .document-ref {
 
             text-align: right;
 
         }
 
 
-        .doc-ref .ref {
+        .document-ref .label {
+
+            color: #777;
+
+            font-size: 11px;
+
+        }
+
+
+        .document-ref .value {
 
             font-size: 16px;
 
@@ -63,43 +110,126 @@
         }
 
 
-        .title {
 
-            margin-bottom: 20px;
+        /* COMPANY */
+
+        .company {
+
+            margin-bottom: 14px;
 
         }
 
 
-        .title h1 {
+        .company-name {
 
-            margin: 0;
+            font-size: 22px;
+
+            font-weight: bold;
 
             color: #f39b00;
 
-            font-size: 30px;
+            margin-bottom: 8px;
 
         }
 
 
-        .purchase-ref {
+        .company p {
 
-            margin-top: 5px;
-
-            color: #666;
+            margin: 3px 0;
 
         }
 
 
-        .info {
+
+        /* TITLE */
+
+        .invoice-title {
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .invoice-title h1 {
+
+            margin: 0;
+
+            font-size: 32px;
+
+            color: #f39b00;
+
+        }
+
+
+        .sale-ref {
+
+            margin-top: 0px;
+
+            font-size: 14px;
+
+            color: #555;
+
+        }
+
+
+
+        /* INFO */
+
+        .info-row {
 
             display: flex;
 
-            justify-content: space-between;
+            align-items: flex-start;
 
-            margin-bottom: 30px;
+            margin-bottom: 28px;
 
         }
 
+
+        .info-box:first-child {
+
+            width: 55%;
+
+        }
+
+
+        .info-box:last-child {
+
+            width: 45%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: flex-end;
+
+            text-align: right;
+
+        }
+
+
+        .box-title {
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            color: black;
+
+            margin-bottom: 0px;
+
+        }
+
+
+        .info-box p {
+
+            margin: 4px 0;
+
+        }
+
+
+
+        /* TABLE */
 
         table {
 
@@ -110,35 +240,88 @@
         }
 
 
-        th {
+        thead {
 
             background: #f39b00;
 
             color: white;
 
+        }
+
+
+        th {
+
             padding: 12px;
 
             text-align: left;
+
+            font-size: 12px;
 
         }
 
 
         td {
 
-            padding: 10px;
+            padding: 11px;
 
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #DDD;
 
         }
 
 
-        .total {
+        tbody tr:nth-child(even) {
 
-            margin-top: 30px;
+            background: #fafafa;
+
+        }
+
+
+        .text-right {
 
             text-align: right;
 
-            font-size: 20px;
+        }
+
+
+
+        /* TOTAL */
+
+        .total-area {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            margin-top: 30px;
+
+        }
+
+
+        .total-card {
+
+            width: 300px;
+
+        }
+
+
+        .total-line {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .total-final {
+
+            border-top: 2px solid #f39b00;
+
+            padding-top: 12px;
+
+            font-size: 22px;
 
             font-weight: bold;
 
@@ -146,95 +329,109 @@
 
         }
 
-        .company{
-
-            margin-bottom:14px;
-
-        }
-
-        .company p {
-
-            margin: 3px 0;
-
-        }
 
 
-        /* informations bancaires */
-        .bank-footer {
+        /* FOOTER */
 
-            position: fixed;
+        .footer {
 
-            bottom: 10px;
-
-            left: 0;
-
-            right: 0;
+            margin-top: 50px;
 
             text-align: center;
 
-            font-size: 12px;
+            color: #777;
 
-            color: black;
-
-            padding-top: 10px;
-
-            border-top: 1px solid #ddd;
+            font-size: 11px;
 
         }
+
+        /* signature */
+        .signature {
+
+            margin-top: 100px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+        }
+
+
+        .signature .title {
+
+            font-weight: bold;
+
+            margin-bottom: 70px;
+
+        }
+
+.second-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.client-box {
+    text-align: right;
+}
+
+.client-box .box-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 4px;
+}
+
+.client-box p {
+    margin: 2px 0;
+}
     </style>
 
 </head>
 
 
+
 <body>
 
-    <div class="header">
+    <!-- HEADER LIGNE 1 : Logo / Référence document -->
+    <div class="top-header">
 
         <div class="logo">
-
-            <img src="{{ logo_path }}">
-
+            <img src="{{ logo_path }}" alt="test">
         </div>
 
+        <div class="document-ref">
+            <div class="label">Référence document</div>
+            <div class="value">{{ document.reference }}</div>
+        </div>
 
-        <div class="doc-ref">
+    </div>
 
-            Référence document
 
-            <div class="ref">
+    <!-- HEADER LIGNE 2 : Company / Client -->
+    <div class="second-header">
 
-                {{ document.reference }}
+        <div class="company">
+            <p>Mali, Bamako Coura</p>
+            <p>Imm. Pendourou, En face de Moov Africa</p>
+            <p>Boutique N°5</p>
+            <p>(+223) 79 76 76 13 / 61 54 54 34</p>
+        </div>
 
-            </div>
-
+        <div class="client-box">
+            <div class="box-title">Fournisseur</div>
+            <p>{{ purchase.supplier }}</p>
+            <p>TEL : {{ purchase.supplier.phone }}</p>
         </div>
 
     </div>
 
 
 
-    <!-- COMPANY -->
+    <!-- TITLE -->
 
-    <div class="company">
-
-        <p>
-            Mali, Bamako Coura <br />
-            Imm. Pendourou, En face de Moov Africa <br />
-            Boutique N°5
-        </p>
-
-        <p>
-            (+223) 79 76 76 13 / 61 54 54 34
-        </p>
-
-    </div>
-
-
-
-
-
-    <br />
-    <div class="title">
+    <div class="invoice-title">
 
         <h1>
 
@@ -242,13 +439,12 @@
 
         </h1>
 
-        <div class="purchase-ref">
+        <div class="sale-ref">
 
-            Achat :
-
+            Vente :
             <strong>
 
-                {{ purchase.invoice_number }}
+                {{ purchase.reference }}
 
             </strong>
 
@@ -257,37 +453,18 @@
     </div>
 
 
-
-    <div class="info">
-
-        <div>
-
-            <strong>
-
-                Fournisseur
-
-            </strong>
-
-            <br>
-
-            {{ purchase.supplier }}
-
-        </div>
-
-
-        <div>
-
-            Date
-
-            <br>
-
-            {{ purchase.created_at|date:"d/m/Y" }}
-
+        <!-- INFO -->
+        <div class="info-row">
+            <div class="info-box" style="margin-left: auto;">
+                <div>Date : {{ purchase.created_at|date:"d/m/Y" }}</div>
+            </div>
         </div>
 
     </div>
 
 
+
+    <!-- TABLE -->
 
     <table>
 
@@ -328,37 +505,37 @@
 
             {% for item in purchase.items.all %}
 
-            <tr>
+                <tr>
 
-                <td>
+                    <td>
 
-                    {{ item.product }}
+                        {{ item.product }}
 
-                </td>
+                    </td>
 
-                <td>
+                    <td>
 
-                    {{ item.quantity }}
+                        {{ item.quantity }}
 
-                </td>
+                    </td>
 
-                <td>
+                    <td>
 
-                    {{ item.unit_price|intcomma }}
+                        {{ item.unit_price|intcomma }}
 
-                    FCFA
+                        FCFA
 
-                </td>
+                    </td>
 
-                <td>
+                    <td>
 
-                    {{ item.total|intcomma }}
+                        {{ item.total|intcomma }}
 
-                    FCFA
+                        FCFA
 
-                </td>
+                    </td>
 
-            </tr>
+                </tr>
 
             {% endfor %}
 
@@ -367,20 +544,29 @@
     </table>
 
 
-    <div class="total">
 
-        TOTAL :
+    <!-- TOTAL -->
 
-        {{ purchase.total|intcomma }}
+    <div class="total-area">
+        <div class="total-card">
+            <div class="total-line total-final">
+                TOTAL :
 
-        FCFA
+                {{ purchase.total|intcomma }}
 
+                FCFA
+            </div>
+        </div>
     </div>
+
 
     <!-- information bancaire -->
     <div class="bank-footer">
         <span><strong>Infos Bancaires</strong></span> <br /> <br />
-        NIF : 083342654T / RIB 50 ; Cpte Bancaire : N 62622302201 BMS.SA
+        NIF : 083342654T / RIB 50 ; Cpte Bancaire : N 62622302201 BMS.SA <br /><br />
+
+        <span><strong>Site internet :</strong> sonikaraelectro.com</span> <br />
+        <span><strong>Adresse email :</strong> sonikaelectronique@gmail.com</span>
     </div>
 </body>
 
