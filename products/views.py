@@ -6,6 +6,37 @@ from . models import Product
 from .forms import ProductForm, MarqueForm
 from stocks.models import Stock
 
+from django.db.models import Q
+from .models import Product
+from .serializers import ProductSearchSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def product_search_api(request):
+    query = request.GET.get('q', '').strip()
+
+    if len(query) < 1:
+        return Response({'results': []})
+
+    products = (
+        Product.objects
+        .filter(is_deleted=False)
+        .filter(
+            Q(reference__icontains=query) |
+            Q(name__icontains=query) |
+            Q(category__name__icontains=query)
+        )
+        .select_related('category')
+        .order_by('name')[:20]
+    )
+
+    serializer = ProductSearchSerializer(products, many=True)
+    return Response({'results': serializer.data})
+
 
 
 # lister les produits

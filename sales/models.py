@@ -85,13 +85,6 @@ class Sale(TimeStampedModel):
 
 
 
-
-
-
-
-
-
-
 class SaleItem(models.Model):
 
     sale = models.ForeignKey(

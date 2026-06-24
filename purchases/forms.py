@@ -57,47 +57,37 @@ class PurchaseForm(forms.ModelForm):
         }
 
 
-
 class PurchaseItemForm(forms.ModelForm):
 
     class Meta:
         model = PurchaseItem
-        exclude = [
-            'purchase',
-            'total'
-        ]
+        exclude = ['purchase', 'total']
 
         widgets = {
 
-            'product': forms.Select(
-                attrs={
-                    'class':'form-control',
-                }
-            ),
+            'product': forms.HiddenInput(),   # <-- le changement clé
 
             'quantity': forms.NumberInput(
                 attrs={
-                    'class':'form-control',
-                    'placeholder' : "Quantité",
+                    'class': 'form-control',
+                    'placeholder': "Quantité",
                 }
             ),
 
             'unit_price': forms.NumberInput(
                 attrs={
-                    'class':'form-control',
-                    'placeholder' : "Prix d'achat"
+                    'class': 'form-control',
+                    'placeholder': "Prix d'achat"
                 }
             )
 
         }
-
 
         labels = {
             'product': 'Produit',
             'quantity': 'Quantité',
             'unit_price': "Prix d'achat",
         }
-
 
 
 PurchaseItemFormSet = (

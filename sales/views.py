@@ -12,6 +12,10 @@ from .services import validate_sale
 
 from django.contrib.auth.decorators import login_required
 
+from django.http import JsonResponse
+from django.db.models import Q
+from products.models import Product
+
 
 
 

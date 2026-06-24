@@ -10,7 +10,7 @@ urlpatterns = [
     path('create/marque', views.create_marque, name="create_marque"),
     path('<int:pk>/update/', views.update_product, name="update"),
     path('<int:pk>/delete/', views.delete_product, name="delete"),
-
+    path('api/products/search/', views.product_search_api, name='product_search_api'),
 
     # path('addstock/<int:product_id>/<int:store_id>/', views.add_stock, name='add_stock'),
 ]

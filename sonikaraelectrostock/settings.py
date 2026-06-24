@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # autre app
     'django.contrib.humanize',
     'django_user_agents',
+     'rest_framework',
 ]
 
 MIDDLEWARE = [

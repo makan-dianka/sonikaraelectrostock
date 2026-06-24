@@ -55,197 +55,223 @@
         <div id="lines">
 
             {% for line in formset %}
-
             <div class="line">
 
                 {{ line.id }}
 
-                <div>
-
+                <div class="product-search-wrapper">
                     <label>Produit</label>
 
                     {{ line.product }}
 
+                    <input
+                        type="text"
+                        class="form-control product-search-input"
+                        placeholder="Rechercher par référence ou catégorie..."
+                        value="{% if line.instance.product %}{{ line.instance.product.reference }} - {{ line.instance.product.name }}{% endif %}"
+                        autocomplete="off"
+                    >
+
+                    <div class="product-search-results"></div>
                 </div>
 
                 <div>
-
                     <label>Quantité</label>
-
                     {{ line.quantity }}
-
                 </div>
 
                 <div>
-
-                    <label>Prix unité</label>
-
+                    <label>Prix d'achat</label>
                     {{ line.unit_price }}
-
                 </div>
 
                 <div class="delete">
-
                     {% if line.instance.pk %}
-
                     <label>Supprimer</label>
-
                     {{ line.DELETE }}
-
                     {% endif %}
-
                 </div>
 
             </div>
-
             {% endfor %}
 
         </div>
 
 
-        <!-- TEMPLATE VIDE -->
-
         <div id="empty-form" style="display:none;">
-
             <div class="line">
 
                 {{ formset.empty_form.id }}
 
-                <div>
-
+                <div class="product-search-wrapper">
                     <label>Produit</label>
 
                     {{ formset.empty_form.product }}
 
+                    <input
+                        type="text"
+                        class="form-control product-search-input"
+                        placeholder="Rechercher par référence ou catégorie..."
+                        autocomplete="off"
+                    >
+
+                    <div class="product-search-results"></div>
                 </div>
 
                 <div>
-
                     <label>Quantité</label>
-
                     {{ formset.empty_form.quantity }}
-
                 </div>
 
                 <div>
-
-                    <label>Prix unité</label>
-
+                    <label>Prix d'achat</label>
                     {{ formset.empty_form.unit_price }}
-
                 </div>
 
                 <div></div>
 
             </div>
-
         </div>
 
+                <br />
+                <div class="buttons">
 
-        <br />
-        <div class="buttons">
+                    <button type="button" id="add-line" class="btn btn-primary mb-3">
 
-            <button type="button" id="add-line" class="btn btn-primary mb-3">
+                        +
 
-                +
+                        Ajouter ligne
 
-                Ajouter ligne
+                    </button>
 
-            </button>
+                    <br />  <br />
 
-            <br />  <br />
+                    <button type="submit" class="btn w-100" style="background-color: #f39b00; color: white; font-family: 'Libre Baskerville'; padding: 15px; font-size: 20px;">
 
-            <button type="submit" class="btn w-100" style="background-color: #f39b00; color: white; font-family: 'Libre Baskerville'; padding: 15px; font-size: 20px;">
+                        Effectuer l'achat
 
-                Effectuer l'achat
+                    </button>
 
-            </button>
+                </div>
+
+
+            </form>
 
         </div>
-
-
-    </form>
-
-</div>
-
 
 
 <script>
+    const PRODUCT_SEARCH_URL = "{% url 'products:product_search_api' %}";
 
-    const addButton =
-        document.getElementById(
-            'add-line'
-        )
+    function debounce(fn, delay) {
+        let timer;
+        return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
 
-    const container =
-        document.getElementById(
-            'lines'
-        )
+    function initProductSearch(lineEl) {
+        const searchInput = lineEl.querySelector('.product-search-input');
+        const resultsBox = lineEl.querySelector('.product-search-results');
+        const hiddenProductInput = lineEl.querySelector('[id$="-product"]');
+        const unitPriceInput = lineEl.querySelector('[id$="-unit_price"]');
 
-    const totalForms =
-        document.getElementById(
-            'id_items-TOTAL_FORMS'
-        )
-        ||
-        document.getElementById(
-            'id_purchaseitem_set-TOTAL_FORMS'
-        )
+        if (!searchInput || searchInput.dataset.initialized) return;
+        searchInput.dataset.initialized = "true";
 
+        const doSearch = debounce(async function (query) {
+            if (query.length < 1) {
+                resultsBox.innerHTML = '';
+                resultsBox.style.display = 'none';
+                return;
+            }
 
+            try {
+                const response = await fetch(`${PRODUCT_SEARCH_URL}?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                renderResults(data.results);
+            } catch (err) {
+                console.error('Erreur recherche produit:', err);
+            }
+        }, 200);
 
-    addButton.addEventListener(
-        'click',
+        function renderResults(results) {
+            if (results.length === 0) {
+                resultsBox.innerHTML = '<div class="no-result">Aucun produit trouvé</div>';
+                resultsBox.style.display = 'block';
+                return;
+            }
 
-        function () {
+            resultsBox.innerHTML = results.map(p => `
+                <div class="result-item"
+                    data-id="${p.id}"
+                    data-price="${p.sale_price}"
+                    data-label="${p.reference} - ${p.name}">
+                    <strong>${p.reference}</strong> — ${p.name}
+                    <span class="result-category">${p.category}</span>
+                </div>
+            `).join('');
 
-            let formIndex =
-
-                parseInt(
-                    totalForms.value
-                )
-
-
-
-            let template =
-
-                document
-                    .getElementById(
-                        'empty-form'
-                    )
-                    .innerHTML
-
-
-
-            template =
-
-                template.replace(
-
-                    /__prefix__/g,
-
-                    formIndex
-
-                )
-
-
-
-            container.insertAdjacentHTML(
-
-                'beforeend',
-
-                template
-
-            )
-
-
-
-            totalForms.value =
-
-                formIndex + 1
-
+            resultsBox.style.display = 'block';
         }
 
-    )
+        searchInput.addEventListener('input', function () {
+            doSearch(this.value.trim());
+        });
 
+        searchInput.addEventListener('focus', function () {
+            if (resultsBox.innerHTML.trim() !== '') {
+                resultsBox.style.display = 'block';
+            }
+        });
+
+        resultsBox.addEventListener('click', function (e) {
+            const item = e.target.closest('.result-item');
+            if (!item) return;
+
+            hiddenProductInput.value = item.dataset.id;
+            unitPriceInput.value = item.dataset.price;
+            searchInput.value = item.dataset.label;
+
+            resultsBox.innerHTML = '';
+            resultsBox.style.display = 'none';
+        });
+
+        // fermer le dropdown si on clique ailleurs
+        document.addEventListener('click', function (e) {
+            if (!lineEl.contains(e.target)) {
+                resultsBox.style.display = 'none';
+            }
+        });
+    }
+
+    // initialiser toutes les lignes déjà présentes
+    document.querySelectorAll('#lines .line').forEach(initProductSearch);
+
+
+    // --- gestion de l'ajout de ligne (votre code existant, adapté) ---
+
+    const addButton = document.getElementById('add-line');
+    const container = document.getElementById('lines');
+
+    const totalForms =
+        document.getElementById('id_items-TOTAL_FORMS') ||
+        document.getElementById('id_purchaseitem_set-TOTAL_FORMS');
+
+    addButton.addEventListener('click', function () {
+        let formIndex = parseInt(totalForms.value);
+
+        let template = document.getElementById('empty-form').innerHTML;
+        template = template.replace(/__prefix__/g, formIndex);
+
+        container.insertAdjacentHTML('beforeend', template);
+
+        const newLine = container.lastElementChild;
+        initProductSearch(newLine);
+
+        totalForms.value = formIndex + 1;
+    });
 </script>
 
 {% endblock %}
