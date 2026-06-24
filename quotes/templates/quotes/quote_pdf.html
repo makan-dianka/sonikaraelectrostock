@@ -1,38 +1,69 @@
-{% load humanize %}
+{% load static %}
 
+{% load humanize %}
 
 <!DOCTYPE html>
 
-<html>
+<html lang="fr">
 
 <head>
 
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+
+    <title>
+
+        Facture {{ document.reference }}
+
+    </title>
 
     <style>
-        @page {
+@page {
+    size: A4;
+    margin-top: 10mm;
+    margin-bottom: 22mm;  /* on augmente un peu pour laisser de la place au footer */
+    margin-left: 8mm;
+    margin-right: 8mm;
 
-            size: A4;
+    @bottom-center {
+        content: element(bankfooter);
+    }
+}
 
-            margin: 10mm;
 
-        }
+.bank-footer {
+    position: running(bankfooter);
+    text-align: center;
+    font-size: 12px;
+    color: black;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
 
 
         body {
 
             margin: 0;
 
-            font-family: Arial;
+            padding: 0;
+
+            font-family: Arial, sans-serif;
 
             font-size: 15px;
 
             color: #222;
 
+            line-height: 1.4;
+
         }
 
 
-        .header {
+        * {
+            box-sizing: border-box;
+        }
+
+        /* HEADER */
+
+        .top-header {
 
             display: flex;
 
@@ -40,7 +71,7 @@
 
             align-items: flex-start;
 
-            margin-bottom: 15px;
+            margin-bottom: 10px;
 
         }
 
@@ -52,16 +83,25 @@
         }
 
 
-        .ref {
+        .document-ref {
 
             text-align: right;
 
         }
 
 
-        .ref .value {
+        .document-ref .label {
 
-            font-size: 18px;
+            color: #777;
+
+            font-size: 11px;
+
+        }
+
+
+        .document-ref .value {
+
+            font-size: 16px;
 
             font-weight: bold;
 
@@ -70,43 +110,19 @@
         }
 
 
+
+        /* COMPANY */
+
         .company {
 
-            margin-bottom: 18px;
+            margin-bottom: 14px;
 
         }
 
 
-        .company h2 {
+        .company-name {
 
-            margin: 0;
-
-            color: #02407F;
-
-        }
-
-
-        .client {
-
-            display: flex;
-
-            justify-content: flex-end;
-
-            margin-bottom: 20px;
-
-        }
-
-
-        .client-card {
-
-            width: 35%;
-
-            text-align: right;
-
-        }
-
-
-        .client-title {
+            font-size: 22px;
 
             font-weight: bold;
 
@@ -117,23 +133,103 @@
         }
 
 
-        .title {
+        .company p {
 
-            margin-bottom: 18px;
+            margin: 3px 0;
 
         }
 
 
-        .title h1 {
+
+        /* TITLE */
+
+        .invoice-title {
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .invoice-title h1 {
 
             margin: 0;
 
-            font-size: 30px;
+            font-size: 32px;
 
             color: #02407F;
 
         }
 
+
+        .sale-ref {
+
+            margin-top: 0px;
+
+            font-size: 14px;
+
+            color: #555;
+
+        }
+
+
+
+        /* INFO */
+
+        .info-row {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            margin-bottom: 28px;
+
+        }
+
+
+        .info-box:first-child {
+
+            width: 55%;
+
+        }
+
+
+        .info-box:last-child {
+
+            width: 45%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: flex-end;
+
+            text-align: right;
+
+        }
+
+
+        .box-title {
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            color: black;
+
+            margin-bottom: 0px;
+
+        }
+
+
+        .info-box p {
+
+            margin: 4px 0;
+
+        }
+
+
+
+        /* TABLE */
 
         table {
 
@@ -141,20 +237,25 @@
 
             border-collapse: collapse;
 
-            margin-top: 15px;
+        }
+
+
+        thead {
+
+            background: #02407F;
+
+            color: white;
 
         }
 
 
         th {
 
-            background: #02407F;
-
-            color: white;
-
             padding: 12px;
 
             text-align: left;
+
+            font-size: 12px;
 
         }
 
@@ -163,17 +264,27 @@
 
             padding: 11px;
 
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #DDD;
 
         }
 
 
-        .right {
+        tbody tr:nth-child(even) {
+
+            background: #fafafa;
+
+        }
+
+
+        .text-right {
 
             text-align: right;
 
         }
 
+
+
+        /* TOTAL */
 
         .total-area {
 
@@ -181,19 +292,19 @@
 
             justify-content: flex-end;
 
-            margin-top: 25px;
+            margin-top: 30px;
 
         }
 
 
         .total-card {
 
-            width: 320px;
+            width: 300px;
 
         }
 
 
-        .line {
+        .total-line {
 
             display: flex;
 
@@ -204,7 +315,11 @@
         }
 
 
-        .final {
+        .total-final {
+
+            border-top: 2px solid #02407F;
+
+            padding-top: 12px;
 
             font-size: 22px;
 
@@ -212,36 +327,25 @@
 
             color: #02407F;
 
-            border-top: 2px solid #02407F;
-
-            padding-top: 10px;
-
         }
 
 
-        /* informations bancaires */
-        .bank-footer {
 
-            position: fixed;
+        /* FOOTER */
 
-            bottom: 10px;
+        .footer {
 
-            left: 0;
-
-            right: 0;
+            margin-top: 50px;
 
             text-align: center;
 
-            font-size: 12px;
+            color: #777;
 
-            color: black;
-
-            padding-top: 10px;
-
-            border-top: 1px solid #ddd;
+            font-size: 11px;
 
         }
 
+        /* signature */
         .signature {
 
             margin-top: 100px;
@@ -260,6 +364,28 @@
             margin-bottom: 70px;
 
         }
+
+.second-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.client-box {
+    text-align: right;
+}
+
+.client-box .box-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 4px;
+}
+
+.client-box p {
+    margin: 2px 0;
+}
     </style>
 
 </head>
@@ -268,71 +394,46 @@
 
 <body>
 
-    <div class="header">
+    <!-- HEADER -->
 
-        <div class="logo">
+<!-- HEADER LIGNE 1 : Logo / Référence document -->
+<div class="top-header">
 
-            <img src="{{ logo_path }}">
-
-        </div>
-
-
-        <div class="ref">
-
-            Référence devis
-
-            <div class="value">
-
-                {{ quote.reference }}
-
-            </div>
-
-        </div>
-
+    <div class="logo">
+        <img src="{{ logo_path }}" alt="test">
     </div>
 
+    <div class="document-ref">
+        <div class="label">Référence document</div>
+        <div class="value">{{ quote.reference }}</div>
+    </div>
 
+</div>
+
+
+<!-- HEADER LIGNE 2 : Company / Client -->
+<div class="second-header">
 
     <div class="company">
-
-        <p>
-            Mali, Bamako Coura
-        </p>
-
-        <p>
-            Imm. Pendourou, En face de Moov Africa
-        </p>
-
-        <p>
-            Boutique N°5
-        </p>
-
-        <p>
-            (+223) 79 76 76 13 / 61 54 54 34
-        </p>
+        <p>Mali, Bamako Coura</p>
+        <p>Imm. Pendourou, En face de Moov Africa</p>
+        <p>Boutique N°5</p>
+        <p>(+223) 79 76 76 13 / 61 54 54 34</p>
     </div>
 
-
-
-    <div class="client">
-
-        <div class="client-card">
-
-            <div class="client-title">
-
-                Client
-
-            </div>
-
-            {{ quote.customer }}
-
-        </div>
-
+    <div class="client-box">
+        <div class="box-title">Client</div>
+        <p>{{ quote.customer }}</p>
+        <p>TEL : {{ quote.customer.phone }}</p>
     </div>
 
+</div>
 
 
-    <div class="title">
+
+    <!-- TITLE -->
+
+    <div class="invoice-title">
 
         <h1>
 
@@ -340,13 +441,31 @@
 
         </h1>
 
-        Date :
+        <div class="sale-ref">
 
-        {{ quote.created_at|date:"d/m/Y" }}
+            <strong>
+
+                {{ quote.reference }}
+
+            </strong>
+
+        </div>
 
     </div>
 
 
+<!-- INFO -->
+<div class="info-row">
+    <div class="info-box" style="margin-left: auto;">
+        <div>Date : {{ quote.created_at|date:"d/m/Y" }}</div>
+    </div>
+</div>
+
+    </div>
+
+
+
+    <!-- TABLE -->
 
     <table>
 
@@ -368,13 +487,13 @@
 
                 <th>
 
-                    Prix
+                    Prix unitaire
 
                 </th>
 
-                <th>
+                <th class="text-right">
 
-                    Total
+                    Montant
 
                 </th>
 
@@ -391,7 +510,7 @@
 
                 <td>
 
-                    {{ item.product }}
+                    {{ item.product.name }}
 
                 </td>
 
@@ -409,7 +528,7 @@
 
                 </td>
 
-                <td class="right">
+                <td class="text-right">
 
                     {{ item.subtotal|intcomma }}
 
@@ -427,141 +546,60 @@
 
 
 
+    <!-- TOTAL -->
+
     <div class="total-area">
 
         <div class="total-card">
 
-            <div class="line">
-
-                Produits
-
-                <span>
-
-                    {{ quote.total|intcomma }}
-
-                    FCFA
-
-                </span>
-
+            <div class="total-line">
+                <span>Produits</span>
+                <span>{{ quote.total|intcomma }} FCFA</span>
             </div>
 
-
-
-            <div class="line">
-
-                Main d'œuvre
-
-                <span>
-
-                    {{ quote.labor_cost|intcomma }}
-
-                    FCFA
-
-                </span>
-
+            <div class="total-line">
+                <span>Main d'oeuvre</span>
+                <span>{{ quote.labor_cost|intcomma }} FCFA</span>
             </div>
 
+            {% if quote.vat_rate %}
+                <div class="total-line">
+                    <span>TVA ({{ quote.vat_rate }}%)</span>
+                    <span>{{ quote.vat_amount|intcomma }} FCFA</span>
+                </div>
+            {% endif %}
+
+            {% if quote.delivery_fee != 0 %}
+                <div class="total-line">
+                    <span>Frais livraison</span>
+                    <span>{{ quote.delivery_fee|intcomma }} FCFA</span>
+                </div>
+            {% endif %}
+
+            {% if quote.reduction %}
+                <div class="total-line">
+                    <span>Réduction ({{ quote.reduction }}%)</span>
+                    <span>-{{ quote.reduction_amount|intcomma }} FCFA</span>
+                </div>
+            {% endif %}
 
 
-            <div class="line">
-
-                Frais de livraison
-
-                <span>
-
-                    {{ quote.delivery_fee|intcomma }}
-
-                    FCFA
-
-                </span>
-
-            </div>
-
-            <div class="line">
-
-                Réduction ({{ quote.reduction }}%)
-
-                <span>
-
-                    {{ quote.reduction_amount|intcomma }}
-
-                    FCFA
-
-                </span>
-
-            </div>
-
-
-            <div class="line">
-
-                TVA ({{ quote.vat_rate }}%)
-
-                <span>
-
-                    {{ quote.vat_amount|intcomma }}
-
-                    FCFA
-
-                </span>
-
-            </div>
-
-         
-
-
-
-            <div class="line final">
-
-                TOTAL
-
-                <span>
-
-                    {{ quote.total_amount|intcomma }}
-
-                    FCFA
-
-                </span>
-
+            <div class="total-line total-final">
+                <span>TTC</span>
+                <span>{{ quote.total_amount|intcomma }} FCFA</span>
             </div>
 
         </div>
 
     </div>
-
-
-
-    {% if quote.notes %}
-
-    <br><br>
-
-    <strong>
-
-        Observations :
-
-    </strong>
-
-    {{ quote.notes }}
-
-    {% endif %}
-
-
 
     <div class="signature">
 
         <div>
-
-            <div class="title">
-
-                Fournisseur
-
-            </div>
-
+            <div class="title">Le Fournisseur</div>
             <!-- <div class="line"></div> -->
-
         </div>
-
     </div>
-
 
 
     <!-- information bancaire -->
