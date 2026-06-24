@@ -155,7 +155,7 @@
                                     Payé
                                 </span>
                             {% else %}
-                                <a class="pay" href="{% url 'payments:create' sale.id %}">
+                                <a class="pay" href="{% url 'payments:create' %}?type=sale&id={{ sale.id }}">
                                     Payer
                                 </a>
                             {% endif %}

@@ -12,10 +12,11 @@ class PurchaseForm(forms.ModelForm):
     class Meta:
         model = Purchase
         exclude = [
-            'total_amount',
+            'total',
             'created_by',
             'status',
-            'invoice_number',
+            'reference',
+            'payment_status'
         ]
 
         widgets = {

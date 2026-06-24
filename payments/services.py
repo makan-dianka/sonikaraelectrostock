@@ -1,15 +1,15 @@
 from .models import Payment
 
 
-def update_payment_status(sale):
+def update_payment_status(obj):
 
-    paid = sale.paid_amount
+    paid = obj.paid_amount
 
     if paid <= 0:
-        sale.payment_status = 'unpaid'
-    elif paid < sale.total:
-        sale.payment_status = 'partial'
+        obj.payment_status = 'unpaid'
+    elif paid < obj.total:
+        obj.payment_status = 'partial'
     else:
-        sale.payment_status = 'paid'
+        obj.payment_status = 'paid'
 
-    sale.save()
+    obj.save()

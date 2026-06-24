@@ -5,15 +5,31 @@ from .models import Payment
 
 class PaymentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
+
         self.sale = kwargs.pop('sale', None)
+        self.purchase = kwargs.pop('purchase', None)
+
         super().__init__(*args, **kwargs)
 
-        # pré-remplissage du montant
+        # pre-remplir le champ montant
         if self.sale:
-            if self.sale.remaining_amount > 0:
-                self.fields['amount'].initial = self.sale.remaining_amount
+
+            remaining = self.sale.remaining_amount
+
+            if remaining and remaining > 0:
+                self.fields['amount'].initial = remaining
             else:
                 self.fields['amount'].initial = self.sale.total
+
+
+        elif self.purchase:
+
+            remaining = self.purchase.remaining_amount
+
+            if remaining and remaining > 0:
+                self.fields['amount'].initial = remaining
+            else:
+                self.fields['amount'].initial = self.purchase.total
 
 
 

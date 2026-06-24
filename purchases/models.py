@@ -1,5 +1,6 @@
 from django.db import models
 from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.tools import generate_reference
 from django.utils import timezone
 
 
@@ -23,16 +24,26 @@ class Purchase(TimeStampedModel):
         related_name='purchases'
     )
 
-    invoice_number = models.CharField(
+    reference = models.CharField(
         max_length=100,
         blank=True,
         null=True,
         unique=True
     )
 
+    payment_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('unpaid', 'Non payé'),
+            ('partial', 'Partiel'),
+            ('paid', 'Payé')
+        ],
+        default='unpaid'
+    )
+
     purchase_date = models.DateField()
 
-    total_amount = models.IntegerField(default=0)
+    total = models.IntegerField(default=0)
 
     status = models.CharField(
         max_length=20,
@@ -49,11 +60,11 @@ class Purchase(TimeStampedModel):
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return self.invoice_number
+        return self.reference
 
     def update_total(self):
         total = sum(item.quantity * item.unit_price for item in self.items.all())
-        self.total_amount = total
+        self.total = total
         self.save()
 
 
@@ -74,45 +85,21 @@ class Purchase(TimeStampedModel):
 
 
 
-
-
-    def generate_invoice_number(self):
-        """genere invoice number
-
-        Returns:
-            str: invoice number
-        """
-
-        today = timezone.now()
-
-
-        prefix = (f"ACH-" f"{today:%Y%m}-")
-
-        last = (
-            Purchase.objects.filter(
-                invoice_number__startswith=prefix
-            ).order_by(
-                '-invoice_number'
-            ).first()
-        )
-
-        if last:
-
-            try:
-                seq = int(last.invoice_number.split('-')[-1]) + 1
-            except:
-                seq = 1
-        else:
-            seq = 1
-        return (f"{prefix}" f"{seq:04d}")
-
-
-
     def save(self, *args, **kwargs):
 
-        if not self.invoice_number:
-            self.invoice_number = self.generate_invoice_number()
+        if not self.reference:
+            self.reference = generate_reference('ACH', Purchase)
         super().save(*args, **kwargs)
+
+
+    @property
+    def paid_amount(self):
+        return (self.payments.aggregate(total=models.Sum('amount'))['total'] or 0)
+
+
+    @property
+    def remaining_amount(self):
+        return (self.total - self.paid_amount)
 
 
 

@@ -4,7 +4,7 @@ from .models import Purchase, PurchaseItem
 
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ('supplier', 'store', 'invoice_number', 'total_amount', 'status', 'created_by')
+    list_display = ('supplier', 'store', 'reference', 'total', 'status', 'created_by')
 
 
 

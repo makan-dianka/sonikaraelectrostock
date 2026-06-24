@@ -23,7 +23,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Référence Vente</th>
+                    <th>Référence</th>
                     <th>Montant payé</th>
                     <th>Reste à payé</th>
                     <th>Méthode</th>
@@ -38,12 +38,15 @@
                 {% for payment in payments %}
                 <tr>
                     <td>{{ payment.id }}</td>
-                    <td>{{ payment.sale.reference }}</td>
+
+                    <td>
+                        {{ payment.get_reference }}
+                    </td>
                     <td class="amount">
                         {{ payment.amount|intcomma }} FCFA
                     </td>
                     <td class="text-danger">
-                        {{ payment.sale.remaining_amount|intcomma }} FCFA
+                        {{ payment.get_remaining|intcomma }} FCFA
                     </td>
                     <td>
                         <span class="badge method">
@@ -53,12 +56,26 @@
                     <td>{{ payment.reference|default:"-" }}</td>
                     <td>{{ payment.created_at|date:"d/m/Y H:i" }}</td>
                     <td>
-                        {% if payment.sale.payment_status == 'paid' %}
-                            <span class="validated">
-                                Payé
-                            </span>
-                        {% else %}
-                            <a href="{% url 'payments:create' payment.sale.id %}">Payer</a>
+                        {% if payment.sale %}
+
+                            {% if payment.sale.payment_status == 'paid' %}
+                                <span class="validated">Payé</span>
+                            {% else %}
+                                <a href="{% url 'payments:create' %}?type=sale&id={{ payment.sale.id }}">
+                                    Payer
+                                </a>
+                            {% endif %}
+
+                        {% elif payment.purchase %}
+
+                            {% if payment.purchase.payment_status == 'paid' %}
+                                <span class="validated">Payé</span>
+                            {% else %}
+                                <a href="{% url 'payments:create' %}?type=purchase&id={{ payment.purchase.id }}">
+                                    Payer
+                                </a>
+                            {% endif %}
+
                         {% endif %}
                     </td>
                 </tr>

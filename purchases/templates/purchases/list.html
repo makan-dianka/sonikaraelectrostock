@@ -49,9 +49,10 @@
 
                     <th>Magasin</th>
 
-                    <th>Référence achat</th>
+                    <th>Référence</th>
 
                     <th>Total</th>
+                    <th>Reste à payer</th>
 
                     <th>
 
@@ -62,6 +63,12 @@
                     <th>
 
                     Actions
+
+                    </th>
+
+                    <th>
+
+                    Comptoir
 
                     </th>
 
@@ -96,15 +103,26 @@
 
                     <td>
 
-                        {{ purchase.invoice_number }}
+                        {{ purchase.reference }}
 
                     </td>
 
                     <td>
-                        {% if purchase.total_amount <= 0 %}
+                        {% if purchase.total <= 0 %}
                             xxx
                         {% else %}
-                            {{ purchase.total_amount|intcomma }}
+                            {{ purchase.total|intcomma }}
+
+                            FCFA
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {% if purchase.total <= 0 %}
+                            xxx
+                        {% else %}
+                            {{ purchase.remaining_amount|intcomma }}
 
                             FCFA
                         {% endif %}
@@ -146,6 +164,29 @@
 
                         {% endif %}
                     </td>
+
+                    <td>
+                        {% if purchase.payment_status == 'unpaid' or purchase.payment_status == 'partial' %}
+                            {% if purchase.payment_status == 'paid' %}
+                                <span class="validated">
+                                    Payé
+                                </span>
+                            {% elif purchase.status == 'cancelled'  %}
+                                <span class="cancelled">
+                                    Annulé
+                                </span>
+                            {% elif purchase.status == 'received' %}
+                                <a class="pay" href="{% url 'payments:create' %}?type=purchase&id={{ purchase.id }}">
+                                    Payer
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <span class="received">
+                                Payé
+                            </span>
+                        {% endif %}
+                    </td>
+
 
                 </tr>
 
