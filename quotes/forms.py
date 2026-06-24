@@ -85,6 +85,7 @@ class QuoteForm(forms.ModelForm):
 
 
 
+
 class QuoteItemForm(forms.ModelForm):
 
     class Meta:
@@ -94,28 +95,9 @@ class QuoteItemForm(forms.ModelForm):
         exclude = ['quote', 'subtotal']
 
         widgets = {
-
-            'product':
-            forms.Select(
-                attrs={
-                    'class':'form-control'
-                }
-            ),
-
-            'quantity':
-            forms.NumberInput(
-                attrs={
-                    'class':'form-control'
-                }
-            ),
-
-            'unit_price':
-            forms.NumberInput(
-                attrs={
-                    'class':'form-control'
-                }
-            ),
-
+            'product': forms.HiddenInput(),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
+            'unit_price': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
 
