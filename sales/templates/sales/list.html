@@ -116,6 +116,12 @@
 
                         </span>
 
+                        {% elif sale.status == 'cancelled' %}
+                            <span class="cancelled">
+
+                                Annulé
+
+                            </span>
                         {% else %}
 
                         <span class="validated">
@@ -137,6 +143,15 @@
                             onclick="return confirm('Valider la vente ?')">
 
                             Valider
+
+                        </a>
+
+                        {% elif sale.status == 'validated' %}
+
+                        <a class="cancel" href="{% url 'sales:cancel' sale.id %}"
+                            onclick="return confirm('Annuler la vente ?')">
+
+                            Annuler
 
                         </a>
 

@@ -114,3 +114,31 @@ td {
     text-decoration: none;
 
 }
+
+
+.cancelled {
+
+    background: #ffeaea;
+
+    color: #e53935;
+
+    padding: 8px 12px;
+
+    border-radius: 10px;
+
+}
+
+
+.cancel {
+
+    background: #ef4444;
+
+    color: white;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+}

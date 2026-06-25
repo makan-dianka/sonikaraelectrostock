@@ -80,16 +80,16 @@ def dashboard(request, store_id=None):
 
     # calcul du chiffres d'affaires
     # additionner le prix de toute les ventes du jour
-    ca_day = sales.filter(created_at__date=today).aggregate(total=Sum('total'))['total'] or 0
+    ca_day = sales.filter(created_at__date=today, status='validated').aggregate(total=Sum('total'))['total'] or 0
 
-    ca_week = sales.filter(created_at__date__gte=start_week).aggregate(total=Sum('total'))['total'] or 0
+    ca_week = sales.filter(created_at__date__gte=start_week, status='validated').aggregate(total=Sum('total'))['total'] or 0
 
-    ca_month = sales.filter(created_at__year=today.year, created_at__month=today.month).aggregate(total=Sum('total'))['total'] or 0
+    ca_month = sales.filter(created_at__year=today.year, created_at__month=today.month, status='validated').aggregate(total=Sum('total'))['total'] or 0
 
 
     # JOUR PRÉCÉDENT
     yesterday = today - timedelta(days=1)
-    ca_yesterday = sales.filter(created_at__date=yesterday).aggregate(total=Sum('total'))['total'] or 0
+    ca_yesterday = sales.filter(created_at__date=yesterday, status='validated').aggregate(total=Sum('total'))['total'] or 0
 
 
     # SEMAINE PASSÉE
@@ -99,7 +99,8 @@ def dashboard(request, store_id=None):
 
     ca_last_week = sales.filter(
             created_at__date__gte=start_last_week,
-            created_at__date__lte=end_last_week
+            created_at__date__lte=end_last_week,
+            status='validated'
         ).aggregate(total=Sum('total'))['total'] or 0
 
 
@@ -115,17 +116,18 @@ def dashboard(request, store_id=None):
 
     ca_last_month = sales.filter(
             created_at__year=last_month_year,
-            created_at__month=last_month
+            created_at__month=last_month,
+            status='validated'
         ).aggregate(total=Sum('total'))['total'] or 0
 
 
 
 
     # ANNÉE EN COURS
-    ca_year = sales.filter(created_at__year=today.year).aggregate(total=Sum('total'))['total'] or 0
+    ca_year = sales.filter(created_at__year=today.year, status='validated').aggregate(total=Sum('total'))['total'] or 0
 
     # ANNÉE PASSÉE
-    ca_last_year = sales.filter(created_at__year=today.year - 1).aggregate(total=Sum('total'))['total'] or 0
+    ca_last_year = sales.filter(created_at__year=today.year - 1, status='validated').aggregate(total=Sum('total'))['total'] or 0
 
 
 
@@ -147,7 +149,7 @@ def dashboard(request, store_id=None):
     profit_last_month = SaleItem.objects.filter(
             sale__in=sales, 
             sale__created_at__year=last_month_year,
-            sale__created_at__month=last_month
+            sale__created_at__month=last_month,
         ).aggregate(total=Sum(ExpressionWrapper(
             (F('unit_price') - F('product__purchase_price')) *
             F('quantity'), output_field=IntegerField())))['total'] or 0

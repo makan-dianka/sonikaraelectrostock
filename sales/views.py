@@ -8,14 +8,9 @@ from .forms import SaleForm, SaleItemFormSet
 
 from django.contrib import messages
 
-from .services import validate_sale
+from .services import validate_sale, cancel_sale
 
 from django.contrib.auth.decorators import login_required
-
-from django.http import JsonResponse
-from django.db.models import Q
-from products.models import Product
-
 
 
 
@@ -107,43 +102,39 @@ def create_sale(request):
 
 
 
-
-
 @login_required(login_url='accounts:login')
 def validate_sale_view(request, pk):
 
-    sale = (
-
-        Sale.objects.get(
-            id=pk
-        )
-
-    )
+    sale = (Sale.objects.get(id=pk))
 
     try:
 
-        validate_sale(
-            sale
-        )
+        validate_sale(sale)
 
-        messages.success(
-
-            request,
-
-            "Vente validée."
-
-        )
+        messages.success(request,"Vente validée.")
 
     except Exception as e:
 
-        messages.error(
+        messages.error(request, str(e))
 
-            request,
+    return redirect('sales:list')
 
-            str(e)
 
-        )
 
-    return redirect(
-        'sales:list'
-    )
+
+@login_required(login_url='accounts:login')
+def cancel_sale_view(request, pk):
+
+    sale = (Sale.objects.get(id=pk))
+
+    try:
+
+        cancel_sale(sale)
+
+        messages.success(request,"Vente annulé.")
+
+    except Exception as e:
+
+        messages.error(request, str(e))
+
+    return redirect('sales:list')
