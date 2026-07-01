@@ -7,6 +7,7 @@ from .models import Sale
 from .forms import SaleForm, SaleItemFormSet
 
 from django.contrib import messages
+from django.db.models import Sum
 
 from .services import validate_sale, cancel_sale
 
@@ -48,8 +49,19 @@ def generate_reference():
 def sale_list(request):
 
     sales = Sale.objects.select_related('customer', 'store').order_by('-created_at')
+    total_sale = sales.filter(status='validated').aggregate(total=Sum('total'))['total'] or 0
+    sales_validated = Sale.objects.filter(status='validated').select_related('customer', 'store').order_by('-created_at')
+    total_paid = sum(sale.paid_amount for sale in sales_validated)
+    total_remaining = total_sale - total_paid
 
-    return render(request, 'sales/list.html', {'sales':sales})
+    context = {
+        'sales' : sales,
+        'total_sale' : total_sale,
+        'total_paid' : total_paid,
+        'total_remaining' : total_remaining
+    }
+
+    return render(request, 'sales/list.html', context)
 
 
 
