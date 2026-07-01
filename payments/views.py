@@ -135,9 +135,8 @@ def create_payment(request):
 @login_required(login_url='accounts:login')
 def payment_list(request):
     payments = Payment.objects.select_related('sale').all().order_by('-id')
-    total_received = payments.filter(sale__isnull=False).aggregate(total=Sum('amount'))['total'] or 0
-    total_sent = payments.filter(purchase__isnull=False).aggregate(total=Sum('amount'))['total'] or 0
-
+    total_received = payments.filter(sale__isnull=False, sale__status='validated').aggregate(total=Sum('amount'))['total'] or 0
+    total_sent = payments.filter(purchase__isnull=False, purchase__status='received').aggregate(total=Sum('amount'))['total'] or 0
     context = {
         'payments': payments,
         'total_received': total_received,
