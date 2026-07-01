@@ -12,10 +12,18 @@
 {% block content %}
 <div class="container">
 
-    <!-- <div class="header">
-        <h2>💰 Liste des paiements</h2>
-        <a href="#" class="btn-primary">+ Nouveau paiement</a>
-    </div> -->
+    <div class="stats">
+
+        <div class="card income">
+            <p>Montant reçu</p>
+            <h2>+ {{ total_received|intcomma }} FCFA</h2>
+        </div>
+
+        <div class="card expense">
+            <p>Montant envoyé</p>
+            <h2>- {{ total_sent|intcomma }} FCFA</h2>
+        </div>
+    </div>
 
     <div class="table-card">
 

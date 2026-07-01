@@ -7,6 +7,7 @@ from django.shortcuts import (
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
+from django.db.models import Sum
 
 from .forms import PaymentForm
 from .models import Payment
@@ -15,7 +16,6 @@ from purchases.models import Purchase
 from .services import update_payment_status
 
 from sonikaraelectrostock.tools import generate_reference
-
 
 
 @login_required(login_url='accounts:login')
@@ -135,4 +135,13 @@ def create_payment(request):
 @login_required(login_url='accounts:login')
 def payment_list(request):
     payments = Payment.objects.select_related('sale').all().order_by('-id')
-    return render(request, 'payments/list.html', {'payments': payments})
+    total_received = payments.filter(sale__isnull=False).aggregate(total=Sum('amount'))['total'] or 0
+    total_sent = payments.filter(purchase__isnull=False).aggregate(total=Sum('amount'))['total'] or 0
+
+    context = {
+        'payments': payments,
+        'total_received': total_received,
+        'total_sent': total_sent,
+    }
+
+    return render(request, 'payments/list.html', context)
