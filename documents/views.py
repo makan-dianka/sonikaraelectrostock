@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 from .services import generate_pdf
 
@@ -97,9 +98,7 @@ def create_document(request):
 
 
 @login_required(login_url='accounts:login')
-def document_list(
-    request
-):
+def document_list(request):
 
     documents = (
 
@@ -125,7 +124,16 @@ def document_list(
 
     )
 
-    return render(request, 'documents/list.html', {'documents':documents})
+    paginator = Paginator(documents, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'documents': page_obj,
+        'page_obj': page_obj,
+    }
+
+    return render(request, 'documents/list.html', context)
 
 
 

@@ -135,11 +135,11 @@
                         </span>
 
                         {% elif sale.status == 'cancelled' %}
-                            <span class="cancelled">
+                        <span class="cancelled">
 
-                                Annulé
+                            Annulé
 
-                            </span>
+                        </span>
                         {% else %}
 
                         <span class="validated">
@@ -183,17 +183,17 @@
 
                     <td>
                         {% if sale.status == 'validated' %}
-                            {% if sale.payment_status == 'paid' %}
-                                <span class="validated">
-                                    Payé
-                                </span>
-                            {% else %}
-                                <a class="pay" href="{% url 'payments:create' %}?type=sale&id={{ sale.id }}">
-                                    Payer
-                                </a>
-                            {% endif %}
+                        {% if sale.payment_status == 'paid' %}
+                        <span class="validated">
+                            Payé
+                        </span>
                         {% else %}
-                         —
+                        <a class="pay" href="{% url 'payments:create' %}?type=sale&id={{ sale.id }}">
+                            Payer
+                        </a>
+                        {% endif %}
+                        {% else %}
+                        —
                         {% endif %}
                     </td>
 
@@ -202,9 +202,32 @@
                 {% endfor %}
 
             </tbody>
-
         </table>
+    </div>
 
+    <div class="pagination">
+
+        {% if page_obj.has_previous %}
+            <a href="?page=1">
+                « Premier
+            </a>
+
+            <a href="?page={{ page_obj.previous_page_number }}">
+                ←
+            </a>
+        {% endif %}
+
+        <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">
+                →
+            </a>
+
+            <a href="?page={{ page_obj.paginator.num_pages }}">
+                Dernier »
+            </a>
+        {% endif %}
     </div>
 
 </div>

@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.db.models import Sum
+from django.core.paginator import Paginator
 
 from .forms import PaymentForm
 from .models import Payment
@@ -134,11 +135,18 @@ def create_payment(request):
 
 @login_required(login_url='accounts:login')
 def payment_list(request):
+
     payments = Payment.objects.select_related('sale').all().order_by('-id')
     total_received = payments.filter(sale__isnull=False, sale__status='validated').aggregate(total=Sum('amount'))['total'] or 0
     total_sent = payments.filter(purchase__isnull=False, purchase__status='received').aggregate(total=Sum('amount'))['total'] or 0
+
+    paginator = Paginator(payments, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'payments': payments,
+        'payments': page_obj,
+        'page_obj': page_obj,
         'total_received': total_received,
         'total_sent': total_sent,
     }

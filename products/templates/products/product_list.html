@@ -5,78 +5,101 @@
 
 
 {% block head%}
-    <link rel="stylesheet" href="{% static 'css/products/product_list.css' %}">
+<link rel="stylesheet" href="{% static 'css/products/product_list.css' %}">
 {% endblock %}
 
 
 {% block content %}
 
-    <div class="page-header">
-        <h1>📦 Produits</h1>
-        <a href="{% url 'products:create' %}" class="btn-add">+ Ajouter</a>
-    </div>
+<div class="page-header">
+    <h1>📦 Produits</h1>
+    <a href="{% url 'products:create' %}" class="btn-add">+ Ajouter</a>
+</div>
 
-    <div class="table-card">
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Produit</th>
-                    <th>Magasin(Stock)</th>
-                    <th>Catégorie</th>
-                    <th>Marque</th>
-                    <th>Référence produit</th>
-                    <th>Prix Achat</th>
-                    <th>Prix Vente</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
+<div class="table-card">
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Produit</th>
+                <th>Magasin(Stock)</th>
+                <th>Catégorie</th>
+                <th>Marque</th>
+                <th>Référence produit</th>
+                <th>Prix Achat</th>
+                <th>Prix Vente</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
 
-            <tbody>
-                {% for product in products %}
-                    <tr>
-                        <td>
-                            {% if product.image %}
-                                <img class="thumb" src="{{ product.image.url }}">
-                            {% else %}
-                                —
-                            {% endif %}
-                        </td>
-                        <td>{{ product.name }}</td>
-                        <td>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                    {% if product.image %}
+                    <img class="thumb" src="{{ product.image.url }}">
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
+                <td>{{ product.name }}</td>
+                <td>
 
-                            {% for stock in product.stocks.all %}
-                                {{ stock.store }}({{ stock.quantity }}) <br />
-                            {% empty %}
-                                —
-                            {% endfor %}
+                    {% for stock in product.stocks.all %}
+                    {{ stock.store }}({{ stock.quantity }}) <br />
+                    {% empty %}
+                    —
+                    {% endfor %}
 
-                        </td>
-                        <td>{{ product.category }}</td>
-                        <td>{{ product.marque }}</td>
-                        <td>{{ product.reference }}</td>
-                        {% if product.purchase_price != None %}
-                            <td>{{ product.purchase_price|intcomma }} FCFA</td>
-                        {% else %}
-                            <td> --- </td>
-                        {% endif %}
-                        <td>{{ product.sale_price|intcomma }} FCFA</td>
-                        <td class="actions">
-                            <a class="edit" href="{% url 'products:update' product.id %}">
-                                Modifier
-                            </a>
-                            <a class="delete" href="{% url 'products:delete' product.id %}"
-                                onclick="return confirm('Supprimer ce produit ?')">
-                                Supprimer
-                            </a>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="8">Aucun produit</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.marque }}</td>
+                <td>{{ product.reference }}</td>
+                {% if product.purchase_price != None %}
+                <td>{{ product.purchase_price|intcomma }} FCFA</td>
+                {% else %}
+                <td> --- </td>
+                {% endif %}
+                <td>{{ product.sale_price|intcomma }} FCFA</td>
+                <td class="actions">
+                    <a class="edit" href="{% url 'products:update' product.id %}">
+                        Modifier
+                    </a>
+                    <a class="delete" href="{% url 'products:delete' product.id %}"
+                        onclick="return confirm('Supprimer ce produit ?')">
+                        Supprimer
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">Aucun produit</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">« Premier</a>
+
+        <a href="?page={{ page_obj.previous_page_number }}">
+            ←
+        </a>
+    {% endif %}
+
+    <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">
+            →
+        </a>
+
+        <a href="?page={{ page_obj.paginator.num_pages }}">
+            Dernier »
+        </a>
+    {% endif %}
+</div>
+
 {% endblock %}

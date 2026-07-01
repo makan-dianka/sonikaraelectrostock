@@ -21,6 +21,7 @@ from weasyprint import HTML
 from django.conf import settings
 import os
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 
 
@@ -42,19 +43,18 @@ def quote_list(request):
 
     )
 
-    return render(
 
-        request,
 
-        'quotes/list.html',
+    paginator = Paginator(quotes, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-        {
+    context = {
+        'quotes': page_obj,
+        'page_obj': page_obj,
+    }
 
-            'quotes':quotes
-
-        }
-
-    )
+    return render(request, 'quotes/list.html', context)
 
 
 

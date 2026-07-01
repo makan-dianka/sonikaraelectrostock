@@ -8,6 +8,7 @@ from .forms import SaleForm, SaleItemFormSet
 
 from django.contrib import messages
 from django.db.models import Sum
+from django.core.paginator import Paginator
 
 from .services import validate_sale, cancel_sale
 
@@ -49,13 +50,20 @@ def generate_reference():
 def sale_list(request):
 
     sales = Sale.objects.select_related('customer', 'store').order_by('-created_at')
+
+    sales_validated = Sale.objects.filter(status='validated').select_related('customer', 'store')
     total_sale = sales.filter(status='validated').aggregate(total=Sum('total'))['total'] or 0
     sales_validated = Sale.objects.filter(status='validated').select_related('customer', 'store').order_by('-created_at')
     total_paid = sum(sale.paid_amount for sale in sales_validated)
     total_remaining = total_sale - total_paid
 
+    paginator = Paginator(sales, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'sales' : sales,
+        'sales': page_obj,
+        'page_obj': page_obj,
         'total_sale' : total_sale,
         'total_paid' : total_paid,
         'total_remaining' : total_remaining

@@ -103,7 +103,8 @@ td {
 
 .pay {
 
-    background: #f39b00;;
+    background: #f39b00;
+    ;
 
     padding: 10px 16px;
 
@@ -268,5 +269,59 @@ td {
             1fr;
 
     }
+
+}
+
+
+
+/* pagination */
+
+.pagination {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 30px;
+
+    flex-wrap: wrap;
+
+}
+
+
+
+.pagination a {
+
+    padding: 10px 18px;
+
+    background: #f39b00;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    transition: .2s;
+
+}
+
+
+
+.pagination a:hover {
+
+    transform: translateY(-2px);
+
+}
+
+
+
+.pagination span {
+
+    font-weight: 700;
 
 }

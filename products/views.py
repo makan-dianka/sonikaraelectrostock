@@ -9,6 +9,7 @@ from stocks.models import Stock
 from django.db.models import Q
 from .models import Product
 from .serializers import ProductSearchSerializer
+from django.core.paginator import Paginator
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -39,11 +40,20 @@ def product_search_api(request):
 
 
 
-# lister les produits
+
+
 @login_required(login_url='accounts:login')
 def product_list(request):
-    products = Product.objects.filter(is_deleted=False).order_by('-created_at')
-    context = {'products' : products}
+    products = Product.objects.filter(is_deleted=False).prefetch_related('stocks', 'stocks__store').order_by('-created_at')
+    paginator = Paginator(products, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'products': page_obj,
+        'page_obj': page_obj,
+    }
+
     return render(request, "products/product_list.html", context)
 
 
