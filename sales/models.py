@@ -37,7 +37,6 @@ class Sale(TimeStampedModel):
     )
 
     total = models.IntegerField(default=0)
-    apply_vat = models.BooleanField(default=False)
     vat_rate = models.IntegerField(default=18)
     delivery_fee = models.IntegerField(default=0)
 
@@ -68,8 +67,6 @@ class Sale(TimeStampedModel):
 
     @property
     def vat_amount(self):
-        if not self.apply_vat:
-            return 0
         return round(self.total * self.vat_rate / 100)
 
 

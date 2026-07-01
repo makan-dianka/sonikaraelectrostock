@@ -25,8 +25,6 @@ class SaleForm(forms.ModelForm):
 
             'payment_status',
 
-            'vat_rate'
-
         ]
 
         widgets = {
@@ -43,7 +41,12 @@ class SaleForm(forms.ModelForm):
                 }
             ),
 
-            'apply_vat':forms.CheckboxInput(),
+            'vat_rate':
+            forms.NumberInput(
+                attrs={
+                    'class':'form-control',
+                }
+            ),
 
             'delivery_fee':forms.NumberInput(
                 attrs={
@@ -57,7 +60,7 @@ class SaleForm(forms.ModelForm):
         labels = {
             'customer': 'Choisir un client',
             'store': 'Choisir un magasin',
-            'apply_vat': 'TVA',
+            'vat_rate': 'Pourcentage TVA (%)',
             'delivery_fee': 'Frais de livraison',
         }
 

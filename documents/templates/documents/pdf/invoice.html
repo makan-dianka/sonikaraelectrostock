@@ -558,9 +558,9 @@
                 <span>{{ sale.total|intcomma }} FCFA</span>
             </div>
 
-            {% if sale.apply_vat %}
+            {% if sale.vat_rate %}
                 <div class="total-line">
-                    <span>TVA (18%)</span>
+                    <span>TVA ({{ sale.vat_rate }}%)</span>
                     <span>{{ sale.vat_amount|intcomma }} FCFA</span>
                 </div>
             {% endif %}
