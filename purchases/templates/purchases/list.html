@@ -35,6 +35,26 @@
     </div>
 
 
+
+    <div class="stats">
+        <div class="resume total">
+            <p>Total achat</p>
+            <h2>{{ total_purchase|intcomma }} FCFA</h2>
+        </div>
+
+        <div class="resume paid">
+            <p>Total payé</p>
+            <h2>{{ total_paid|intcomma }} FCFA</h2>
+        </div>
+
+        <div class="resume remaining">
+            <p>Reste à payer</p>
+            <h2>{{ total_remaining|intcomma }} FCFA</h2>
+        </div>
+    </div>
+
+
+
     <div class="card">
 
         <table>

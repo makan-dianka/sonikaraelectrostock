@@ -12,6 +12,7 @@ from .forms import (
 )
 
 from django.contrib import messages
+from django.db.models import Sum
 
 
 from .services import receive_purchase
@@ -36,7 +37,19 @@ def purchase_list(request):
         )
     )
 
-    return render(request, 'purchases/list.html', {'purchases': purchases})
+
+    total_purchase = purchases.aggregate(total=Sum('total'))['total'] or 0
+    total_paid = sum(purchase.paid_amount for purchase in purchases)
+    total_remaining = total_purchase - total_paid
+
+    context = {
+        'purchases': purchases,
+        'total_purchase': total_purchase,
+        'total_paid': total_paid,
+        'total_remaining': total_remaining,
+    }
+
+    return render(request, 'purchases/list.html', context)
 
 
 
