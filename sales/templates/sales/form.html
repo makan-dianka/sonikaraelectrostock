@@ -13,120 +13,103 @@
 
     <h1>💳 Nouvelle vente</h1>
 
-    <form method="POST">
-
-        {% csrf_token %}
+    <form method="POST"> {% csrf_token %}
 
         {{ formset.management_form }}
 
-
         <!-- ENTETE ACHAT -->
-
         <div class="header-grid">
-
             {% for field in form %}
-
-            <div class="field">
-
-                <label>
-
-                    {{ field.label }}
-
-                </label>
-
-                {{ field }}
-
-            </div>
-
+                <div class="field">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                </div>
             {% endfor %}
-
         </div>
+
         <br />
         <br />
         <hr />
+
         <h2>Produits</h2>
 
 
-<div id="lines">
+        <div id="lines">
+            {% for line in formset %}
+                <div class="line">
+                    {{ line.id }}
+                    <div class="product-search-wrapper">
+                        <label>Produit</label>
+                        {{ line.product }}
 
-    {% for line in formset %}
-    <div class="line">
+                        <input
+                            type="text"
+                            class="form-control product-search-input"
+                            placeholder="Rechercher par référence ou catégorie..."
+                            value="{% if line.instance.product %}{{ line.instance.product.reference }} - {{ line.instance.product.name }}{% endif %}"
+                            autocomplete="off"
+                        >
 
-        {{ line.id }}
+                        <div class="product-search-results"></div>
+                    </div>
 
-        <div class="product-search-wrapper">
-            <label>Produit</label>
+                    <div>
+                        <label>Quantité</label>
+                        {{ line.quantity }}
+                    </div>
 
-            {{ line.product }}
+                    <div>
+                        <label>Prix de vente</label>
+                        {{ line.unit_price }}
+                    </div>
 
-            <input
-                type="text"
-                class="form-control product-search-input"
-                placeholder="Rechercher par référence ou catégorie..."
-                value="{% if line.instance.product %}{{ line.instance.product.reference }} - {{ line.instance.product.name }}{% endif %}"
-                autocomplete="off"
-            >
+                    <div class="delete">
+                        {% if line.instance.pk %}
+                        <label>Supprimer</label>
+                        {{ line.DELETE }}
+                        {% endif %}
+                    </div>
 
-            <div class="product-search-results"></div>
+                </div>
+            {% endfor %}
+
         </div>
 
-        <div>
-            <label>Quantité</label>
-            {{ line.quantity }}
+
+        <div id="empty-form" style="display:none;">
+            <div class="line">
+
+                {{ formset.empty_form.id }}
+
+                <div class="product-search-wrapper">
+                    <label>Produit</label>
+
+                    {{ formset.empty_form.product }}
+
+                    <input
+                        type="text"
+                        class="form-control product-search-input"
+                        placeholder="Rechercher par référence ou catégorie..."
+                        autocomplete="off"
+                    >
+
+                    <div class="product-search-results"></div>
+                </div>
+
+                <div>
+                    <label>Quantité</label>
+                    {{ formset.empty_form.quantity }}
+                </div>
+
+                <div>
+                    <label>Prix unité</label>
+                    {{ formset.empty_form.unit_price }}
+                </div>
+
+                <div></div>
+
+            </div>
         </div>
-
-        <div>
-            <label>Prix de vente</label>
-            {{ line.unit_price }}
-        </div>
-
-        <div class="delete">
-            {% if line.instance.pk %}
-            <label>Supprimer</label>
-            {{ line.DELETE }}
-            {% endif %}
-        </div>
-
-    </div>
-    {% endfor %}
-
-</div>
-
-
-<div id="empty-form" style="display:none;">
-    <div class="line">
-
-        {{ formset.empty_form.id }}
-
-        <div class="product-search-wrapper">
-            <label>Produit</label>
-
-            {{ formset.empty_form.product }}
-
-            <input
-                type="text"
-                class="form-control product-search-input"
-                placeholder="Rechercher par référence ou catégorie..."
-                autocomplete="off"
-            >
-
-            <div class="product-search-results"></div>
-        </div>
-
-        <div>
-            <label>Quantité</label>
-            {{ formset.empty_form.quantity }}
-        </div>
-
-        <div>
-            <label>Prix unité</label>
-            {{ formset.empty_form.unit_price }}
-        </div>
-
-        <div></div>
-
-    </div>
-</div>
 
 
         <!-- TEMPLATE VIDE -->
@@ -138,174 +121,150 @@
                 {{ formset.empty_form.id }}
 
                 <div>
-
                     <label>Produit</label>
-
                     {{ formset.empty_form.product }}
-
                 </div>
 
                 <div>
-
                     <label>Quantité</label>
-
                     {{ formset.empty_form.quantity }}
-
                 </div>
 
                 <div>
-
                     <label>Prix unité</label>
-
                     {{ formset.empty_form.unit_price }}
-
                 </div>
-
                 <div></div>
-
             </div>
-
         </div>
 
 
         <br />
         <div class="buttons">
-
-            <button type="button" id="add-line" class="btn btn-primary mb-3">
-
-                +
-
-                Ajouter ligne
-
-            </button>
-
+            <button type="button" id="add-line" class="btn btn-primary mb-3">+ Ajouter ligne</button>
             <br />  <br />
-
             <button type="submit" class="btn w-100" style="background-color: #f39b00; color: white; font-family: 'Libre Baskerville'; padding: 15px; font-size: 20px;">
-
                 Valider la vente
-
             </button>
-
         </div>
-
-
     </form>
-
 </div>
 
 <script>
-const PRODUCT_SEARCH_URL = "{% url 'products:product_search_api' %}";
+    const PRODUCT_SEARCH_URL = "{% url 'products:product_search_api' %}";
 
-function debounce(fn, delay) {
-    let timer;
-    return function (...args) {
-        clearTimeout(timer);
-        timer = setTimeout(() => fn.apply(this, args), delay);
-    };
-}
-
-function initProductSearch(lineEl) {
-    const searchInput = lineEl.querySelector('.product-search-input');
-    const resultsBox = lineEl.querySelector('.product-search-results');
-    const hiddenProductInput = lineEl.querySelector('[id$="-product"]');
-    const unitPriceInput = lineEl.querySelector('[id$="-unit_price"]');
-
-    if (!searchInput || searchInput.dataset.initialized) return;
-    searchInput.dataset.initialized = "true";
-
-    const doSearch = debounce(async function (query) {
-        if (query.length < 1) {
-            resultsBox.innerHTML = '';
-            resultsBox.style.display = 'none';
-            return;
-        }
-
-        try {
-            const response = await fetch(`${PRODUCT_SEARCH_URL}?q=${encodeURIComponent(query)}`);
-            const data = await response.json();
-            renderResults(data.results);
-        } catch (err) {
-            console.error('Erreur recherche produit:', err);
-        }
-    }, 200);
-
-    function renderResults(results) {
-        if (results.length === 0) {
-            resultsBox.innerHTML = '<div class="no-result">Aucun produit trouvé</div>';
-            resultsBox.style.display = 'block';
-            return;
-        }
-
-        resultsBox.innerHTML = results.map(p => `
-            <div class="result-item"
-                 data-id="${p.id}"
-                 data-price="${p.sale_price}"
-                 data-label="${p.reference} - ${p.name}">
-                <strong>${p.reference}</strong> — ${p.name}
-                <span class="result-category">${p.category}</span>
-            </div>
-        `).join('');
-
-        resultsBox.style.display = 'block';
+    function debounce(fn, delay) {
+        let timer;
+        return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), delay);
+        };
     }
 
-    searchInput.addEventListener('input', function () {
-        doSearch(this.value.trim());
-    });
+    function initProductSearch(lineEl) {
+        const searchInput = lineEl.querySelector('.product-search-input');
+        const resultsBox = lineEl.querySelector('.product-search-results');
+        const hiddenProductInput = lineEl.querySelector('[id$="-product"]');
+        const hiddenProductQuantity = lineEl.querySelector('[id$="-quantity"]');
+        const unitPriceInput = lineEl.querySelector('[id$="-unit_price"]');
 
-    searchInput.addEventListener('focus', function () {
-        if (resultsBox.innerHTML.trim() !== '') {
+        if (!searchInput || searchInput.dataset.initialized) return;
+        searchInput.dataset.initialized = "true";
+
+        const doSearch = debounce(async function (query) {
+            if (query.length < 1) {
+                resultsBox.innerHTML = '';
+                resultsBox.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${PRODUCT_SEARCH_URL}?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                renderResults(data.results);
+            } catch (err) {
+                console.error('Erreur recherche produit:', err);
+            }
+        }, 200);
+
+        function renderResults(results) {
+            if (results.length === 0) {
+                resultsBox.innerHTML = '<div class="no-result">Aucun produit trouvé</div>';
+                resultsBox.style.display = 'block';
+                return;
+            }
+
+            resultsBox.innerHTML = results.map(p => `
+                <div class="result-item"
+                    data-id="${p.id}"
+                    data-price="${p.sale_price}"
+                    data-quantity=1
+                    data-label="${p.reference} - ${p.name}">
+                    <strong>${p.reference}</strong> — ${p.name}
+                    <span class="result-category">${p.category}</span>
+                </div>
+            `).join('');
+
             resultsBox.style.display = 'block';
         }
-    });
 
-    resultsBox.addEventListener('click', function (e) {
-        const item = e.target.closest('.result-item');
-        if (!item) return;
+        searchInput.addEventListener('input', function () {
+            doSearch(this.value.trim());
+        });
 
-        hiddenProductInput.value = item.dataset.id;
-        unitPriceInput.value = item.dataset.price;
-        searchInput.value = item.dataset.label;
+        searchInput.addEventListener('focus', function () {
+            if (resultsBox.innerHTML.trim() !== '') {
+                resultsBox.style.display = 'block';
+            }
+        });
 
-        resultsBox.innerHTML = '';
-        resultsBox.style.display = 'none';
-    });
+        resultsBox.addEventListener('click', function (e) {
+            const item = e.target.closest('.result-item');
+            if (!item) return;
 
-    // fermer le dropdown si on clique ailleurs
-    document.addEventListener('click', function (e) {
-        if (!lineEl.contains(e.target)) {
+            hiddenProductInput.value = item.dataset.id;
+            hiddenProductQuantity.value = item.dataset.quantity;
+            unitPriceInput.value = item.dataset.price;
+            searchInput.value = item.dataset.label;
+
+            resultsBox.innerHTML = '';
             resultsBox.style.display = 'none';
-        }
+        });
+
+        // fermer le dropdown si on clique ailleurs
+        document.addEventListener('click', function (e) {
+            if (!lineEl.contains(e.target)) {
+                resultsBox.style.display = 'none';
+            }
+        });
+    }
+
+    // initialiser toutes les lignes déjà présentes
+    document.querySelectorAll('#lines .line').forEach(initProductSearch);
+
+
+    // --- gestion de l'ajout de ligne (votre code existant, adapté) ---
+
+    const addButton = document.getElementById('add-line');
+    const container = document.getElementById('lines');
+
+    const totalForms =
+        document.getElementById('id_items-TOTAL_FORMS') ||
+        document.getElementById('id_purchaseitem_set-TOTAL_FORMS');
+
+    addButton.addEventListener('click', function () {
+        let formIndex = parseInt(totalForms.value);
+
+        let template = document.getElementById('empty-form').innerHTML;
+        template = template.replace(/__prefix__/g, formIndex);
+
+        container.insertAdjacentHTML('beforeend', template);
+
+        const newLine = container.lastElementChild;
+        initProductSearch(newLine);
+
+        totalForms.value = formIndex + 1;
     });
-}
-
-// initialiser toutes les lignes déjà présentes
-document.querySelectorAll('#lines .line').forEach(initProductSearch);
-
-
-// --- gestion de l'ajout de ligne (votre code existant, adapté) ---
-
-const addButton = document.getElementById('add-line');
-const container = document.getElementById('lines');
-
-const totalForms =
-    document.getElementById('id_items-TOTAL_FORMS') ||
-    document.getElementById('id_purchaseitem_set-TOTAL_FORMS');
-
-addButton.addEventListener('click', function () {
-    let formIndex = parseInt(totalForms.value);
-
-    let template = document.getElementById('empty-form').innerHTML;
-    template = template.replace(/__prefix__/g, formIndex);
-
-    container.insertAdjacentHTML('beforeend', template);
-
-    const newLine = container.lastElementChild;
-    initProductSearch(newLine);
-
-    totalForms.value = formIndex + 1;
-});
 </script>
 
 {% endblock %}
