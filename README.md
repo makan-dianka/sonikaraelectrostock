@@ -7,21 +7,170 @@ Application web de gestion commerciale permettant de gérer plusieurs magasins, 
 - python
 
 
-## Architecture
-les applications du projet
+# Architecture
 
-    apps
-        accounts/
-        stores/
-        products/
-        customers/
-        suppliers/
-        sales/
-        purchases/
-        payments/
-        expenses/
-        documents/
-        dashboard/
+
+
+                             ┌─────────────────────────┐
+                             │      Dashboard          │
+                             │ KPI - Graphiques - CA  │
+                             └────────────┬────────────┘
+                                          │
+ ─────────────────────────────────────────┼────────────────────────────────────────
+                                          │
+ ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────────┐
+ │ MultiStore   │  │ Utilisateurs │  │ Paramètres   │  │ Notifications  │
+ └──────┬───────┘  └──────┬───────┘  └────────────────┘  └────────────────┘
+        │                 │
+        └─────────────────┼───────────────────────────────────────────────────┐
+                          │                                                   │
+                          ▼                                                   ▼
+
+                  ┌─────────────────────────────────────────────────────────────┐
+                  │                    PRODUITS                                │
+                  │ Catégories - Marques - Produits - Stock - Inventaire       │
+                  └──────────────┬──────────────────────────────────────────────┘
+                                 │
+                 ┌───────────────┴────────────────┐
+                 │                                │
+                 ▼                                ▼
+
+        ┌─────────────────┐              ┌──────────────────┐
+        │     ACHATS      │              │      VENTES      │
+        └────────┬────────┘              └─────────┬────────┘
+                 │                                 │
+                 ▼                                 ▼
+
+        Ligne Achat                      Ligne Vente
+
+                 │                                 │
+                 └───────────────┬─────────────────┘
+                                 │
+                                 ▼
+
+                         Mise à jour Stock
+
+───────────────────────────────────────────────────────────────────────────────
+
+                 ┌───────────────────────────────────────┐
+                 │              DOCUMENTS                │
+                 ├───────────────────────────────────────┤
+                 │ Bon de commande                       │
+                 │ Bon de livraison                      │
+                 │ Facture PDF                           │
+                 └───────────────────────────────────────┘
+
+───────────────────────────────────────────────────────────────────────────────
+
+        ┌────────────────┐             ┌────────────────────┐
+        │    CLIENTS     │             │   FOURNISSEURS     │
+        └────────────────┘             └────────────────────┘
+
+───────────────────────────────────────────────────────────────────────────────
+
+                 ┌──────────────────────────────────────┐
+                 │            PAIEMENTS                 │
+                 ├──────────────────────────────────────┤
+                 │ Espèces                              │
+                 │ Banque                               │
+                 │ Mobile Money                         │
+                 │ Chèque                               │
+                 └──────────────────────────────────────┘
+
+───────────────────────────────────────────────────────────────────────────────
+
+         ┌────────────────────┐       ┌─────────────────────┐
+         │     DÉPENSES       │       │      CRÉDITS        │
+         ├────────────────────┤       ├─────────────────────┤
+         │ Catégories         │       │ Crédit marchandises │
+         │ Dépenses           │       │ Crédit espèces      │
+         │ Historique         │       │ Remboursements      │
+         └────────────────────┘       └─────────────────────┘
+
+───────────────────────────────────────────────────────────────────────────────
+
+                         ┌─────────────────────┐
+                         │      RAPPORTS       │
+                         ├─────────────────────┤
+                         │ Chiffre d'affaires  │
+                         │ Achats              │
+                         │ Dépenses            │
+                         │ Stocks              │
+                         │ Bénéfices           │
+                         │ Crédits             │
+                         └─────────────────────┘
+
+
+
+### Structure backend
+
+core/
+│
+├── accounts/        (utilisateurs)
+├── stores/          (magasins)
+├── customers/       (clients)
+├── suppliers/       (fournisseurs)
+├── products/        (produits)
+├── purchases/       (achats)
+├── sales/           (ventes)
+├── documents/       (bon de commande, livraison, facture)
+├── payments/        (paiements)
+├── expenses/        (dépenses)
+├── credits/         (crédits clients et espèces)
+├── dashboard/       (statistiques)
+├── reports/         (rapports)
+├── settings_app/    (configuration)
+
+
+# Logique metier
+
+### Fournisseur
+
+Fournisseur
+      │
+      ▼
+    Achat
+      │
+      ▼
+ Mise à jour du stock
+      │
+      ▼
+ Vente
+      │
+      ├──────────────► Paiement
+      │                     │
+      │                     ▼
+      │               Espèces / Banque
+      │
+      ▼
+ Bon de commande
+      ▼
+ Bon de livraison
+      ▼
+ Facture PDF
+
+
+### Client
+
+Client
+   │
+   ▼
+Crédit espèces
+   │
+   ▼
+Échéance
+   │
+   ▼
+Paiement 1
+Paiement 2
+Paiement 3
+   │
+   ▼
+Crédit soldé
+
+
+
+
 
 
 ## installation
