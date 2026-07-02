@@ -1,0 +1,133 @@
+{% extends 'layout/base.html' %} {% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/accounts/user_list.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="page">
+        <div class="page-header">
+            <div>
+                <h1>👥 Utilisateurs</h1>
+                <p>Gestion des collaborateurs</p>
+            </div>
+
+            <a href="{% url 'accounts:register' %}" class="btn-add">
+                + Nouvel utilisateur
+            </a>
+        </div>
+
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3>{{ total_users }}</h3>
+                <span>Utilisateurs</span>
+            </div>
+
+            <div class="stat-card">
+                <h3>{{ total_manager }}</h3>
+                <span>Gérants</span>
+            </div>
+
+            <div class="stat-card">
+                <h3>{{ total_cashier }}</h3>
+                <span>Caissiers</span>
+            </div>
+
+            <div class="stat-card">
+                <h3>{{ total_seller }}</h3>
+                <span>Vendeurs</span>
+            </div>
+        </div>
+
+
+        <div class="table-card">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Magasin</th>
+                        <th>Rôle</th>
+                        <th>Statut</th>
+                        <th>Date création</th>
+                        <th>Dernière connexion</th>
+                        <!-- <th>Actions</th> -->
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for user in users %}
+                        <tr>
+                            <td>
+                                <strong>
+                                    {{ user.first_name }}
+                                    {{ user.last_name }}
+                                </strong>
+                            </td>
+
+                            <td>
+                                {{ user.email }}
+                            </td>
+
+                            <td>
+                                {{ user.phone }}
+                            </td>
+
+                            <td>
+                                {{ user.store|default:"—" }}
+                            </td>
+
+                            <td>
+                                <span class="role {{ user.role }}">
+                                    {{ user.get_role_display }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {% if user.is_active %}
+                                    <span class="active">Actif</span>
+                                {% else %}
+                                    <span class="inactive">Désactivé</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {{ user.date_joined|date:"d/m/Y" }}
+                            </td>
+
+                            <td>
+                                {{ user.last_login }}
+                            </td>
+
+                            <!-- <td class="actions">
+                                <a href="#" class="edit">
+                                    Modifier
+                                </a>
+
+                                <a href="#" class="delete"
+                                    onclick="return confirm('Supprimer cet utilisateur ?')"
+                                > Supprimer</a>
+                            </td> -->
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8">Aucun utilisateur.</td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -61,6 +61,9 @@ def product_list(request):
 # creation d'un produit
 @login_required(login_url='accounts:login')
 def create_product(request):
+    if request.user.role not in ['owner']:
+        return HttpResponseForbidden("Vous n'avez pas la permission d'ajouter de produit.")
+
 
     form = ProductForm(
 

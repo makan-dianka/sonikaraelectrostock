@@ -27,6 +27,9 @@ from sales.models import (
 ########################################################################################################
 @login_required(login_url='accounts:login')
 def dashboard(request, store_id=None):
+    if request.user.role not in ['owner']:
+        return redirect("products:product_list")
+
 
     today = timezone.localdate()
     print("aujourd'hui:", today)

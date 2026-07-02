@@ -9,6 +9,7 @@ from .forms import SaleForm, SaleItemFormSet
 from django.contrib import messages
 from django.db.models import Sum
 from django.core.paginator import Paginator
+from django.http import HttpResponseForbidden
 
 from .services import validate_sale, cancel_sale
 
@@ -144,6 +145,9 @@ def validate_sale_view(request, pk):
 
 @login_required(login_url='accounts:login')
 def cancel_sale_view(request, pk):
+
+    if request.user.role not in ['owner']:
+        return HttpResponseForbidden("Vous n'avez pas la permission d'annuler une vente.")
 
     sale = (Sale.objects.get(id=pk))
 

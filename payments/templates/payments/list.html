@@ -11,19 +11,22 @@
 
 {% block content %}
 <div class="container">
+    {% if request.user.is_authenticated %}
+        {% if request.user.role == 'owner' %}
+            <div class="stats">
 
-    <div class="stats">
+                <div class="card income">
+                    <p>Montant reçu</p>
+                    <h2>+ {{ total_received|intcomma }} FCFA</h2>
+                </div>
 
-        <div class="card income">
-            <p>Montant reçu</p>
-            <h2>+ {{ total_received|intcomma }} FCFA</h2>
-        </div>
-
-        <div class="card expense">
-            <p>Montant envoyé</p>
-            <h2>- {{ total_sent|intcomma }} FCFA</h2>
-        </div>
-    </div>
+                <div class="card expense">
+                    <p>Montant envoyé</p>
+                    <h2>- {{ total_sent|intcomma }} FCFA</h2>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 
     <div class="table-card">
 

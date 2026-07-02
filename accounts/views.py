@@ -5,6 +5,31 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 
 from accounts.forms import CreateUserForm
+from .models import CustomUser
+
+
+
+
+#######################################################################
+# Création d'un collaborateur                -------------------------#
+#######################################################################
+@login_required(login_url='accounts:login')
+def user_list(request):
+
+    if request.user.is_owner():
+        users = request.user.get_collaborators().select_related('store').order_by('first_name')
+    else:
+        users = CustomUser.objects.none()
+
+    context = {
+        'users': users,
+        'total_users': users.count(),
+        'total_manager': users.filter(role='manager').count(),
+        'total_cashier': users.filter(role='cashier').count(),
+        'total_seller': users.filter(role='seller').count(),
+    }
+
+    return render(request, 'accounts/user_list.html', context)
 
 
 
@@ -56,7 +81,7 @@ def register_page(request):
             form.created_by = request.user
             form.save()
 
-            return redirect('accounts:login')
+            return redirect('accounts:user_list')
 
         else:
             messages.info(request, 'Il y a une erreur dans le formulaire. Merci de corriger ')
