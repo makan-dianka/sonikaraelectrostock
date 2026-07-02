@@ -8,12 +8,13 @@ from django.http import HttpResponseForbidden
 
 from .models import Customer
 from .forms import CustomerForm
-from .serializers import CustomerSearchSerializer
+from .serializers import CustomerSearchSerializer, CustomerCreateSerializer
 from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 
 
@@ -39,6 +40,22 @@ def customer_search_api(request):
     serializer = CustomerSearchSerializer(customers, many=True)
     return Response({'results': serializer.data})
 
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_customer_api(request):
+    serializer = CustomerCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        customer = serializer.save()
+        return Response({
+                'success': True,
+                'id': customer.id,
+                'name': customer.name,
+                'phone': customer.phone,
+            })
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

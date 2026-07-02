@@ -13,4 +13,5 @@ urlpatterns = [
     path('<int:pk>/delete/', views.delete_customer, name="delete"),
 
     path('api/customer/search/', views.customer_search_api, name='customer_search_api'),
+    path('api/customer/create/', views.create_customer_api, name='create_customer_api'),
 ]

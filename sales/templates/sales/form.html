@@ -8,194 +8,232 @@
 
 
 {% block content %}
-    <div class="sale-card">
+<div class="sale-card">
 
-        <h1>💳 Nouvelle vente</h1>
+    <h1>💳 Nouvelle vente</h1>
 
-        <form method="POST"> {% csrf_token %}
+    <form method="POST"> {% csrf_token %}
 
-            {{ formset.management_form }}
+        {{ formset.management_form }}
 
-            <!-- ENTETE ACHAT -->
-            <div class="header-grid">
-                {% for field in form %}
-                <div class="field">
-                    {% if field.name == 'customer' %}
-                    <label>Client</label>
-                    {{ field }}
+        <!-- ENTETE ACHAT -->
+        <div class="header-grid">
+            {% for field in form %}
+            <div class="field">
+                {% if field.name == 'customer' %}
+                <label class="customer-label">
+                    Client
 
-                    <div class="customer-search-wrapper">
-                        <input type="text" id="customer-search" class="form-control"
-                            placeholder="Rechercher client par nom ou téléphone" autocomplete="off">
-
-                        <div id="customer-results"></div>
+                    <div type="button" id="open-customer-modal" class="add-customer">
+                        <svg width="25" height="25" color="blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
                     </div>
-                    {% else %}
-                    <label>{{ field.label }}</label>
-                    {{ field }}
+                </label>
+
+
+
+                {{ field }}
+
+                <div class="customer-search-wrapper">
+                    <input type="text" id="customer-search" class="form-control"
+                        placeholder="Rechercher client par nom ou téléphone" autocomplete="off">
+
+                    <div id="customer-results"></div>
+                </div>
+                {% else %}
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <br />
+        <br />
+        <hr />
+
+        <h2>Produits</h2>
+
+
+        <div id="lines">
+            {% for line in formset %}
+            <div class="line">
+
+                {{ line.id }}
+
+                <div class="product-search-wrapper">
+                    <label>Produit</label>
+                    {{ line.product }}
+
+                    <input type="text" class="form-control product-search-input" placeholder="Rechercher produit..."
+                        autocomplete="off">
+
+                    <div class="product-search-results"></div>
+                </div>
+
+
+                <div>
+                    <label>Quantité</label>
+                    {{ line.quantity }}
+                </div>
+
+
+                <div>
+                    <label>Prix unité</label>
+                    {{ line.unit_price }}
+                </div>
+
+
+                <div>
+                    <label>Sous-total</label>
+                    <input type="text" class="subtotal" readonly>
+
+                </div>
+
+
+                <div class="delete">
+                    {% if line.instance.pk %}
+                    <label>Supprimer</label>
+                    {{ line.DELETE }}
                     {% endif %}
                 </div>
-                {% endfor %}
             </div>
-
-            <br />
-            <br />
-            <hr />
-
-            <h2>Produits</h2>
+            {% endfor %}
+        </div>
 
 
-            <div id="lines">
-                {% for line in formset %}
-                <div class="line">
-
-                    {{ line.id }}
-
-                    <div class="product-search-wrapper">
-                        <label>Produit</label>
-                        {{ line.product }}
-
-                        <input type="text" class="form-control product-search-input" placeholder="Rechercher produit..."
-                            autocomplete="off">
-
-                        <div class="product-search-results"></div>
-                    </div>
 
 
-                    <div>
-                        <label>Quantité</label>
-                        {{ line.quantity }}
-                    </div>
+        <!-- TEMPLATE VIDE -->
 
+        <div id="empty-form" style="display:none;">
 
-                    <div>
-                        <label>Prix unité</label>
-                        {{ line.unit_price }}
-                    </div>
+            <div class="line">
 
+                {{ formset.empty_form.id }}
 
-                    <div>
-                        <label>Sous-total</label>
-                        <input type="text" class="subtotal" readonly>
-
-                    </div>
-
-
-                    <div class="delete">
-                        {% if line.instance.pk %}
-                        <label>Supprimer</label>
-                        {{ line.DELETE }}
-                        {% endif %}
-                    </div>
+                <div class="product-search-wrapper">
+                    <label>Produit</label>
+                    {{ formset.empty_form.product }}
+                    <input type="text" class="form-control product-search-input"
+                        placeholder="Rechercher par nom ou référence" autocomplete="off">
+                    <div class="product-search-results"></div>
                 </div>
-                {% endfor %}
-            </div>
 
 
-
-
-            <!-- TEMPLATE VIDE -->
-
-            <div id="empty-form" style="display:none;">
-
-                <div class="line">
-
-                    {{ formset.empty_form.id }}
-
-                    <div class="product-search-wrapper">
-                        <label>Produit</label>
-                        {{ formset.empty_form.product }}
-                        <input type="text" class="form-control product-search-input"
-                            placeholder="Rechercher par nom ou référence" autocomplete="off">
-                        <div class="product-search-results"></div>
-                    </div>
-
-
-                    <div>
-                        <label>Quantité</label>
-                        {{ formset.empty_form.quantity }}
-                    </div>
-
-
-                    <div>
-                        <label>Prix unité</label>
-                        {{ formset.empty_form.unit_price }}
-                    </div>
-
-
-                    <div>
-                        <label>Sous-total</label>
-                        <input type="text" class="subtotal" readonly>
-                    </div>
-                    <div></div>
+                <div>
+                    <label>Quantité</label>
+                    {{ formset.empty_form.quantity }}
                 </div>
+
+
+                <div>
+                    <label>Prix unité</label>
+                    {{ formset.empty_form.unit_price }}
+                </div>
+
+
+                <div>
+                    <label>Sous-total</label>
+                    <input type="text" class="subtotal" readonly>
+                </div>
+                <div></div>
             </div>
+        </div>
 
-            <br />
+        <br />
 
-            <div class="sale-total-box">
-                <span>Total :</span>
-                <strong id="sale-total">0 FCFA</strong>
-            </div>
+        <div class="sale-total-box">
+            <span>Total :</span>
+            <strong id="sale-total">0 FCFA</strong>
+        </div>
 
-            <br />
+        <br />
 
-            <div class="buttons">
-                <button type="button" id="add-line" class="btn btn-primary mb-3">+ Ajouter ligne</button>
-                <br /> <br />
-                <button type="submit" class="btn w-100"
-                    style="background-color: #f39b00; color: white; font-family: 'Libre Baskerville'; padding: 15px; font-size: 20px;">
-                    Valider la vente
-                </button>
-            </div>
-        </form>
+        <div class="buttons">
+            <button type="button" id="add-line" class="btn btn-primary mb-3">+ Ajouter ligne</button>
+            <br /> <br />
+            <button type="submit" class="btn w-100"
+                style="background-color: #f39b00; color: white; font-family: 'Libre Baskerville'; padding: 15px; font-size: 20px;">
+                Valider la vente
+            </button>
+        </div>
+    </form>
+
+
+    <div id="customer-modal">
+        <div class="modal-card">
+            <h2>Nouveau client</h2>
+            <form id="customer-form"> {% csrf_token %}
+                <input name="name" placeholder="Nom" required>
+                <input name="phone" placeholder="Téléphone" required>
+                <input name="email" placeholder="Email">
+
+                <textarea name="address" placeholder="Adresse"></textarea>
+
+                <div class="modal-buttons">
+                    <button type="button" id="close-modal">
+                        Annuler
+                    </button>
+
+                    <button>
+                        Créer
+                    </button>
+                </div>
+            </form>
+            
+        </div>
     </div>
 
-    <script>
-        const PRODUCT_SEARCH_URL = "{% url 'products:product_search_api' %}";
+</div>
 
-        function debounce(fn, delay) {
-            let timer;
-            return function (...args) {
-                clearTimeout(timer);
-                timer = setTimeout(() => fn.apply(this, args), delay);
-            };
-        }
+<script>
+    const PRODUCT_SEARCH_URL = "{% url 'products:product_search_api' %}";
 
-        function initProductSearch(lineEl) {
-            const searchInput = lineEl.querySelector('.product-search-input');
-            const resultsBox = lineEl.querySelector('.product-search-results');
-            const hiddenProductInput = lineEl.querySelector('[id$="-product"]');
-            const hiddenProductQuantity = lineEl.querySelector('[id$="-quantity"]');
-            const unitPriceInput = lineEl.querySelector('[id$="-unit_price"]');
+    function debounce(fn, delay) {
+        let timer;
+        return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
 
-            if (!searchInput || searchInput.dataset.initialized) return;
-            searchInput.dataset.initialized = "true";
+    function initProductSearch(lineEl) {
+        const searchInput = lineEl.querySelector('.product-search-input');
+        const resultsBox = lineEl.querySelector('.product-search-results');
+        const hiddenProductInput = lineEl.querySelector('[id$="-product"]');
+        const hiddenProductQuantity = lineEl.querySelector('[id$="-quantity"]');
+        const unitPriceInput = lineEl.querySelector('[id$="-unit_price"]');
 
-            const doSearch = debounce(async function (query) {
-                if (query.length < 1) {
-                    resultsBox.innerHTML = '';
-                    resultsBox.style.display = 'none';
-                    return;
-                }
+        if (!searchInput || searchInput.dataset.initialized) return;
+        searchInput.dataset.initialized = "true";
 
-                try {
-                    const response = await fetch(`${PRODUCT_SEARCH_URL}?q=${encodeURIComponent(query)}`);
-                    const data = await response.json();
-                    renderResults(data.results);
-                } catch (err) {
-                    console.error('Erreur recherche produit:', err);
-                }
-            }, 200);
+        const doSearch = debounce(async function (query) {
+            if (query.length < 1) {
+                resultsBox.innerHTML = '';
+                resultsBox.style.display = 'none';
+                return;
+            }
 
-            function renderResults(results) {
-                if (results.length === 0) {
-                    resultsBox.innerHTML = '<div class="no-result">Aucun produit trouvé</div>';
-                    resultsBox.style.display = 'block';
-                    return;
-                }
+            try {
+                const response = await fetch(`${PRODUCT_SEARCH_URL}?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                renderResults(data.results);
+            } catch (err) {
+                console.error('Erreur recherche produit:', err);
+            }
+        }, 200);
 
-                resultsBox.innerHTML = results.map(p => `
+        function renderResults(results) {
+            if (results.length === 0) {
+                resultsBox.innerHTML = '<div class="no-result">Aucun produit trouvé</div>';
+                resultsBox.style.display = 'block';
+                return;
+            }
+
+            resultsBox.innerHTML = results.map(p => `
                         <div class="result-item"
                             data-id="${p.id}"
                             data-price="${p.sale_price}"
@@ -206,200 +244,235 @@
                         </div>
                     `).join('');
 
+            resultsBox.style.display = 'block';
+        }
+
+        searchInput.addEventListener('input', function () {
+            doSearch(this.value.trim());
+        });
+
+        searchInput.addEventListener('focus', function () {
+            if (resultsBox.innerHTML.trim() !== '') {
                 resultsBox.style.display = 'block';
             }
-
-            searchInput.addEventListener('input', function () {
-                doSearch(this.value.trim());
-            });
-
-            searchInput.addEventListener('focus', function () {
-                if (resultsBox.innerHTML.trim() !== '') {
-                    resultsBox.style.display = 'block';
-                }
-            });
-
-            resultsBox.addEventListener('click', function (e) {
-                const item = e.target.closest('.result-item');
-                if (!item) return;
-
-                hiddenProductInput.value = item.dataset.id;
-                hiddenProductQuantity.value = item.dataset.quantity;
-                unitPriceInput.value = item.dataset.price;
-                searchInput.value = item.dataset.label;
-
-                resultsBox.innerHTML = '';
-                resultsBox.style.display = 'none';
-            });
-
-            // fermer le dropdown si on clique ailleurs
-            document.addEventListener('click', function (e) {
-                if (!lineEl.contains(e.target)) {
-                    resultsBox.style.display = 'none';
-                }
-            });
-        }
-
-        // initialiser toutes les lignes déjà présentes
-        document.querySelectorAll('#lines .line').forEach(initProductSearch);
-
-
-        // --- gestion de l'ajout de ligne (votre code existant, adapté) ---
-
-        const addButton = document.getElementById('add-line');
-        const container = document.getElementById('lines');
-
-        const totalForms =
-            document.getElementById('id_items-TOTAL_FORMS') ||
-            document.getElementById('id_purchaseitem_set-TOTAL_FORMS');
-
-        addButton.addEventListener('click', function () {
-            let formIndex = parseInt(totalForms.value);
-
-            let template = document.getElementById('empty-form').innerHTML;
-            template = template.replace(/__prefix__/g, formIndex);
-
-            container.insertAdjacentHTML('beforeend', template);
-
-            const newLine = container.lastElementChild;
-            initProductSearch(newLine);
-
-            totalForms.value = formIndex + 1;
         });
 
+        resultsBox.addEventListener('click', function (e) {
+            const item = e.target.closest('.result-item');
+            if (!item) return;
+
+            hiddenProductInput.value = item.dataset.id;
+            hiddenProductQuantity.value = item.dataset.quantity;
+            unitPriceInput.value = item.dataset.price;
+            searchInput.value = item.dataset.label;
+
+            resultsBox.innerHTML = '';
+            resultsBox.style.display = 'none';
+        });
+
+        // fermer le dropdown si on clique ailleurs
+        document.addEventListener('click', function (e) {
+            if (!lineEl.contains(e.target)) {
+                resultsBox.style.display = 'none';
+            }
+        });
+    }
+
+    // initialiser toutes les lignes déjà présentes
+    document.querySelectorAll('#lines .line').forEach(initProductSearch);
 
 
-        // calcul de sous-total et total
+    // --- gestion de l'ajout de ligne (votre code existant, adapté) ---
 
-        function formatAmount(value) {
-            return new Intl.NumberFormat('fr-FR').format(value);
+    const addButton = document.getElementById('add-line');
+    const container = document.getElementById('lines');
+
+    const totalForms =
+        document.getElementById('id_items-TOTAL_FORMS') ||
+        document.getElementById('id_purchaseitem_set-TOTAL_FORMS');
+
+    addButton.addEventListener('click', function () {
+        let formIndex = parseInt(totalForms.value);
+
+        let template = document.getElementById('empty-form').innerHTML;
+        template = template.replace(/__prefix__/g, formIndex);
+
+        container.insertAdjacentHTML('beforeend', template);
+
+        const newLine = container.lastElementChild;
+        initProductSearch(newLine);
+
+        totalForms.value = formIndex + 1;
+    });
+
+
+
+    // calcul de sous-total et total
+
+    function formatAmount(value) {
+        return new Intl.NumberFormat('fr-FR').format(value);
+    }
+
+
+    function updateLineSubtotal(line) {
+        const qty = parseFloat(line.querySelector('[id$="-quantity"]')?.value) || 0;
+        const price = parseFloat(line.querySelector('[id$="-unit_price"]')?.value) || 0;
+        const subtotal = qty * price;
+        const field = line.querySelector('.subtotal');
+        if (field) {
+            field.value = formatAmount(subtotal) + ' FCFA';
         }
+        updateSaleTotal();
+    }
 
 
-        function updateLineSubtotal(line) {
+    function updateSaleTotal() {
+        let total = 0;
+        document.querySelectorAll('#lines .line').forEach(line => {
             const qty = parseFloat(line.querySelector('[id$="-quantity"]')?.value) || 0;
             const price = parseFloat(line.querySelector('[id$="-unit_price"]')?.value) || 0;
-            const subtotal = qty * price;
-            const field = line.querySelector('.subtotal');
-            if (field) {
-                field.value = formatAmount(subtotal) + ' FCFA';
-            }
-            updateSaleTotal();
-        }
-
-
-        function updateSaleTotal() {
-            let total = 0;
-            document.querySelectorAll('#lines .line').forEach(line => {
-                const qty = parseFloat(line.querySelector('[id$="-quantity"]')?.value) || 0;
-                const price = parseFloat(line.querySelector('[id$="-unit_price"]')?.value) || 0;
-                total += (qty * price);
-            }
-            );
-            document.getElementById('sale-total').innerText = formatAmount(total) + ' FCFA';
-        }
-
-
-        function initCalculation(line) {
-            const qty = line.querySelector('[id$="-quantity"]');
-            const price = line.querySelector('[id$="-unit_price"]');
-            if (qty) {
-                qty.addEventListener('input', () => updateLineSubtotal(line));
-            }
-
-            if (price) {
-                price.addEventListener('input', () => updateLineSubtotal(line));
-            }
-
-            updateLineSubtotal(line);
-        }
-
-
-        // lignes existantes
-        document.querySelectorAll('#lines .line').forEach(line => {
-            initCalculation(line);
+            total += (qty * price);
         }
         );
+        document.getElementById('sale-total').innerText = formatAmount(total) + ' FCFA';
+    }
 
 
-        // ajout dynamique
-        addButton.addEventListener('click', function () {
+    function initCalculation(line) {
+        const qty = line.querySelector('[id$="-quantity"]');
+        const price = line.querySelector('[id$="-unit_price"]');
+        if (qty) {
+            qty.addEventListener('input', () => updateLineSubtotal(line));
+        }
+
+        if (price) {
+            price.addEventListener('input', () => updateLineSubtotal(line));
+        }
+
+        updateLineSubtotal(line);
+    }
+
+
+    // lignes existantes
+    document.querySelectorAll('#lines .line').forEach(line => {
+        initCalculation(line);
+    }
+    );
+
+
+    // ajout dynamique
+    addButton.addEventListener('click', function () {
+        setTimeout(() => {
+            const newLine = container.lastElementChild;
+            initProductSearch(newLine);
+            initCalculation(newLine);
+        }, 50);
+    });
+
+
+    // produit sélectionné
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.result-item')) {
             setTimeout(() => {
-                const newLine = container.lastElementChild;
-                initProductSearch(newLine);
-                initCalculation(newLine);
+                document.querySelectorAll('#lines .line').forEach(updateLineSubtotal);
             }, 50);
-        });
-
-
-        // produit sélectionné
-        document.addEventListener('click', function (e) {
-            if (e.target.closest('.result-item')) {
-                setTimeout(() => {
-                    document.querySelectorAll('#lines .line').forEach(updateLineSubtotal);
-                }, 50);
-            }
-        });
+        }
+    });
 
 
 
-        // rechercher un client
+    // rechercher un client
 
-        const CUSTOMER_URL = "{% url 'customers:customer_search_api' %}";
+    const CUSTOMER_URL = "{% url 'customers:customer_search_api' %}";
 
-        const customerInput = document.getElementById('customer-search');
-        const customerHidden = document.getElementById('id_customer');
-        const customerResults = document.getElementById('customer-results');
+    const customerInput = document.getElementById('customer-search');
+    const customerHidden = document.getElementById('id_customer');
+    const customerResults = document.getElementById('customer-results');
 
-        const searchCustomer = debounce(async function (query) {
-            if (query.length < 1) {
-                customerResults.style.display = 'none';
-                return;
-            }
+    const searchCustomer = debounce(async function (query) {
+        if (query.length < 1) {
+            customerResults.style.display = 'none';
+            return;
+        }
 
-            const response = await fetch(`${CUSTOMER_URL}?q=${query}`);
-                const data = await response.json();
-                renderCustomers(data.results);
-        }, 200);
+        const response = await fetch(`${CUSTOMER_URL}?q=${query}`);
+        const data = await response.json();
+        renderCustomers(data.results);
+    }, 200);
 
 
 
-        function renderCustomers(results) {
-            if (!results.length) {
-                customerResults.innerHTML = '<div class="customer-item">Aucun client</div>';
-                customerResults.style.display = 'block';
-                return;
-            }
+    function renderCustomers(results) {
+        if (!results.length) {
+            customerResults.innerHTML = '<div class="customer-item">Aucun client</div>';
+            customerResults.style.display = 'block';
+            return;
+        }
 
-            customerResults.innerHTML = results.map(c => `
+        customerResults.innerHTML = results.map(c => `
                 <div class="customer-item" data-id="${c.id}" data-label="${c.name}">
                     <strong>${c.name}</strong>
                     <span class="customer-phone">${c.phone}</span>
                 </div>`
-            ).join('');
+        ).join('');
 
-            customerResults.style.display = 'block';
+        customerResults.style.display = 'block';
+    }
+
+    customerInput.addEventListener('input', function () {
+        searchCustomer(this.value.trim());
+    });
+
+    customerResults.addEventListener('click', function (e) {
+        const item = e.target.closest('.customer-item');
+        if (!item) return;
+
+        customerHidden.value = item.dataset.id;
+        customerInput.value = item.dataset.label;
+        customerResults.style.display = 'none';
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!customerInput.contains(e.target) && !customerResults.contains(e.target)) {
+            customerResults.style.display = 'none';
+        }
+    });
+
+
+
+    // ajouter un popup form 
+    // pour creer un user
+
+    const modal = document.getElementById('customer-modal');
+
+    document.getElementById('open-customer-modal').onclick = () => {
+        modal.style.display = 'flex';
+    };
+
+    document.getElementById('close-modal').onclick = () => {
+        modal.style.display = 'none';
+    };
+
+    document.getElementById('customer-form').addEventListener('submit', async function (e) {
+
+        e.preventDefault();
+
+        const form =new FormData(this);
+        const response = await fetch("{% url 'customers:create_customer_api' %}", {method:'POST', body: form});
+        const data = await response.json();
+
+        if (response.ok) {
+            customerInput.value = `${data.name}`;
+            customerHidden.value = data.id;
+            modal.style.display = 'none';
+            this.reset();
         }
 
-        customerInput.addEventListener('input', function () {
-            searchCustomer(this.value.trim());
-        });
+        else {
+            alert(Object.values(data).join('\n'));
+        }
+    });
 
-        customerResults.addEventListener('click', function (e) {
-            const item = e.target.closest('.customer-item');
-            if (!item) return;
-
-            customerHidden.value = item.dataset.id;
-            customerInput.value = item.dataset.label;
-            customerResults.style.display = 'none';
-        });
-
-        document.addEventListener('click', function (e) {
-            if (!customerInput.contains(e.target) && !customerResults.contains(e.target)) {
-                customerResults.style.display = 'none';
-            }
-        });
-
-    </script>
+</script>
 
 {% endblock %}
