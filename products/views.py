@@ -245,7 +245,7 @@ def update_product(request, pk):
 @login_required(login_url='accounts:login')
 def delete_product(request, pk):
     if request.user.role not in ['owner']:
-        return HttpResponseForbidden("Vous n'avez pas la permission de supprimer un Magasin.")
+        return HttpResponseForbidden("Vous n'avez pas la permission de supprimer un produit.")
     product = get_object_or_404(Product, id=pk)
     product.is_deleted = True
     product.save()

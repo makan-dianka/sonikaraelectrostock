@@ -20,6 +20,7 @@ urlpatterns = [
     path('documents/', include("documents.urls")),
     path('quotes/', include("quotes.urls")),
     path('credits/', include("credits.urls")),
+    path('expenses/', include("expenses.urls")),
 ]
 
 

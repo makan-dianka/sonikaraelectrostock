@@ -40,12 +40,13 @@ INSTALLED_APPS = [
     'documents',
     'quotes',
     'credits',
+    'expenses',
 
 
     # autre app
     'django.contrib.humanize',
     'django_user_agents',
-     'rest_framework',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

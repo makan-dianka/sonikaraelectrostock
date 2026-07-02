@@ -1,0 +1,66 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/expenses/form.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="expense-page">
+
+    <div class="card">
+
+        <h1>
+
+            💸 Nouvelle dépense
+
+        </h1>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="grid">
+
+                {% for field in form %}
+
+                <div class="field">
+
+                    <label>
+
+                        {{ field.label }}
+
+                    </label>
+
+                    {{ field }}
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="buttons">
+
+                <a href="{% url 'expenses:list' %}" class="cancel">
+
+                    Retour
+
+                </a>
+
+                <button>
+
+                    Enregistrer
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
