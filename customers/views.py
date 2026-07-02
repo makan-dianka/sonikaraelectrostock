@@ -8,6 +8,36 @@ from django.http import HttpResponseForbidden
 
 from .models import Customer
 from .forms import CustomerForm
+from .serializers import CustomerSearchSerializer
+from django.db.models import Q
+
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def customer_search_api(request):
+    query = request.GET.get('q', '').strip()
+
+    if len(query) < 1:
+        return Response({'results': []})
+
+    customers = (
+        Customer.objects
+        .filter(is_deleted=False)
+        .filter(
+            Q(phone__icontains=query) |
+            Q(name__icontains=query)
+        )
+        .order_by('name')[:20]
+    )
+
+    serializer = CustomerSearchSerializer(customers, many=True)
+    return Response({'results': serializer.data})
 
 
 

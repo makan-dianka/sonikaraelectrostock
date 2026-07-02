@@ -29,11 +29,7 @@ class SaleForm(forms.ModelForm):
 
         widgets = {
 
-            'customer': forms.Select(
-                attrs={
-                    'class':'form-control'
-                }
-            ),
+            'customer': forms.HiddenInput(),
 
             'store': forms.Select(
                 attrs={

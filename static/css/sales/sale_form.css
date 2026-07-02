@@ -103,57 +103,80 @@
 /* calcul de sous-total et total */
 
 .subtotal {
-
     width: 100%;
-
     padding: 12px;
-
     border: none;
-
     background: #f5f5f5;
-
     font-weight: 700;
-
     border-radius: 8px;
-
 }
 
 
 
 .sale-total-box {
-
     margin-top: 30px;
-
     padding: 20px;
-
     display: flex;
-
     justify-content: flex-end;
-
     align-items: center;
-
     gap: 20px;
-
     font-size: 26px;
-
     font-weight: 700;
-
     color: #f39b00;
-
     border-top: 2px solid #eee;
-
 }
 
 
 
 .line {
-
     display: grid;
-
     grid-template-columns:
-
         3fr 1fr 1fr 1fr auto;
-
     gap: 20px;
+}
 
+
+/* rechercher un client */
+.customer-search-wrapper {
+    position: relative;
+}
+
+
+
+#customer-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow:
+        0 6px 18px rgba(0,
+            0,
+            0,
+            0.08);
+
+    display: none;
+    z-index: 20;
+    max-height: 260px;
+    overflow: auto;
+}
+
+
+
+.customer-item {
+    padding: 14px;
+    cursor: pointer;
+    border-bottom:
+        1px solid #eee;
+}
+
+.customer-item:hover {
+    background: #fff7e6;
+}
+
+.customer-phone {
+    display: block;
+    font-size: 13px;
+    color: #888;
 }

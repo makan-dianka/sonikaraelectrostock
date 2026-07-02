@@ -3,12 +3,11 @@
 {% load static %}
 
 {% block head%}
-    <link rel="stylesheet" href="{% static 'css/sales/sale_form.css' %}">
+<link rel="stylesheet" href="{% static 'css/sales/sale_form.css' %}">
 {% endblock %}
 
 
 {% block content %}
-
     <div class="sale-card">
 
         <h1>💳 Nouvelle vente</h1>
@@ -21,8 +20,20 @@
             <div class="header-grid">
                 {% for field in form %}
                 <div class="field">
+                    {% if field.name == 'customer' %}
+                    <label>Client</label>
+                    {{ field }}
+
+                    <div class="customer-search-wrapper">
+                        <input type="text" id="customer-search" class="form-control"
+                            placeholder="Rechercher client par nom ou téléphone" autocomplete="off">
+
+                        <div id="customer-results"></div>
+                    </div>
+                    {% else %}
                     <label>{{ field.label }}</label>
                     {{ field }}
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
@@ -36,47 +47,47 @@
 
             <div id="lines">
                 {% for line in formset %}
-                    <div class="line">
+                <div class="line">
 
-                        {{ line.id }}
+                    {{ line.id }}
 
-                        <div class="product-search-wrapper">
-                            <label>Produit</label>
-                            {{ line.product }}
+                    <div class="product-search-wrapper">
+                        <label>Produit</label>
+                        {{ line.product }}
 
-                            <input type="text" class="form-control product-search-input" placeholder="Rechercher produit..."
-                                autocomplete="off">
+                        <input type="text" class="form-control product-search-input" placeholder="Rechercher produit..."
+                            autocomplete="off">
 
-                            <div class="product-search-results"></div>
-                        </div>
-
-
-                        <div>
-                            <label>Quantité</label>
-                            {{ line.quantity }}
-                        </div>
-
-
-                        <div>
-                            <label>Prix unité</label>
-                            {{ line.unit_price }}
-                        </div>
-
-
-                        <div>
-                            <label>Sous-total</label>
-                            <input type="text" class="subtotal" readonly>
-
-                        </div>
-
-
-                        <div class="delete">
-                            {% if line.instance.pk %}
-                                <label>Supprimer</label>
-                                {{ line.DELETE }}
-                            {% endif %}
-                        </div>
+                        <div class="product-search-results"></div>
                     </div>
+
+
+                    <div>
+                        <label>Quantité</label>
+                        {{ line.quantity }}
+                    </div>
+
+
+                    <div>
+                        <label>Prix unité</label>
+                        {{ line.unit_price }}
+                    </div>
+
+
+                    <div>
+                        <label>Sous-total</label>
+                        <input type="text" class="subtotal" readonly>
+
+                    </div>
+
+
+                    <div class="delete">
+                        {% if line.instance.pk %}
+                        <label>Supprimer</label>
+                        {{ line.DELETE }}
+                        {% endif %}
+                    </div>
+                </div>
                 {% endfor %}
             </div>
 
@@ -94,12 +105,8 @@
                     <div class="product-search-wrapper">
                         <label>Produit</label>
                         {{ formset.empty_form.product }}
-                        <input
-                            type="text"
-                            class="form-control product-search-input"
-                            placeholder="Rechercher par nom ou référence"
-                            autocomplete="off"
-                        >
+                        <input type="text" class="form-control product-search-input"
+                            placeholder="Rechercher par nom ou référence" autocomplete="off">
                         <div class="product-search-results"></div>
                     </div>
 
@@ -118,11 +125,7 @@
 
                     <div>
                         <label>Sous-total</label>
-                        <input
-                            type="text"
-                            class="subtotal"
-                            readonly
-                        >
+                        <input type="text" class="subtotal" readonly>
                     </div>
                     <div></div>
                 </div>
@@ -193,15 +196,15 @@
                 }
 
                 resultsBox.innerHTML = results.map(p => `
-                    <div class="result-item"
-                        data-id="${p.id}"
-                        data-price="${p.sale_price}"
-                        data-quantity=1
-                        data-label="${p.reference} - ${p.name}">
-                        <strong>${p.reference}</strong> — ${p.name}
-                        <span class="result-category">${p.category}</span>
-                    </div>
-                `).join('');
+                        <div class="result-item"
+                            data-id="${p.id}"
+                            data-price="${p.sale_price}"
+                            data-quantity=1
+                            data-label="${p.reference} - ${p.name}">
+                            <strong>${p.reference}</strong> — ${p.name}
+                            <span class="result-category">${p.category}</span>
+                        </div>
+                    `).join('');
 
                 resultsBox.style.display = 'block';
             }
@@ -288,10 +291,10 @@
         function updateSaleTotal() {
             let total = 0;
             document.querySelectorAll('#lines .line').forEach(line => {
-                    const qty = parseFloat(line.querySelector('[id$="-quantity"]')?.value) || 0;
-                    const price = parseFloat(line.querySelector('[id$="-unit_price"]')?.value) || 0;
-                    total += (qty * price);
-                }
+                const qty = parseFloat(line.querySelector('[id$="-quantity"]')?.value) || 0;
+                const price = parseFloat(line.querySelector('[id$="-unit_price"]')?.value) || 0;
+                total += (qty * price);
+            }
             );
             document.getElementById('sale-total').innerText = formatAmount(total) + ' FCFA';
         }
@@ -315,12 +318,13 @@
         // lignes existantes
         document.querySelectorAll('#lines .line').forEach(line => {
             initCalculation(line);
-            }
+        }
         );
 
 
         // ajout dynamique
-        addButton.addEventListener('click', function () {setTimeout(() => {
+        addButton.addEventListener('click', function () {
+            setTimeout(() => {
                 const newLine = container.lastElementChild;
                 initProductSearch(newLine);
                 initCalculation(newLine);
@@ -330,11 +334,72 @@
 
         // produit sélectionné
         document.addEventListener('click', function (e) {
-            if (e.target.closest('.result-item')) {setTimeout(() => {
+            if (e.target.closest('.result-item')) {
+                setTimeout(() => {
                     document.querySelectorAll('#lines .line').forEach(updateLineSubtotal);
                 }, 50);
             }
         });
+
+
+
+        // rechercher un client
+
+        const CUSTOMER_URL = "{% url 'customers:customer_search_api' %}";
+
+        const customerInput = document.getElementById('customer-search');
+        const customerHidden = document.getElementById('id_customer');
+        const customerResults = document.getElementById('customer-results');
+
+        const searchCustomer = debounce(async function (query) {
+            if (query.length < 1) {
+                customerResults.style.display = 'none';
+                return;
+            }
+
+            const response = await fetch(`${CUSTOMER_URL}?q=${query}`);
+                const data = await response.json();
+                renderCustomers(data.results);
+        }, 200);
+
+
+
+        function renderCustomers(results) {
+            if (!results.length) {
+                customerResults.innerHTML = '<div class="customer-item">Aucun client</div>';
+                customerResults.style.display = 'block';
+                return;
+            }
+
+            customerResults.innerHTML = results.map(c => `
+                <div class="customer-item" data-id="${c.id}" data-label="${c.name}">
+                    <strong>${c.name}</strong>
+                    <span class="customer-phone">${c.phone}</span>
+                </div>`
+            ).join('');
+
+            customerResults.style.display = 'block';
+        }
+
+        customerInput.addEventListener('input', function () {
+            searchCustomer(this.value.trim());
+        });
+
+        customerResults.addEventListener('click', function (e) {
+            const item = e.target.closest('.customer-item');
+            if (!item) return;
+
+            customerHidden.value = item.dataset.id;
+            customerInput.value = item.dataset.label;
+            customerResults.style.display = 'none';
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!customerInput.contains(e.target) && !customerResults.contains(e.target)) {
+                customerResults.style.display = 'none';
+            }
+        });
+
     </script>
 
 {% endblock %}
