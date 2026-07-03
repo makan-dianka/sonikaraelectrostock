@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from django.utils import timezone
 
@@ -87,7 +87,8 @@ def create_sale(request):
 
         if form.is_valid() and formset.is_valid():
             sale = form.save(commit=False)
-            sale.reference = generate_reference()
+            if not sale.reference:
+                sale.reference = generate_reference()
             sale.user = request.user
             sale.save()
 
@@ -119,6 +120,47 @@ def create_sale(request):
             )
 
     return render(request, 'sales/form.html', {'form':form, 'formset':formset})
+
+
+
+
+
+@login_required(login_url='accounts:login')
+def update_sale(request, pk):
+    if request.user.role not in ['owner']:
+        return HttpResponseForbidden("Vous n'avez pas la permission de modifier une vente.")
+
+
+    sale = get_object_or_404(Sale, pk=pk)
+
+    if request.method == 'POST':
+
+        form = SaleForm(request.POST, instance=sale)
+        formset = SaleItemFormSet(request.POST, instance=sale, prefix='items')
+
+        if form.is_valid() and formset.is_valid():
+            sale = form.save(commit=False)
+            sale.user = request.user
+            sale.save()
+
+            formset.instance = sale
+            formset.save()
+
+            sale.recalc_total()
+
+            return redirect('sales:list')
+
+    else:
+        form = SaleForm(instance=sale)
+        formset = SaleItemFormSet(instance=sale, prefix='items')
+
+    return render(request, 'sales/form.html', {
+        'form': form,
+        'formset': formset,
+        'sale': sale
+    })
+
+
 
 
 
