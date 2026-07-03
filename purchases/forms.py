@@ -9,6 +9,10 @@ from .models import (
 
 class PurchaseForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['purchase_date'].input_formats = ['%Y-%m-%d']
+
     class Meta:
         model = Purchase
         exclude = [
@@ -34,6 +38,7 @@ class PurchaseForm(forms.ModelForm):
             ),
 
             'purchase_date': forms.DateInput(
+                format='%Y-%m-%d',
                 attrs={
                     'class':'form-control',
                     'type':'date'

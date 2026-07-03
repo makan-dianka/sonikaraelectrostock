@@ -67,6 +67,12 @@ class Purchase(TimeStampedModel):
         self.total = total
         self.save()
 
+    # pour recalculer le total après un update
+    def recalc_total(self):
+        total = sum(item.total for item in self.items.all())
+        self.total = total
+        self.save(update_fields=['total'])
+
 
     def can_change_to(self, new_status):
 

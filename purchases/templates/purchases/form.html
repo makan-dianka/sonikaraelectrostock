@@ -41,8 +41,9 @@
                         <div class="product-search-wrapper">
                             <label>Produit</label>
                             {{ line.product }}
-
-                            <input type="text" class="form-control product-search-input" placeholder="Rechercher produit..."
+                            <input type="text"
+                                class="form-control product-search-input"
+                                data-label="{{ line.instance.product.reference }} - {{ line.instance.product.name }}"
                                 autocomplete="off">
 
                             <div class="product-search-results"></div>
@@ -159,6 +160,17 @@
             const hiddenProductInput = lineEl.querySelector('[id$="-product"]');
             const hiddenProductQuantity = lineEl.querySelector('[id$="-quantity"]');
             const unitPriceInput = lineEl.querySelector('[id$="-unit_price"]');
+
+            // lors de mis en jour
+            // ajout de produit dans le champ 
+            // produit (pre-rempli)
+            function hydrate() {
+                const label = searchInput.dataset.label;
+                if (hiddenProductInput.value && !searchInput.value && label) {
+                    searchInput.value = label;
+                }
+            }
+            hydrate()
 
             if (!searchInput || searchInput.dataset.initialized) return;
             searchInput.dataset.initialized = "true";

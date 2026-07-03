@@ -16,7 +16,7 @@ from django.db.models import Sum
 from django.core.paginator import Paginator
 
 
-from .services import receive_purchase
+from .services import receive_purchase, cancel_purchase
 
 
 from django.contrib.auth.decorators import login_required
@@ -39,7 +39,7 @@ def purchase_list(request):
     )
 
 
-    total_purchase = purchases.aggregate(total=Sum('total'))['total'] or 0
+    total_purchase = purchases.filter(status='received').aggregate(total=Sum('total'))['total'] or 0
     total_paid = sum(purchase.paid_amount for purchase in purchases)
     total_remaining = total_purchase - total_paid
 
@@ -70,33 +70,67 @@ def purchase_create(request):
     if request.method == 'POST':
         form = PurchaseForm(request.POST)
         if form.is_valid():
-            purchase = (
-                form.save(commit=False)
-            )
-
-            purchase.created_by = (request.user)
+            purchase = form.save(commit=False)
+            purchase.created_by = request.user
             purchase.save()
 
-            formset = (
-                PurchaseItemFormSet(
-                    request.POST,
-                    instance=purchase,
-                    prefix='items'
-                )
+            formset = PurchaseItemFormSet(
+                request.POST,
+                instance=purchase,
+                prefix='items'
             )
 
             if formset.is_valid():
                 formset.save()
+                purchase.update_total() # mettre à jour le total dans l'entité purchase
                 return redirect('purchases:list')
     else:
         form = PurchaseForm()
-        formset = (
-            PurchaseItemFormSet(
-                prefix='items'
-            )
-        )
+        formset = PurchaseItemFormSet(prefix='items')
 
     return render(request, 'purchases/form.html', {'form':form, 'formset':formset})
+
+
+
+
+#################################################################
+# Modifier un achat :
+# fournisseur, produit ...
+#################################################################
+@login_required(login_url='accounts:login')
+def update_purchase(request, pk):
+    if request.user.role not in ['owner']:
+        return HttpResponseForbidden("Vous n'avez pas la permission de modifier un achat.")
+
+
+    purchase = get_object_or_404(Purchase, pk=pk)
+
+    if request.method == 'POST':
+
+        form = PurchaseForm(request.POST, instance=purchase)
+        formset = PurchaseItemFormSet(request.POST, instance=purchase, prefix='items')
+
+        if form.is_valid() and formset.is_valid():
+            purchase = form.save(commit=False)
+            purchase.user = request.user
+            purchase.save()
+
+            formset.instance = purchase
+            formset.save()
+
+            purchase.recalc_total()
+
+            return redirect('purchases:list')
+
+    else:
+        form = PurchaseForm(instance=purchase)
+        formset = PurchaseItemFormSet(instance=purchase, prefix='items')
+
+    return render(request, 'purchases/form.html', {
+        'form': form,
+        'formset': formset,
+        'purchase': purchase
+    })
 
 
 
@@ -121,10 +155,8 @@ def update_status(request, pk, status):
 
     if status == 'received':
         receive_purchase(purchase)
-        purchase.update_total() # mettre à jour le total dans l'entité purchase
     elif status == 'cancelled':
-        purchase.status = 'cancelled'
-        purchase.save()
+        cancel_purchase(purchase)
 
     messages.success(request, "Statut mis à jour")
     return redirect('purchases:list')
