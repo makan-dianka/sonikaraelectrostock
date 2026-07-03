@@ -41,20 +41,41 @@ def product_search_api(request):
 
 
 
-
 @login_required(login_url='accounts:login')
 def product_list(request):
-    products = Product.objects.filter(is_deleted=False).prefetch_related('stocks', 'stocks__store').order_by('-created_at')
-    paginator = Paginator(products, 6)
+
+    q = request.GET.get('q', '').strip()
+
+    products = (
+        Product.objects
+        .filter(is_deleted=False)
+        .prefetch_related(
+            'stocks',
+            'stocks__store'
+        )
+    )
+
+    if q:
+        products = products.filter(
+            Q(name__icontains=q) |
+            Q(reference__icontains=q)
+        )
+
+    products = products.order_by('-created_at')
+
+    paginator = Paginator(products, 25)
+
     page_number = request.GET.get('page')
+
     page_obj = paginator.get_page(page_number)
 
     context = {
         'products': page_obj,
         'page_obj': page_obj,
+        'q': q,
     }
 
-    return render(request, "products/product_list.html", context)
+    return render(request, 'products/product_list.html', context)
 
 
 

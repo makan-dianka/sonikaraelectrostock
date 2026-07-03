@@ -10,96 +10,117 @@
 
 
 {% block content %}
+    <!-- bar de rechercher -->
+    <div class="search-card col-md-6">
+        <form method="GET">
+            <input
+                required
+                type="text"
+                name="q"
+                value="{{ q }}"
+                placeholder="Rechercher un produit par nom ou référence"
+            >
 
-<div class="page-header">
-    <h1>📦 Produits</h1>
-    <a href="{% url 'products:create' %}" class="btn-add">+ Ajouter</a>
-</div>
+            <button type="submit">🔍 Rechercher</button>
 
-<div class="table-card">
-    <table>
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Produit</th>
-                <th>Magasin(Stock)</th>
-                <th>Catégorie</th>
-                <th>Marque</th>
-                <th>Référence produit</th>
-                <th>Prix Achat</th>
-                <th>Prix Vente</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+            {% if q %}
+                <a href="{% url 'products:product_list' %}" class="reset">
+                    Réinitialiser
+                </a>
+            {% endif %}
+        </form>
+    </div>
+    <!-- fin de bar de recherche -->
 
-        <tbody>
-            {% for product in products %}
-            <tr>
-                <td>
-                    {% if product.image %}
-                    <img class="thumb" src="{{ product.image.url }}">
+    <div class="page-header">
+        <h1>📦 Produits</h1>
+        <a href="{% url 'products:create' %}" class="btn-add">+ Ajouter</a>
+    </div>
+
+    <div class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Produit</th>
+                    <th>Magasin(Stock)</th>
+                    <th>Catégorie</th>
+                    <th>Marque</th>
+                    <th>Référence produit</th>
+                    <th>Prix Achat</th>
+                    <th>Prix Vente</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>
+                        {% if product.image %}
+                        <img class="thumb" src="{{ product.image.url }}">
+                        {% else %}
+                        —
+                        {% endif %}
+                    </td>
+                    <td>{{ product.name }}</td>
+                    <td>
+
+                        {% for stock in product.stocks.all %}
+                        {{ stock.store }}({{ stock.quantity }}) <br />
+                        {% empty %}
+                        —
+                        {% endfor %}
+
+                    </td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.marque }}</td>
+                    <td>{{ product.reference }}</td>
+                    {% if product.purchase_price != None %}
+                    <td>{{ product.purchase_price|intcomma }} FCFA</td>
                     {% else %}
-                    —
+                    <td> --- </td>
                     {% endif %}
-                </td>
-                <td>{{ product.name }}</td>
-                <td>
+                    <td>{{ product.sale_price|intcomma }} FCFA</td>
+                    <td class="actions">
+                        <a class="edit" href="{% url 'products:update' product.id %}">
+                            Modifier
+                        </a>
+                        <a class="delete" href="{% url 'products:delete' product.id %}"
+                            onclick="return confirm('Supprimer ce produit ?')">
+                            Supprimer
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8">Aucun produit</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-                    {% for stock in product.stocks.all %}
-                    {{ stock.store }}({{ stock.quantity }}) <br />
-                    {% empty %}
-                    —
-                    {% endfor %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1&q={{ q }}">« Premier</a>
 
-                </td>
-                <td>{{ product.category }}</td>
-                <td>{{ product.marque }}</td>
-                <td>{{ product.reference }}</td>
-                {% if product.purchase_price != None %}
-                <td>{{ product.purchase_price|intcomma }} FCFA</td>
-                {% else %}
-                <td> --- </td>
-                {% endif %}
-                <td>{{ product.sale_price|intcomma }} FCFA</td>
-                <td class="actions">
-                    <a class="edit" href="{% url 'products:update' product.id %}">
-                        Modifier
-                    </a>
-                    <a class="delete" href="{% url 'products:delete' product.id %}"
-                        onclick="return confirm('Supprimer ce produit ?')">
-                        Supprimer
-                    </a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="8">Aucun produit</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            <a href="?page={{ page_obj.previous_page_number }}&q={{ q }}">
+                ←
+            </a>
+        {% endif %}
 
-<div class="pagination">
-    {% if page_obj.has_previous %}
-        <a href="?page=1">« Premier</a>
+        <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
 
-        <a href="?page={{ page_obj.previous_page_number }}">
-            ←
-        </a>
-    {% endif %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&q={{ q }}">
+                →
+            </a>
 
-    <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">
-            →
-        </a>
-
-        <a href="?page={{ page_obj.paginator.num_pages }}">
-            Dernier »
-        </a>
-    {% endif %}
-</div>
+            <a href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}">
+                Dernier »
+            </a>
+        {% endif %}
+    </div>
 
 {% endblock %}
