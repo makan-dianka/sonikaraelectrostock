@@ -11,6 +11,31 @@ from .models import Expense
 from django.http import HttpResponseForbidden
 from django.utils import timezone
 
+from .serializers import ExpenseCategoryCreateSerializer
+
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_expense_category_api(request):
+    serializer = ExpenseCategoryCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        category = serializer.save()
+        return Response({
+                'success': True,
+                'id': category.id,
+                'name': category.name,
+            })
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 

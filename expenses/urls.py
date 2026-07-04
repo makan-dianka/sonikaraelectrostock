@@ -8,4 +8,5 @@ urlpatterns = [
     path("", views.expense_list, name="list"),
     path("create/", views.expense_create, name="create"),
     path('<int:pk>/delete/', views.delete_expense, name="delete"),
+    path('api/expense-category/create/', views.create_expense_category_api, name='create_expense_category_api'),
 ]

@@ -24,19 +24,24 @@
             <div class="grid">
 
                 {% for field in form %}
+                    <div class="field">
+                        {% if field.name == 'category' %}
+                            <label class="customer-label">
+                                Catégorie
+                                <div type="button" id="open-customer-modal" class="add-customer">
+                                    <svg width="25" height="25" color="blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                </div>
+                            </label>
+                            {{ field }}
 
-                <div class="field">
-
-                    <label>
-
-                        {{ field.label }}
-
-                    </label>
-
-                    {{ field }}
-
-                </div>
-
+                        {% else %}
+                            <label>{{ field.label }}</label>
+                            {{ field }}
+                        {% endif %}
+                    </div>
                 {% endfor %}
 
             </div>
@@ -61,6 +66,87 @@
 
     </div>
 
+
+    <!-- custome form modal -->
+    <div id="customer-modal">
+        <div class="modal-card">
+            <h2>Nouvelle catégorie</h2>
+            <form id="customer-form"> {% csrf_token %}
+                <input name="name" placeholder="Nom" required>
+                <div class="modal-buttons">
+                    <button type="button" id="close-modal" class="cancel">
+                        Annuler
+                    </button>
+
+                    <button>
+                        Créer
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
 </div>
+
+
+
+<script>
+    // ajouter un popup form 
+    // pour creer un user
+
+    const modal = document.getElementById('customer-modal');
+
+    document.getElementById('open-customer-modal').onclick = () => {
+        modal.style.display = 'flex';
+    };
+
+    document.getElementById('close-modal').onclick = () => {
+        modal.style.display = 'none';
+    };
+
+    document.getElementById('customer-form').addEventListener('submit', async function (e) {
+
+        e.preventDefault();
+
+        const form =new FormData(this);
+        const response = await fetch("{% url 'expenses:create_expense_category_api' %}", {method:'POST', body: form});
+        const data = await response.json();
+
+        if (response.ok) {
+            const categorySelect = document.getElementById("id_category");
+
+            // créer une nouvelle option
+            const option = new Option(
+                data.name,
+                data.id,
+                true,   // sélectionnée
+                true
+            );
+
+            categorySelect.add(option);
+
+            // sélectionner la nouvelle catégorie
+            categorySelect.value = data.id;
+
+            // fermer le popup
+            modal.style.display = "none";
+
+            // vider le formulaire
+            this.reset();
+        }
+        else {
+            alert(Object.values(data).join('\n'));
+        }
+    });
+    // fin de popup form
+
+    // fermer le popup si on clique en dehors de celui-ci
+    window.addEventListener("click", function (e) {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+</script>
 
 {% endblock %}
