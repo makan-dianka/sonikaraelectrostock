@@ -24,6 +24,13 @@ from rest_framework import status
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_expense_category_api(request):
+    if request.user.role not in ["owner"]:
+        return Response(
+            {
+                "detail": "Vous n'avez pas la permission de créer une catégorie."
+            },
+            status=status.HTTP_403_FORBIDDEN
+        )
     serializer = ExpenseCategoryCreateSerializer(data=request.data)
     if serializer.is_valid():
         category = serializer.save()
