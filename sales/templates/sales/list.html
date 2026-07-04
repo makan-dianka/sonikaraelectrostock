@@ -170,11 +170,13 @@
 
                         {% elif sale.status == 'validated' %}
 
+                        <a class="btn btn-primary" href="{% url 'sales:print_invoice' sale.id %}" target="_blank">
+                            🖨 Facture
+                        </a>
+
                         <a class="cancel" href="{% url 'sales:cancel' sale.id %}"
                             onclick="return confirm('Annuler la vente ?')">
-
                             Annuler
-
                         </a>
 
                         {% else %}

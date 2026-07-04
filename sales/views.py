@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import Sale
 
 from .forms import SaleForm, SaleItemFormSet
+from sonikaraelectrostock import tools
 
 from django.contrib import messages
 from django.db.models import Sum
@@ -12,38 +13,36 @@ from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
 
 from .services import validate_sale, cancel_sale
+from documents.services import generate_pdf
+from django.http import FileResponse
+from documents.models import Document
 
 from django.contrib.auth.decorators import login_required
 
 
+@login_required(login_url='accounts:login')
+def print_invoice(request, pk):
 
-# Generation of reference number
-def generate_reference():
-
-    """Generation of reference number
-
-    Returns:
-        str: reference number
-    """
-
-    now = timezone.now()
-
-    prefix = (
-        f"VTE-"
-        f"{now:%Y%m}"
+    sale = get_object_or_404(
+        Sale,
+        pk=pk
     )
 
-    count = Sale.objects.count() + 1
+    document = Document.objects.filter(
+        sale=sale,
+        document_type="invoice"
+    ).first()
 
-    return (
+    if not document:
+        document = Document.objects.create(
+            document_type='invoice',
+            reference=tools.generate_reference('VTE', Document),
+            sale=sale,
+            generated_by=request.user,
+        )
+        generate_pdf(document)
 
-        f"{prefix}"
-
-        f"-{count:04d}"
-    )
-
-
-
+    return FileResponse(document.pdf.open("rb"), content_type="application/pdf")
 
 
 
@@ -88,7 +87,7 @@ def create_sale(request):
         if form.is_valid() and formset.is_valid():
             sale = form.save(commit=False)
             if not sale.reference:
-                sale.reference = generate_reference()
+                sale.reference = tools.generate_reference('VTE', Sale)
             sale.user = request.user
             sale.save()
 

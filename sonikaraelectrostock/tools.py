@@ -1,30 +1,31 @@
 from django.utils import timezone
 
+def generate_reference(prefix, model):
+    """
+    Génère une référence unique.
 
-# Generation of reference number
-def generate_reference(initial, obj):
-    """Generation of reference number
-
-    Args:
-        initial (str): prefix of word
-        obj (object): model object
-
-    Returns:
-        str: reference number
+    Exemple :
+        ACH-202607-0001
+        VEN-202607-0001
+        DOC-202607-0001
+        DEV-202607-0001
     """
 
     now = timezone.now()
 
-    prefix = (
-        f"{initial}-"
-        f"{now:%Y%m}"
+    prefix = f"{prefix}-{now:%Y%m}"
+
+    last_object = (
+        model.objects
+        .filter(reference__startswith=prefix)
+        .order_by("-id")
+        .first()
     )
 
-    count = obj.objects.count() + 1
+    if last_object:
+        last_number = int(last_object.reference.split("-")[-1])
+        number = last_number + 1
+    else:
+        number = 1
 
-    return (
-
-        f"{prefix}"
-
-        f"-{count:04d}"
-    )
+    return f"{prefix}-{number:04d}"
