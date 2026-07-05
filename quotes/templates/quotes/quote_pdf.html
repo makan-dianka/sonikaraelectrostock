@@ -585,7 +585,11 @@
 
 
             <div class="total-line total-final">
-                <span>TTC</span>
+                {% if quote.vat_rate %}
+                    <span>TTC</span>
+                {% else %}
+                    <span>Total</span>  
+                {% endif %}
                 <span>{{ quote.total_amount|intcomma }} FCFA</span>
             </div>
 
