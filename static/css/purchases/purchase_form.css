@@ -173,3 +173,138 @@ button {
     gap: 20px;
 
 }
+
+
+
+/* rechercher un fournisseur */
+.customer-search-wrapper {
+    position: relative;
+}
+
+.add-customer {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.customer-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#customer-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow:
+        0 6px 18px rgba(0,
+            0,
+            0,
+            0.08);
+
+    display: none;
+    z-index: 20;
+    max-height: 260px;
+    overflow: auto;
+}
+
+
+
+.customer-item {
+    padding: 14px;
+    cursor: pointer;
+    border-bottom:
+        1px solid #eee;
+}
+
+.customer-item:hover {
+    background: #fff7e6;
+}
+
+.customer-phone {
+    display: block;
+    font-size: 13px;
+    color: #888;
+}
+/* FIN de rechercher un fournisseur */
+
+
+/* modal form modal popup */
+
+/* ==========================
+   POPUP AJOUT CLIENT
+========================== */
+
+#customer-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, .45);
+    z-index: 99999;
+    justify-content: center;
+    align-items: center;
+}
+
+#customer-modal.active {
+    display: flex;
+}
+
+#customer-modal .modal-card {
+    background: #fff;
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow:
+
+        0 15px 45px rgba(0, 0, 0, .2);
+
+}
+
+
+
+#customer-modal h2 {
+    margin-bottom: 20px;
+}
+
+
+
+#customer-modal input,
+
+#customer-modal textarea {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-buttons button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.modal-buttons button:last-child {
+    background: #f39b00;
+    color: white;
+}

@@ -11,4 +11,7 @@ urlpatterns = [
     path('update/<int:pk>', views.update_supplier, name='update_supplier'),
 
     path('<int:pk>/delete/', views.delete_supplier, name="delete"),
+
+    path('api/supplier/search/', views.supplier_search_api, name='supplier_search_api'),
+    path('api/supplier/create/', views.create_supplier_api, name='create_supplier_api'),
 ]
