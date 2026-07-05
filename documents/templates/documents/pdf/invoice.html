@@ -386,6 +386,23 @@
 .client-box p {
     margin: 2px 0;
 }
+
+
+
+/* GARANTIE */
+.warranty-box{
+    margin-top:20px;
+    padding:10px;
+    border:1px solid #cfcfcf;
+    border-radius:4px;
+    font-size:12px;
+    line-height:1.5;
+}
+
+.warranty-box strong{
+    display:block;
+    margin-bottom:6px;
+}
     </style>
 
 </head>
@@ -587,7 +604,15 @@
 
     </div>
 
+    {% if sale.warranty %}
+        <div class="warranty-box">
+            <strong>GARANTIE :</strong><br>
+            {{ sale.warranty|linebreaksbr }}
+        </div>
+    {% endif %}
+    
     <div class="signature">
+
         <div>
             <div class="title">Pour Acquit</div>
             <div class="line"></div>

@@ -61,7 +61,15 @@ class SaleForm(forms.ModelForm):
                 attrs={
                     'class':'form-control'
                 }
-            )
+            ),
+
+            'warranty': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 3,
+                    'placeholder': "Écrire la garantie ici..."
+                }
+            ),
 
         }
 
@@ -71,6 +79,7 @@ class SaleForm(forms.ModelForm):
             'store': 'Choisir un magasin',
             'vat_rate': 'Pourcentage TVA (%)',
             'delivery_fee': 'Frais de livraison',
+            'warranty': "Garantie",
         }
 
 

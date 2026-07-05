@@ -37,13 +37,19 @@ class Sale(TimeStampedModel):
     )
 
     total = models.IntegerField(default=0)
-    vat_rate = models.IntegerField(default=18)
+    vat_rate = models.IntegerField(default=0)
     delivery_fee = models.IntegerField(default=0)
 
     status = models.CharField(
         max_length=20,
         choices=STATUS,
         default='draft'
+    )
+
+    warranty = models.TextField(
+        "Garantie",
+        blank=True,
+        default=""
     )
 
     payment_status = models.CharField(
