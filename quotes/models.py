@@ -33,8 +33,8 @@ class Quote(TimeStampedModel):
 
     store = models.ForeignKey("stores.Store", on_delete=models.CASCADE)
     labor_cost = models.IntegerField(default=0, verbose_name="Coût main d'œuvre")
-    vat_rate = models.IntegerField(default=18)
-    reduction = models.IntegerField(default=10)
+    vat_rate = models.IntegerField(default=0)
+    reduction = models.IntegerField(default=0)
     delivery_fee = models.IntegerField(default=0)
     notes = models.TextField(blank=True)
     total = models.IntegerField(default=0)
@@ -66,6 +66,13 @@ class Quote(TimeStampedModel):
     @property
     def total_ttc(self):
         return self.total + self.labor_cost + self.vat_amount + self.delivery_fee
+    
+
+    # pour recalculer le total après un update
+    def recalc_total(self):
+        total = sum(item.subtotal for item in self.items.all())
+        self.total = total
+        self.save(update_fields=['total'])
 
 
 
@@ -89,3 +96,8 @@ class QuoteItem(models.Model):
     unit_price = models.IntegerField()
 
     subtotal = models.IntegerField()
+
+
+    def save(self, *args, **kwargs):
+        self.subtotal = self.quantity * self.unit_price
+        super().save(*args, **kwargs)

@@ -5,6 +5,7 @@ from django.shortcuts import (
 )
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+from django.http import FileResponse
 from .models import Quote
 from .forms import (
     QuoteForm,
@@ -13,6 +14,7 @@ from .forms import (
 
 
 from django.template.loader import render_to_string
+from sonikaraelectrostock.tools import generate_reference
 
 from django.core.files.base import ContentFile
 
@@ -22,6 +24,24 @@ from django.conf import settings
 import os
 from django.utils import timezone
 from django.core.paginator import Paginator
+
+
+
+
+@login_required(login_url='accounts:login')
+def print_quote(request, pk):
+
+    quote = get_object_or_404(
+        Quote,
+        pk=pk
+    )
+
+    generate_quote_pdf(quote)
+
+    return FileResponse(quote.pdf.open("rb"), content_type="application/pdf")
+
+
+
 
 
 
@@ -56,32 +76,6 @@ def quote_list(request):
 
     return render(request, 'quotes/list.html', context)
 
-
-
-# Generation of reference number
-def generate_reference():
-
-    """Generation of reference number
-
-    Returns:
-        str: reference number
-    """
-
-    now = timezone.now()
-
-    prefix = (
-        f"DEV-"
-        f"{now:%Y%m%d}"
-    )
-
-    count = Quote.objects.count() + 1
-
-    return (
-
-        f"{prefix}"
-
-        f"-{count:04d}"
-    )
 
 
 
@@ -129,7 +123,7 @@ def create_quote(request):
             )
         )
 
-        quote.reference = generate_reference()
+        quote.reference = generate_reference('DEV', Quote)
 
         quote.user = (
 
@@ -189,6 +183,44 @@ def create_quote(request):
         }
 
     )
+
+
+
+
+@login_required(login_url='accounts:login')
+def update_quote(request, pk):
+    if request.user.role not in ['owner']:
+        return HttpResponseForbidden("Vous n'avez pas la permission de modifier un devis.")
+
+
+    quote = get_object_or_404(Quote, pk=pk)
+
+    if request.method == 'POST':
+
+        form = QuoteForm(request.POST, instance=quote)
+        formset = QuoteItemFormSet(request.POST, instance=quote, prefix='items')
+
+        if form.is_valid() and formset.is_valid():
+            quote = form.save(commit=False)
+            quote.user = request.user
+            quote.save()
+
+            formset.save()
+
+            # recalcul total APRÈS save
+            quote.recalc_total()
+
+            return redirect('quotes:quote_list')
+
+    else:
+        form = QuoteForm(instance=quote)
+        formset = QuoteItemFormSet(instance=quote, prefix='items')
+
+    return render(request, 'quotes/form.html', {
+        'form': form,
+        'formset': formset,
+        'quote': quote
+    })
 
 
 
