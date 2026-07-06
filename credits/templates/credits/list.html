@@ -34,6 +34,7 @@
                     <th>Montant</th>
                     <th>Reste à payer</th>
                     <th>Taux</th>
+                    <th>Détail</th>
                     <th>Échéance</th>
                     <th>Statut</th>
                     <th>Comptoir</th>
@@ -66,6 +67,8 @@
                     <td>
                         {{ credit.interest_rate }}%
                     </td>
+
+                    <td>{{ credit.note }}</td>
 
                     <td>
                         {{ credit.due_date|date:"d/m/Y" }}
