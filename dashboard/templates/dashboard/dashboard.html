@@ -31,7 +31,46 @@
     </div>
 
 
-    <!-- Total de la valeur du boutique -->
+
+    <div class="col-md-12 current_ca">
+        <div class="card p-4 shadow-sm rounded-4" style="margin-bottom: 65px;">
+            <div class="row text-center">
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">💰 Benefice brut du mois</h6>
+
+                        <h2 class="fw-bold text-primary">{{ profit_month|intcomma }} FCFA</h2>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 border rounded-3 bg-light">
+                        <h6 class="text-muted">💸 Dépense du mois</h6>
+
+                        <h3 class="fw-bold text-danger">{{ expense_month|intcomma }} FCFA</h3>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4 mb-3">
+                    <div class="p-3 border rounded-3" style="background:#eafaf1; border:2px solid #1fa971;">
+                        <h6 class="text-muted">🏆 Benefice réel du mois</h6>
+
+                        <h3 class="fw-bold text-danger">{{ real_profit|intcomma }} FCFA</h3>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <!-- ventes effectué -->
     <div class="col-md-12 current_ca">
         <div class="card p-4 shadow-sm rounded-4" style="background-color: green;">
 
@@ -124,7 +163,6 @@
                         <h2 class="fw-bold text-primary">{{ profit_month|intcomma }} FCFA</h2>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

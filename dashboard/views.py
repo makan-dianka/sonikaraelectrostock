@@ -14,6 +14,7 @@ from django.db.models import (
 from . import services
 from stores.models import Store
 from stocks.models import Stock
+from expenses.models import Expense
 from sales.models import (
     Sale,
     SaleItem
@@ -166,6 +167,19 @@ def dashboard(request, store_id=None):
             (F('unit_price') - F('product__purchase_price')) *
             F('quantity'), output_field=IntegerField())
         ))['total'] or 0
+    
+
+    # Depense du mois
+    expense_month = Expense.objects.filter(
+        expense_date__year=today.year,
+        expense_date__month=today.month,
+        is_deleted=False
+    ).aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
+    # benefice réel
+    real_profit = profit_month - expense_month
 
 
     # pourcentage du profit ce mois
@@ -198,6 +212,8 @@ def dashboard(request, store_id=None):
         'ca_year' : ca_year,
 
         'profit_month': profit_month,
+        'expense_month' : expense_month,
+        'real_profit' : real_profit,
 
         'total_stock': total_stock,
         'total_purchase': total_purchase,
