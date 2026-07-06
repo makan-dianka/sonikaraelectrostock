@@ -11,24 +11,15 @@
 
 {% block content %}
     <!-- bar de rechercher -->
-    <div class="search-card col-md-6">
-        <form method="GET">
+    <div class="search-card col-md-5">
             <input
+                id="product-search"
                 required
                 type="text"
                 name="q"
                 value="{{ q }}"
                 placeholder="Rechercher un produit par nom ou référence"
             >
-
-            <button type="submit">🔍 Rechercher</button>
-
-            {% if q %}
-                <a href="{% url 'products:product_list' %}" class="reset">
-                    Réinitialiser
-                </a>
-            {% endif %}
-        </form>
     </div>
     <!-- fin de bar de recherche -->
 
@@ -53,7 +44,7 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody id="products-table">
                 {% for product in products %}
                 <tr>
                     <td>
@@ -123,4 +114,113 @@
         {% endif %}
     </div>
 
+
+
+
+<script>
+
+    const PRODUCT_URL = "{% url 'products:product_search_api' %}";
+
+    const input = document.getElementById("product-search");
+
+    const table = document.getElementById("products-table");
+
+    let timer;
+
+    input.addEventListener("input", function(){
+
+        clearTimeout(timer);
+
+        timer = setTimeout(searchProducts,200);
+
+    });
+
+
+    async function searchProducts(){
+
+        const q=input.value.trim();
+
+        if(q===""){
+            location.reload();
+            return;
+        }
+
+        const response=await fetch(
+            `${PRODUCT_URL}?q=${encodeURIComponent(q)}`
+        );
+
+        const data=await response.json();
+
+        renderProducts(data.results);
+
+    }
+
+
+    function renderProducts(products){
+
+        if(products.length === 0){
+            table.innerHTML = `
+                <tr>
+                    <td colspan="9">Aucun produit trouvé</td>
+                </tr>
+            `;
+            return;
+        }
+
+        table.innerHTML = products.map(product => {
+
+            const stocks = product.stocks.length
+                ? product.stocks.map(s =>
+                    `${s.store} (${s.quantity})`
+                ).join("<br>")
+                : "—";
+
+            const image = product.image
+                ? `<img class="thumb" src="${product.image}">`
+                : "—";
+
+            return `
+                <tr>
+
+                    <td>${image}</td>
+
+                    <td>${product.name}</td>
+
+                    <td>${stocks}</td>
+
+                    <td>${product.category}</td>
+
+                    <td>${product.marque || "—"}</td>
+
+                    <td>${product.reference}</td>
+
+                    <td>
+                        ${product.purchase_price != null
+                            ? Number(product.purchase_price).toLocaleString('fr-FR') + ' FCFA'
+                            : '---'}
+                    </td>
+
+                    <td>
+                        ${Number(product.sale_price).toLocaleString('fr-FR')} FCFA
+                    </td>
+
+                    <td class="actions">
+                        <a class="edit" href="/products/${product.id}/update/">
+                            Modifier
+                        </a>
+
+                        <a class="delete"
+                        href="/products/${product.id}/delete/"
+                        onclick="return confirm('Supprimer ce produit ?')">
+                            Supprimer
+                        </a>
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+    }
+
+</script>
 {% endblock %}
