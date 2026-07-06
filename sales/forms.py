@@ -97,6 +97,27 @@ class SaleItemForm(forms.ModelForm):
         }
 
 
+
+    # empecher une vente si le prix de vente est inferieur
+    # ou egal au prix d'achat
+    def clean(self):
+        cleaned_data = super().clean()
+
+        product = cleaned_data.get('product')
+        unit_price = cleaned_data.get('unit_price')
+
+        if product and unit_price is not None:
+            purchase_price = product.purchase_price
+
+            if unit_price <= purchase_price:
+                raise forms.ValidationError(
+                    f"Le prix de vente ({unit_price} FCFA) doit être supérieur au prix d'achat ({purchase_price} FCFA)."
+                )
+
+        return cleaned_data
+
+
+
 SaleItemFormSet = (
 
     inlineformset_factory(

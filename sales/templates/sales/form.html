@@ -9,7 +9,13 @@
 
 {% block content %}
 <div class="sale-card">
-
+    {% for form in formset %}
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+    {% endfor %}
     <h1>💳 Nouvelle vente</h1>
 
     <form method="POST"> {% csrf_token %}
