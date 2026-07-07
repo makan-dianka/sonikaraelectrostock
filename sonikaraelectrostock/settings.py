@@ -151,3 +151,59 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = BASE_DIR / "media"
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(lineno)s %(message)s',
+        },
+
+        'simple': {
+            'format': '%(levelname)s %(message)s',
+        },
+    },
+
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename' :  os.path.join(BASE_DIR, 'logs/debug.log'),
+            'formatter': 'verbose'
+        },
+        'info': {
+            'filename' :  os.path.join(BASE_DIR, 'logs/info.log'),
+            'filters': ['require_debug_false'],
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'backupCount' : 5,
+            'maxBytes' : 1024*1024*50,
+            'encoding' : 'utf8',
+            'level': 'INFO',
+        },
+    },
+
+    'loggers': {
+        'django': {
+            'handlers':['file'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
+        'info_log': {
+            'handlers': ['info'],
+            'level': 'INFO',
+            'propagate': True
+        },
+    }
+}
