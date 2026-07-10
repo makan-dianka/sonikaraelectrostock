@@ -12,6 +12,7 @@ from .models import Supplier
 from .forms import SupplierForm
 
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -63,12 +64,18 @@ def supplier_search_api(request):
 @login_required(login_url='accounts:login')
 def supplier_list(request):
 
-    suppliers = (
-        Supplier.objects.filter(
-            is_deleted=False
-        )
-    )
-    return render(request, 'suppliers/list.html', {'suppliers': suppliers})
+    suppliers = Supplier.objects.filter(is_deleted=False).order_by('-created_at')
+
+    paginator = Paginator(suppliers, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'suppliers': page_obj,
+        'page_obj': page_obj,
+    }
+
+    return render(request, 'suppliers/list.html', context)
 
 
 

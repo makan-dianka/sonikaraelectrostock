@@ -10,6 +10,7 @@ from .models import Customer
 from .forms import CustomerForm
 from .serializers import CustomerSearchSerializer, CustomerCreateSerializer
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -62,12 +63,18 @@ def create_customer_api(request):
 @login_required(login_url='accounts:login')
 def customer_list(request):
 
-    customers = (
-        Customer.objects.filter(
-            is_deleted=False
-        )
-    )
-    return render(request, 'customers/list.html', {'customers': customers})
+    customers = Customer.objects.filter(is_deleted=False).order_by('-created_at')
+
+    paginator = Paginator(customers, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context =  {
+        'customers': page_obj, 
+        'page_obj': page_obj, 
+    }
+
+    return render(request, 'customers/list.html', context)
 
 
 
