@@ -27,6 +27,8 @@
             {% endif %}
         {% endif %}
 
+        {% include "components/search_bar.html" with id="payment-search" placeholder="Rechercher un paiement par référence d'une vente ou référence paiement" %}
+
         <div class="table-card">
             <table class="payment-table">
                 <thead>
@@ -42,7 +44,7 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="payments-table">
                     {% for payment in payments %}
                         <tr>
                             <td>{{ payment.id }}</td>
@@ -87,4 +89,20 @@
     </div>
 
     {% include "components/pagination.html" %}
+{% endblock %}
+
+
+
+{% block scripts %}
+    <script src="{% static 'js/search.js' %}"></script>
+    <script>
+        // script pour bar de recherche de paiement
+        const EXPENSE_URL = "{% url 'payments:search_api' 'payments' %}";
+        new LiveSearch({
+            input:"#payment-search",
+            table:"#payments-table",
+            url:EXPENSE_URL,
+            renderer:this.renderPayments
+        });
+    </script>
 {% endblock %}

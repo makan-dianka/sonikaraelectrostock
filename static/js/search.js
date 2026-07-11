@@ -241,3 +241,39 @@ function renderCredits(credits){
         </tr>
     `).join("");
 }
+
+
+
+function renderPayments(payments){
+    if(payments.length===0){
+        return `
+            <tr>
+                <td colspan="10">
+                    Aucun paiement trouvé
+                </td>
+            </tr>
+        `;
+    }
+
+    const payementStatus = (payment) => {
+        if(payment.get_remaining !== 0) {
+            return `<a href="/payments/payment/add/">Payer</a>`;
+        }else{
+            return `<span class="validated">Payé</span>`                     
+        }
+    }
+
+    return payments.map(payment=>`
+
+        <tr>
+            <td>${payment.id}</td>
+            <td>${payment.sale || payment.purchase}</td>
+            <td class="amount">${payment.amount} FCFA</td>
+            <td class="text-danger">${payment.get_remaining} FCFA</td>
+            <td class="badge method">${payment.payment_method}</td>
+            <td>${payment.reference}</td>
+            <td>${payment.created_at}</td>
+            <td class="comptoir">${payementStatus(payment)}</td>
+        </tr>
+    `).join("");
+}
