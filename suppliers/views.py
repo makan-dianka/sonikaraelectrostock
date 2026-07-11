@@ -17,8 +17,10 @@ from django.core.paginator import Paginator
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
 
+import logging
+
+logger = logging.getLogger('info_log')
 
 
 @api_view(["POST"])
@@ -39,6 +41,26 @@ def create_supplier_api(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def supplier_search_api(request):
+
+    ##########################################
+    ###############################################
+    ############# API de recherche de fournisseurs #############
+    ############# Recherche par nom ou téléphone #############
+    ############# Retourne les 20 premiers résultats #############
+    ############# Exemple d'URL: /api/suppliers/search/?q=John
+    ##########################################
+
+    alert="""
+
+        !xxxxxx! ALERT !xxxxxx!
+        Cette view est obsolète depuis [11/06/2026] et sera supprimée dans les prochaines versions. 
+        Utilisez la views : search_api() dans common/search.py à la place.
+
+    """
+    logger.warning(alert)
+
+
+
     query = request.GET.get('q', '').strip()
     if len(query) < 1:
         return Response({'results': []})

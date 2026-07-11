@@ -107,3 +107,49 @@ function renderCustomers(customers){
         </tr>
     `).join("");
 }
+
+
+
+
+/**
+ *  rendu des fournisseurs dans le tableau
+ * @param {*} suppliers 
+ * @returns 
+ */
+function renderSuppliers(suppliers){
+    if(suppliers.length===0){
+        return `
+            <tr>
+                <td colspan="6">
+                    Aucun fournisseur trouvé
+                </td>
+            </tr>
+        `;
+    }
+
+    return suppliers.map(supplier=>`
+
+        <tr>
+            <td>${supplier.id}</td>
+            <td>${supplier.name}</td>
+            <td>${supplier.phone}</td>
+            <td>${supplier.email || "—"}</td>
+            <td>${supplier.address || "—"}</td>
+
+            <td class="actions">
+                <a
+                    class="edit"
+                    href="/suppliers/update/${supplier.id}">
+                    Modifier
+                </a>
+
+                <a
+                    class="delete"
+                    href="/suppliers/${supplier.id}/delete/"
+                    onclick="return confirm('Supprimer ce fournisseur ?')">
+                    Supprimer
+                </a>
+            </td>
+        </tr>
+    `).join("");
+}

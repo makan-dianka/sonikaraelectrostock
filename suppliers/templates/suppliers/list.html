@@ -8,161 +8,79 @@
 
 
 {% block content %}
+    <div class="supplier-page">
 
-<div class="supplier-page">
+        {% include "components/search_bar.html" with id="supplier-search" placeholder="Rechercher un fournisseur par son nom ou numéro de téléphone" %}
 
-    <div class="header">
+        <div class="header">
+            <h1>🚚 Fournisseurs</h1>
 
-        <h1>
+            <a href="{% url 'suppliers:create' %}" class="btn-add">
+                + Ajouter un fournisseur
+            </a>
+        </div>
 
-            🚚 Fournisseurs
 
-        </h1>
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Téléphone</th>
+                        <th>Email</th>
+                        <th>Adresse</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
 
-        <a href="{% url 'suppliers:create' %}" class="btn-add">
+                <tbody id="suppliers-table">
+                    {% for supplier in suppliers %}
+                        <tr>
+                            <td>{{ forloop.counter }} </td>
+                            <td>{{ supplier.name }}</td>
+                            <td>{{ supplier.phone }}</td>
+                            <td>{{ supplier.email|default:"—" }}</td>
+                            <td>{{ supplier.address|default:"—" }}</td>
+                            <td class="actions">
+                                <a href="{% url 'suppliers:update_supplier' supplier.id %}" class="edit">
+                                    Modifier
+                                </a>
 
-            + Ajouter un fournisseur
-
-        </a>
-
+                                <a href="{% url 'suppliers:delete' supplier.id %}" class="delete"
+                                    onclick="return confirm('Supprimer ce fournisseur ?')">
+                                    Supprimer
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6">
+                                Aucun fournisseur disponible
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
-
-    <div class="table-card">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>#</th>
-
-                    <th>Nom</th>
-
-                    <th>Téléphone</th>
-
-                    <th>Email</th>
-
-                    <th>Adresse</th>
-
-                    <th>Actions</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                {% for supplier in suppliers %}
-
-                <tr>
-
-                    <td>
-
-                        {{ forloop.counter }}
-
-                    </td>
-
-
-                    <td>
-
-                        {{ supplier.name }}
-
-                    </td>
-
-
-                    <td>
-
-                        {{ supplier.phone }}
-
-                    </td>
-
-
-                    <td>
-
-                        {{ supplier.email|default:"—" }}
-
-                    </td>
-
-
-                    <td>
-
-                        {{ supplier.address|default:"—" }}
-
-                    </td>
-
-
-                    <td class="actions">
-
-                        <a href="{% url 'suppliers:update_supplier' supplier.id %}" class="edit">
-
-                            Modifier
-
-                        </a>
-
-
-                        <a href="{% url 'suppliers:delete' supplier.id %}" class="delete"
-                            onclick="return confirm('Supprimer ce produit ?')">
-
-                            Supprimer
-
-                        </a>
-
-                    </td>
-
-                </tr>
-
-
-                {% empty %}
-
-                <tr>
-
-                    <td colspan="6">
-
-                        Aucun fournisseur disponible
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
-
-
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">
-                « Premier
-            </a>
-
-            <a href="?page={{ page_obj.previous_page_number }}">
-                ←
-            </a>
-        {% endif %}
-
-        <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">
-                →
-            </a>
-
-            <a href="?page={{ page_obj.paginator.num_pages }}">
-                Dernier »
-            </a>
-        {% endif %}
-    </div>
-
-
+    {% include "components/pagination.html" %}
+{% endblock %}
+
+
+
+{% block scripts %}
+    <script src="{% static 'js/search.js' %}"></script>
+    <script>
+        // script pour bar de recherche de fournisseur
+        const SUPPLIER_URL = "{% url 'suppliers:search_api' 'suppliers' %}";
+        new LiveSearch({
+            input:"#supplier-search",
+            table:"#suppliers-table",
+            url:SUPPLIER_URL,
+            renderer:this.renderSuppliers
+        });
+    </script>
 {% endblock %}
