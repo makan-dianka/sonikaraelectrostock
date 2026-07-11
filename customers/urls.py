@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from common.search import search_api
 
 
 app_name = 'customers'
@@ -14,4 +15,6 @@ urlpatterns = [
 
     path('api/customer/search/', views.customer_search_api, name='customer_search_api'),
     path('api/customer/create/', views.create_customer_api, name='create_customer_api'),
+
+    path("search/<str:entity>/", search_api, name="search_api"),
 ]

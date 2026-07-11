@@ -1,0 +1,109 @@
+class LiveSearch {
+
+    constructor(options){
+
+        this.input = document.querySelector(options.input);
+        this.table = document.querySelector(options.table);
+        this.url = options.url;
+        this.renderer = options.renderer;
+        this.delay = options.delay || 200;
+
+        this.timer = null;
+
+        this.init();
+    }
+
+    init(){
+
+        if(!this.input){
+            console.error("Input introuvable");
+            return;
+        }
+
+        if(!this.table){
+            console.error("Table introuvable");
+            return;
+        }
+
+        this.input.addEventListener("input", ()=>{
+
+            clearTimeout(this.timer);
+
+            this.timer = setTimeout(()=>{
+                this.search();
+            }, this.delay);
+
+        });
+
+    }
+
+    async search(){
+
+        const q = this.input.value.trim();
+        const pagination = document.querySelector(".pagination");
+
+        if(q===""){
+            pagination.style.display = "flex";
+            location.reload();
+            return;
+        }
+
+        pagination.style.display = "none";
+
+        const response = await fetch(
+            `${this.url}?q=${encodeURIComponent(q)}`
+        );
+
+        const data = await response.json();
+
+        this.table.innerHTML = this.renderer(data.results);
+
+    }
+
+}
+
+
+
+
+/**
+ *  rendu des clients dans le tableau
+ * @param {*} customers 
+ * @returns 
+ */
+function renderCustomers(customers){
+    if(customers.length===0){
+        return `
+            <tr>
+                <td colspan="6">
+                    Aucun client trouvé
+                </td>
+            </tr>
+        `;
+    }
+
+    return customers.map(customer=>`
+
+        <tr>
+            <td>${customer.id}</td>
+            <td>${customer.name}</td>
+            <td>${customer.phone}</td>
+            <td>${customer.email || "—"}</td>
+            <td>${customer.address || "—"}</td>
+
+            <td class="actions">
+                <a
+                    class="edit"
+                    href="/customers/update/${customer.id}">
+                    Modifier
+                </a>
+
+                <a
+                    class="delete"
+                    href="/customers/${customer.id}/delete/"
+                    onclick="return confirm('Supprimer ce client ?')">
+                    Supprimer
+                </a>
+            </td>
+        </tr>
+    `).join("");
+}

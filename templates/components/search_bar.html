@@ -1,0 +1,61 @@
+<div class="search-card {{ width|default:'col-md-5' }}">
+    <input
+        id="{{ id }}"
+        type="text"
+        placeholder="{{ placeholder }}"
+        value="{{ value|default:'' }}"
+    >
+</div>
+
+
+<style>
+    .search-card{
+        margin:20px 0;
+        padding:20px;
+        background:#f39b00;
+        border-radius:12px;
+        box-shadow:0 3px 10px rgba(0,0,0,.08);
+    }
+
+    .search-card form{
+        display:flex;
+        gap:15px;
+        align-items:center;
+        flex-wrap:wrap;
+    }
+
+    .search-card input{
+        flex:1;
+        min-width:500px;
+        padding:12px 15px;
+        border:1px solid #ddd;
+        border-radius:8px;
+        font-size:15px;
+    }
+
+    .search-card button{
+        padding:12px 22px;
+        border:none;
+        background:#f39b00;
+        color:white;
+        border-radius:8px;
+        cursor:pointer;
+        font-weight:600;
+    }
+
+    .search-card button:hover{
+        background:#d88600;
+    }
+
+    .reset{
+        padding:12px 20px;
+        background:#6c757d;
+        color:white !important;
+        border-radius:8px;
+        text-decoration:none;
+    }
+
+    .reset:hover{
+        background:#5a6268;
+    }
+</style>

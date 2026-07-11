@@ -1,185 +1,87 @@
-{% extends 'layout/base.html' %}
-
-
-{% load static %}
+{% extends 'layout/base.html' %} {% load static %}
 
 {% block head%}
     <link rel="stylesheet" href="{% static 'css/customers/list.css' %}">
 {% endblock %}
 
 
-
 {% block content %}
+    <div class="client-page">
 
-<div class="client-page">
+        {% include "components/search_bar.html" with id="customer-search" placeholder="Rechercher un client par son nom ou numéro de téléphone" %}
 
-    <div class="page-header">
+        <div class="page-header">
+            <div>
+                <h1>👥 Clients</h1>
+                <p>Gérer les clients de votre entreprise</p>
+            </div>
 
-        <div>
-
-            <h1>
-
-                👥 Clients
-
-            </h1>
-
-            <p>
-
-                Gérer les clients de votre entreprise
-
-            </p>
-
+            <a href="{% url 'customers:create' %}" class="btn-add">
+                + Ajouter un client
+            </a>
         </div>
 
 
-        <a
-        href="{% url 'customers:create' %}"
-        class="btn-add"
-        >
 
-            + Ajouter un client
+        <div class="table-card">
 
-        </a>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Téléphone</th>
+                        <th>Email</th>
+                        <th>Adresse</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
+                <tbody id="customers-table">
+
+                    {% for customer in customers %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.phone }}</td>
+                            <td>{{ customer.email|default:"—" }}</td>
+                            <td>{{ customer.address|default:"—" }}</td>
+                            <td class="actions">
+                                <a href="{% url 'customers:update' customer.id %}" class="edit">
+                                    Modifier
+                                </a>
+
+                                <a href="{% url 'customers:delete' customer.id %}" class="delete" onclick="return confirm('Supprimer ce client ?')">
+                                    Supprimer
+                                </a>
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td colspan="6">Aucun client trouvé</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
+    {% include "components/pagination.html" %}
+{% endblock %}
 
 
-    <div class="table-card">
 
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>#</th>
-
-                    <th>Nom</th>
-
-                    <th>Téléphone</th>
-
-                    <th>Email</th>
-
-                    <th>Adresse</th>
-
-                    <th>Actions</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                {% for customer in customers %}
-
-                <tr>
-
-                    <td>
-
-                        {{ forloop.counter }}
-
-                    </td>
-
-                    <td>
-
-                        {{ customer.name }}
-
-                    </td>
-
-                    <td>
-
-                        {{ customer.phone }}
-
-                    </td>
-
-                    <td>
-
-                        {{ customer.email|default:"—" }}
-
-                    </td>
-
-                    <td>
-
-                        {{ customer.address|default:"—" }}
-
-                    </td>
-
-
-                    <td class="actions">
-
-                        <a
-                        href="{% url 'customers:update' customer.id %}"
-                        class="edit"
-                        >
-
-                            Modifier
-
-                        </a>
-
-
-                        <a
-                        href="{% url 'customers:delete' customer.id %}"
-                        class="delete"
-
-                        onclick="return confirm('Supprimer ce client ?')"
-
-                        >
-
-                            Supprimer
-
-                        </a>
-
-                    </td>
-
-                </tr>
-
-                {% empty %}
-
-                <tr>
-
-                    <td colspan="6">
-
-                        Aucun client trouvé
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
-
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">
-                « Premier
-            </a>
-
-            <a href="?page={{ page_obj.previous_page_number }}">
-                ←
-            </a>
-        {% endif %}
-
-        <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">
-                →
-            </a>
-
-            <a href="?page={{ page_obj.paginator.num_pages }}">
-                Dernier »
-            </a>
-        {% endif %}
-    </div>
-
+{% block scripts %}
+    <script src="{% static 'js/search.js' %}"></script>
+    <script>
+        // script pour bar de recherche de client
+        const CUSTOMER_URL = "{% url 'customers:search_api' 'customers' %}";
+        new LiveSearch({
+            input:"#customer-search",
+            table:"#customers-table",
+            url:CUSTOMER_URL,
+            renderer:this.renderCustomers
+        });
+    </script>
 {% endblock %}

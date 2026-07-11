@@ -63,7 +63,7 @@ def product_list(request):
 
     products = products.order_by('-created_at')
 
-    paginator = Paginator(products, 25)
+    paginator = Paginator(products, 10)
 
     page_number = request.GET.get('page')
 
