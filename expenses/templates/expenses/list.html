@@ -7,188 +7,131 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="page">
-
         {% if request.user.is_authenticated %}
             {% if request.user.role == 'owner' %}
                 <div class="summary">
-
                     <div class="summary-card">
-
                         <span>Total dépenses</span>
-
-                        <h2>
-
-                            {{ total_expense|intcomma }}
-
-                            FCFA
-
-                        </h2>
-
+                        <h2>{{ total_expense|intcomma }} FCFA</h2>
                     </div>
 
                     <div class="summary-card">
-
                         <span>Aujourd'hui</span>
-
-                        <h2>
-
-                            {{ expense_today|intcomma }}
-
-                            FCFA
-
-                        </h2>
-
+                        <h2>{{ expense_today|intcomma }} FCFA</h2>
                     </div>
 
                     <div class="summary-card">
-
                         <span>Ce mois</span>
-
-                        <h2>
-
-                            {{ expense_month|intcomma }}
-
-                            FCFA
-
-                        </h2>
-
+                        <h2>{{ expense_month|intcomma }} FCFA</h2>
                     </div>
 
                     <div class="summary-card">
-
                         <span>Magasins concernés</span>
-
-                        <h2>
-
-                            {{ total_store }}
-
-                        </h2>
-
+                        <h2>{{ total_store }}</h2>
                     </div>
-
                 </div>
             {% endif %}
         {% endif %}
 
 
+        {% include "components/search_bar.html" with id="expense-search" placeholder="Rechercher une dépense par référence ou catégorie" %}
 
         <div class="header">
-
             <div>
-
                 <h1>💸 Dépenses</h1>
-
-                <!-- <h3>
-
-                    Total :
-
-                    {{ total_expense|intcomma }} FCFA
-
-                </h3> -->
-
             </div>
 
             <a href="{% url 'expenses:create' %}" class="add">
-
                 + Nouvelle dépense
-
             </a>
-
         </div>
 
         <div class="table-card">
-
             <table>
-
                 <thead>
-
                     <tr>
-
                         <th>Référence</th>
-
                         <th>Date</th>
-
                         <th>Magasin</th>
-
                         <th>Catégorie</th>
-
                         <th>Montant</th>
-
                         <th>Paiement</th>
-
                         <th>Description</th>
                         <th>Actions</th>
-
                     </tr>
-
                 </thead>
 
-                <tbody>
-
+                <tbody id="expenses-table">
+                    {% if expenses %}
+                        {% for expense in expenses %}
+                            <tr>
+                                <td>{{ expense.reference }}</td>
+                                <td>{{ expense.expense_date }}</td>
+                                <td>{{ expense.store }}</td>
+                                <td>{{ expense.category }}</td>
+                                <td>{{ expense.amount|intcomma }} FCFA</td>
+                                <td>{{ expense.get_payment_method_display }}</td>
+                                <td>{{ expense.description|default:"—"|truncatechars:50 }}</td>
+                                <td>
+                                    <a class="delete" href="{% url 'expenses:delete' expense.id %}"
+                                        onclick="return confirm('Supprimer cette dépense ?')">
+                                        Supprimer
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7">
+                                Aucune dépense enregistrée.
+                            </td>
+                        </tr>
+                    {% endif %}
                     {% for expense in expenses %}
-
-                    <tr>
-
-                        <td>{{ expense.reference }}</td>
-
-                        <td>{{ expense.expense_date }}</td>
-
-                        <td>{{ expense.store }}</td>
-
-                        <td>{{ expense.category }}</td>
-
-                        <td>
-
-                            {{ expense.amount|intcomma }}
-
-                            FCFA
-
-                        </td>
-
-                        <td>
-
-                            {{ expense.get_payment_method_display }}
-
-                        </td>
-
-                        <td>
-
-                            {{ expense.description|default:"—"|truncatechars:50 }}
-
-                        </td>
-
-                        <td>
-                            <a class="delete" href="{% url 'expenses:delete' expense.id %}"
-                                onclick="return confirm('Supprimer cette dépense ?')">
-                                Supprimer
-                            </a>
-                        </td>
-
-
-                    </tr>
-
+                        <tr>
+                            <td>{{ expense.reference }}</td>
+                            <td>{{ expense.expense_date }}</td>
+                            <td>{{ expense.store }}</td>
+                            <td>{{ expense.category }}</td>
+                            <td>{{ expense.amount|intcomma }} FCFA</td>
+                            <td>{{ expense.get_payment_method_display }}</td>
+                            <td>{{ expense.description|default:"—"|truncatechars:50 }}</td>
+                            <td>
+                                <a class="delete" href="{% url 'expenses:delete' expense.id %}"
+                                    onclick="return confirm('Supprimer cette dépense ?')">
+                                    Supprimer
+                                </a>
+                            </td>
+                        </tr>
                     {% empty %}
 
-                    <tr>
-
-                        <td colspan="7">
-
-                            Aucune dépense enregistrée.
-
-                        </td>
-
-                    </tr>
+                        <tr>
+                            <td colspan="7">
+                                Aucune dépense enregistrée.
+                            </td>
+                        </tr>
 
                     {% endfor %}
-
                 </tbody>
-
             </table>
-
         </div>
-
     </div>
 
+    {% include "components/pagination.html" %}
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'js/search.js' %}"></script>
+    <script>
+        // script pour bar de recherche de dépense
+        const EXPENSE_URL = "{% url 'expenses:search_api' 'expenses' %}";
+        new LiveSearch({
+            input:"#expense-search",
+            table:"#expenses-table",
+            url:EXPENSE_URL,
+            renderer:this.renderExpenses
+        });
+    </script>
 {% endblock %}

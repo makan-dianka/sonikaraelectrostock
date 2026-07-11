@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 
 from django.db.models import Sum
 
+from common.pagination import paginate_queryset
 from sonikaraelectrostock.tools import generate_reference
 
 from .forms import ExpenseForm
@@ -92,8 +93,11 @@ def expense_list(request):
         .count()
     )
 
+    page_obj = paginate_queryset(request, expenses)
+
     context = {
-        "expenses": expenses,
+        "expenses": page_obj,
+        'page_obj': page_obj,
         "total_expense": total_expense,
         "expense_today": expense_today,
         "expense_month": expense_month,

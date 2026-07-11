@@ -1,4 +1,6 @@
 from customers.models import Customer
+from expenses.models import Expense
+from expenses.serializers import ExpenseSearchSerializer
 from suppliers.models import Supplier
 from products.models import Product
 
@@ -27,6 +29,13 @@ SEARCH_CONFIG = {
         "serializer": ProductSearchSerializer,
         "search_fields": ["name", "reference"],
         "order_by": "name",
+    },
+
+    "expenses": {
+        "model": Expense,
+        "serializer": ExpenseSearchSerializer,
+        "search_fields": ["reference", "category__name"],
+        "order_by": "category__name",
     },
 
 }

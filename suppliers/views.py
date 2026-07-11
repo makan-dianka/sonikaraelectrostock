@@ -6,13 +6,13 @@ from django.shortcuts import (
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 
+from common.pagination import paginate_queryset
 from suppliers.serializers import SupplierCreateSerializer, SupplierSearchSerializer
 
 from .models import Supplier
 from .forms import SupplierForm
 
 from django.db.models import Q
-from django.core.paginator import Paginator
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -88,9 +88,7 @@ def supplier_list(request):
 
     suppliers = Supplier.objects.filter(is_deleted=False).order_by('-created_at')
 
-    paginator = Paginator(suppliers, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginate_queryset(request, suppliers)
 
     context = {
         'suppliers': page_obj,

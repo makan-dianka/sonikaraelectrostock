@@ -153,3 +153,40 @@ function renderSuppliers(suppliers){
         </tr>
     `).join("");
 }
+
+
+
+
+function renderExpenses(expenses){
+    if(expenses.length===0){
+        return `
+            <tr>
+                <td colspan="6">
+                    Aucune dépense trouvée
+                </td>
+            </tr>
+        `;
+    }
+
+    return expenses.map(expense=>`
+
+        <tr>
+            <td>${expense.reference}</td>
+            <td>${expense.expense_date}</td>
+            <td>${expense.store}</td>
+            <td>${expense.category}</td>
+            <td>${expense.amount}</td>
+            <td>${expense.payment_method}</td>
+            <td>${expense.description}</td>
+
+            <td class="actions">
+                <a
+                    class="delete"
+                    href="/expenses/${expense.id}/delete/"
+                    onclick="return confirm('Supprimer cette dépense ?')">
+                    Supprimer
+                </a>
+            </td>
+        </tr>
+    `).join("");
+}
