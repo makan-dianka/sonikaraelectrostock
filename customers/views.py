@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import (
     render,
     redirect,
@@ -17,12 +19,30 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-
+logger = logging.getLogger('info_log')
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def customer_search_api(request):
+    ##########################################
+    ###############################################
+    ############# API de recherche de clients #############
+    ############# Recherche par nom ou téléphone #############
+    ############# Retourne les 20 premiers résultats #############
+    ############# Exemple d'URL: /api/customers/search/?q=John
+    ##########################################
+
+    alert="""
+
+        !xxxxxx! ALERT !xxxxxx!
+        Cette view est obsolète depuis [11/06/2026] et sera supprimée dans les prochaines versions. 
+        Utilisez la views : search_api() dans common/search.py à la place.
+
+    """
+    logger.warning(alert)
+
+
     query = request.GET.get('q', '').strip()
 
     if len(query) < 1:
