@@ -12,10 +12,11 @@
 {% block content %}
     <div class="page">
 
+        {% include "components/search_bar.html" with id="credit-search" placeholder="Rechercher un crédit par référence ou client" %}
+
         <div class="header">
             <div>
                 <h2>💳 Crédits clients</h2>
-                <p>Suivi des crédits et échéances</p>
             </div>
 
             <a href="{% url 'credits:create_credit' %}" class="add">
@@ -40,7 +41,7 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="credits-table">
                     {% for credit in credits %}
                         <tr>
                             <td>{{ credit.reference }}</td>
@@ -52,9 +53,9 @@
                             <td>{{ credit.note }}</td>
                             <td>{{ credit.due_date|date:"d/m/Y" }}</td>
                             <td>
-                                {% if credit.status == "PAID" %}
-                                    <span class="badge paid">Payé</span>
-                                {% elif credit.status == "LATE" %}
+                                {% if credit.status == "paid" %}
+                                    <span class="badge paid">Remboursé</span>
+                                {% elif credit.status == "overdue" %}
                                     <span class="badge late">En retard</span>
                                 {% else %}
                                     <span class="badge pending">En cours</span>
@@ -83,4 +84,22 @@
         </div>
     </div>
 
+
+    {% include "components/pagination.html" %}
+{% endblock %}
+
+
+
+{% block scripts %}
+    <script src="{% static 'js/search.js' %}"></script>
+    <script>
+        // script pour bar de recherche de credits
+        const CREDIT_URL = "{% url 'credits:search_api' 'credits' %}";
+        new LiveSearch({
+            input:"#credit-search",
+            table:"#credits-table",
+            url:CREDIT_URL,
+            renderer:this.renderCredits
+        });
+    </script>
 {% endblock %}

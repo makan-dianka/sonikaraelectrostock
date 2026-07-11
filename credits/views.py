@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from common.pagination import paginate_queryset
 from .forms import CreditForm
 from .models import Credit, CreditPayment
 from django.utils import timezone
@@ -69,7 +71,8 @@ def create_credit(request):
 @login_required(login_url='accounts:login')
 def credit_list(request):
     credits = Credit.objects.select_related('customer', 'store').all().order_by('-id')
-    return render(request, 'credits/list.html', {'credits': credits})
+    page_obj = paginate_queryset(request, credits)
+    return render(request, 'credits/list.html', {'credits': page_obj, 'page_obj': page_obj})
 
 
 

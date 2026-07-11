@@ -190,3 +190,54 @@ function renderExpenses(expenses){
         </tr>
     `).join("");
 }
+
+
+function renderCredits(credits){
+    if(credits.length===0){
+        return `
+            <tr>
+                <td colspan="10">
+                    Aucun crédit trouvé
+                </td>
+            </tr>
+        `;
+    }
+
+
+    const payement = (credit) => {
+        if(credit.status !== "paid") {
+            return `<a href="/credits/payment/add/">Payer</a>`;
+        }else{
+            return `<span class="validated">Payé</span>`                     
+        }
+    }
+
+    const getStatusBadge = (status) => {
+        if (status === "paid") {
+            return `<span class="badge paid">Remboursé</span>`;
+        }
+
+        if (status === "overdue") {
+            return `<span class="badge late">En retard</span>`;
+        }
+
+        return `<span class="badge pending">En cours</span>`;
+    }
+
+
+    return credits.map(credit=>`
+
+        <tr>
+            <td>${credit.reference}</td>
+            <td>${credit.customer}</td>
+            <td>${credit.store}</td>
+            <td>${credit.amount} FCFA</td>
+            <td class="text-danger">${credit.remaining} FCFA</td>
+            <td>${credit.interest_rate}%</td>
+            <td>${credit.note}</td>
+            <td>${credit.due_date}</td>
+            <td>${getStatusBadge(credit.status)}</td>
+            <td class="Comptoir">${payement(credit)}</td>
+        </tr>
+    `).join("");
+}
