@@ -175,7 +175,7 @@ function renderExpenses(expenses){
             <td>${expense.expense_date}</td>
             <td>${expense.store}</td>
             <td>${expense.category}</td>
-            <td>${expense.amount}</td>
+            <td>${expense.amount} FCFA</td>
             <td>${expense.payment_method}</td>
             <td>${expense.description}</td>
 
