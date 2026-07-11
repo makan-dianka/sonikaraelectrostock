@@ -5,126 +5,86 @@
 {% load static %}
 
 {% block head%}
-<link rel="stylesheet" href="{% static 'css/payments/list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/payments/list.css' %}">
 {% endblock %}
 
 
 {% block content %}
-<div class="container">
-    {% if request.user.is_authenticated %}
-        {% if request.user.role == 'owner' %}
-            <div class="stats">
+    <div class="page">
+        {% if request.user.is_authenticated %}
+            {% if request.user.role == 'owner' %}
+                <div class="stats">
+                    <div class="card income">
+                        <p>Montant reçu</p>
+                        <h2>+ {{ total_received|intcomma }} FCFA</h2>
+                    </div>
 
-                <div class="card income">
-                    <p>Montant reçu</p>
-                    <h2>+ {{ total_received|intcomma }} FCFA</h2>
+                    <div class="card expense">
+                        <p>Montant envoyé</p>
+                        <h2>- {{ total_sent|intcomma }} FCFA</h2>
+                    </div>
                 </div>
-
-                <div class="card expense">
-                    <p>Montant envoyé</p>
-                    <h2>- {{ total_sent|intcomma }} FCFA</h2>
-                </div>
-            </div>
+            {% endif %}
         {% endif %}
-    {% endif %}
 
-    <div class="table-card">
+        <div class="table-card">
+            <table class="payment-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Référence</th>
+                        <th>Montant payé</th>
+                        <th>Reste à payé</th>
+                        <th>Méthode</th>
+                        <th>Référence paiement</th>
+                        <th>Date</th>
+                        <th>Comptoir</th>
+                    </tr>
+                </thead>
 
-        <table class="payment-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Référence</th>
-                    <th>Montant payé</th>
-                    <th>Reste à payé</th>
-                    <th>Méthode</th>
-                    <th>Référence paiement</th>
-                    <th>Date</th>
-                    <th>Comptoir</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for payment in payments %}
-                <tr>
-                    <td>{{ payment.id }}</td>
-
-                    <td>
-                        {{ payment.get_reference }}
-                    </td>
-                    <td class="amount">
-                        {{ payment.amount|intcomma }} FCFA
-                    </td>
-                    <td class="text-danger">
-                        {{ payment.get_remaining|intcomma }} FCFA
-                    </td>
-                    <td>
-                        <span class="badge method">
-                            {{ payment.payment_method }}
-                        </span>
-                    </td>
-                    <td>{{ payment.reference|default:"-" }}</td>
-                    <td>{{ payment.created_at|date:"d/m/Y H:i" }}</td>
-                    <td>
-                        {% if payment.sale %}
-
-                            {% if payment.sale.payment_status == 'paid' %}
-                                <span class="validated">Payé</span>
-                            {% else %}
-                                <a href="{% url 'payments:create' %}?type=sale&id={{ payment.sale.id }}">
-                                    Payer
-                                </a>
-                            {% endif %}
-
-                        {% elif payment.purchase %}
-
-                            {% if payment.purchase.payment_status == 'paid' %}
-                                <span class="validated">Payé</span>
-                            {% else %}
-                                <a href="{% url 'payments:create' %}?type=purchase&id={{ payment.purchase.id }}">
-                                    Payer
-                                </a>
-                            {% endif %}
-
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="empty">
-                        Aucun paiement enregistré
-                    </td>
-                </tr>
-                {% endfor %}
-
-            </tbody>
-        </table>
+                <tbody>
+                    {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.id }}</td>
+                            <td>{{ payment.get_reference }}</td>
+                            <td class="amount">{{ payment.amount|intcomma }} FCFA</td>
+                            <td class="text-danger">{{ payment.get_remaining|intcomma }} FCFA</td>
+                            <td>
+                                <span class="badge method">{{ payment.payment_method }}</span>
+                            </td>
+                            <td>{{ payment.reference|default:"-" }}</td>
+                            <td>{{ payment.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if payment.sale %}
+                                    {% if payment.sale.payment_status == 'paid' %}
+                                        <span class="validated">Payé</span>
+                                    {% else %}
+                                        <a href="{% url 'payments:create' %}?type=sale&id={{ payment.sale.id }}">
+                                            Payer
+                                        </a>
+                                    {% endif %}
+                                {% elif payment.purchase %}
+                                    {% if payment.purchase.payment_status == 'paid' %}
+                                        <span class="validated">Payé</span>
+                                    {% else %}
+                                        <a href="{% url 'payments:create' %}?type=purchase&id={{ payment.purchase.id }}">
+                                            Payer
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty">
+                                Aucun paiement enregistré
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">
-                « Premier
-            </a>
-
-            <a href="?page={{ page_obj.previous_page_number }}">
-                ←
-            </a>
-        {% endif %}
-
-        <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">
-                →
-            </a>
-
-            <a href="?page={{ page_obj.paginator.num_pages }}">
-                Dernier »
-            </a>
-        {% endif %}
-    </div>
-
-</div>
+    {% include "components/pagination.html" %}
 {% endblock %}
