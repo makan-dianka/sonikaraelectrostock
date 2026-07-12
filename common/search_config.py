@@ -5,6 +5,7 @@ from products.models import Product
 from credits.models import Credit
 from payments.models import Payment
 from sales.models import Sale
+from purchases.models import Purchase
 
 from customers.serializers import CustomerSearchSerializer
 from suppliers.serializers import SupplierSearchSerializer
@@ -13,6 +14,7 @@ from expenses.serializers import ExpenseSearchSerializer
 from credits.serializers import CreditSearchSerializer
 from payments.serializers import PaymentSearchSerializer
 from sales.serializers import SaleSearchSerializer
+from purchases.serializers import PurchaseSearchSerializer
 
 SEARCH_CONFIG = {
 
@@ -63,6 +65,13 @@ SEARCH_CONFIG = {
         "serializer": SaleSearchSerializer,
         "search_fields": ["reference", "customer__name"],
         "order_by": "customer__name",
+    },
+
+    "purchases": {
+        "queryset": Purchase.objects.all(),
+        "serializer": PurchaseSearchSerializer,
+        "search_fields": ["reference", "supplier__name"],
+        "order_by": "supplier__name",
     },
 
 }

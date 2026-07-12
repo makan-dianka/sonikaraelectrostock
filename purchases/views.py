@@ -13,7 +13,7 @@ from .forms import (
 
 from django.contrib import messages
 from django.db.models import Sum
-from django.core.paginator import Paginator
+from common.pagination import paginate_queryset
 
 
 from .services import receive_purchase, cancel_purchase
@@ -44,9 +44,7 @@ def purchase_list(request):
     total_remaining = total_purchase - total_paid
 
 
-    paginator = Paginator(purchases, 6)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginate_queryset(request, purchases)
 
     context = {
         'purchases': page_obj,

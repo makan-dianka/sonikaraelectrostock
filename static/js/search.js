@@ -380,3 +380,102 @@ function renderSales(sales){
         </tr>
     `).join("");
 }
+
+
+
+
+
+function renderPurchases(purchases){
+    if(purchases.length===0){
+        return `
+            <tr>
+                <td colspan="10">
+                    Aucun achat trouvé
+                </td>
+            </tr>
+        `;
+    }
+
+
+    const getStatus = (purchase) => {
+        if (purchase.status === "draft") {
+            return `<a href="/purchases/${purchase.id}/update/" style="text-decoration: none;">
+                        <span class="draft">
+                            Brouillon
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="20" heigth="20" fill="#f39b00"><path d="M416.9 85.2L372 130.1L509.9 268L554.8 223.1C568.4 209.6 576 191.2 576 172C576 152.8 568.4 134.4 554.8 120.9L519.1 85.2C505.6 71.6 487.2 64 468 64C448.8 64 430.4 71.6 416.9 85.2zM338.1 164L122.9 379.1C112.2 389.8 104.4 403.2 100.3 417.8L64.9 545.6C62.6 553.9 64.9 562.9 71.1 569C77.3 575.1 86.2 577.5 94.5 575.2L222.3 539.7C236.9 535.6 250.2 527.9 261 517.1L476 301.9L338.1 164z"/></svg>
+                        </span>
+                    </a>`;
+        }
+
+        if (purchase.status === "received") {
+            return `<span class="received">Réceptionné</span>`;
+        }
+
+        return `<span class="cancelled">Annulé</span>`;
+    }
+
+
+    const setupActions = (purchase) => {
+        if (purchase.status === "draft") {
+            return `
+                    <a class="receive" href="/purchases/${purchase.id}/status/received/"
+                    onclick="return confirm('Confirmer la réception ?')">
+                        Réceptionner
+                    </a>
+
+                    <a class="cancel" href="/purchases/${purchase.id}/status/cancelled/"
+                    onclick="return confirm('Annuler cet achat ?')">
+                        Annuler
+                    </a>
+                    `;
+        }else{
+            return `<span> — </span>`
+        }
+    }
+
+
+    const setupComptoir = (purchase) => {
+        if (purchase.payment_status === "unpaid" || purchase.payment_status === 'partial') {
+            if (purchase.remaining_amount === 0) {
+                return `<span class="validated">Payé</span>`;
+            }else if (purchase.status === 'cancelled') {
+                return `<span class="cancelled">Annulé</span>`
+            }else if (purchase.status === 'received') {
+                return `
+                        <a class="pay" href="/payments/create?type=purchase&id=${purchase.id}">
+                            Payer
+                        </a>
+                    `;
+            }
+        }else{
+            return `<span class="received">Payé</span>`;
+        }
+
+        return `<span></span>`;
+    }
+
+
+
+    const payementStatus = (sale) => {
+        if(sale.remaining_amount !== 0) {
+            return `<a href="/payments/create?type=&id=">Payer</a>`;
+        }else{
+            return `<span class="validated">Payé</span>`                     
+        }
+    }
+
+    return purchases.map(purchase=>`
+
+        <tr>
+            <td>${purchase.purchase_date}</td>
+            <td>${purchase.supplier || 'Fournisseur'}</td>
+            <td>${purchase.store}</td>
+            <td>${purchase.reference}</td>
+            <td>${purchase.total} FCFA</td>
+            <td>${purchase.remaining_amount} FCFA</td>
+            <td>${getStatus(purchase)}</td>
+            <td>${setupActions(purchase)}</td>
+            <td>${setupComptoir(purchase)}</td>
+        </tr>
+    `).join("");
+}

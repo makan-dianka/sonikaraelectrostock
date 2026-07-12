@@ -2,237 +2,146 @@
 
 {% load humanize %}
 
-
 {% block head%}
     <link rel="stylesheet" href="{% static 'css/purchases/purchase_list.css' %}">
 {% endblock %}
 
-
-    <h1>
-
-        💳 Nouvelle vente
-
-    </h1>
-
 {% block content %}
+    <div class="page">
+        {% if request.user.is_authenticated %}
+            {% if request.user.role == 'owner' %}
+                <div class="stats">
+                    <div class="resume total">
+                        <p>Total achat</p>
+                        <h2>{{ total_purchase|intcomma }} FCFA</h2>
+                    </div>
 
-<div class="page">
+                    <div class="resume paid">
+                        <p>Total payé</p>
+                        <h2>{{ total_paid|intcomma }} FCFA</h2>
+                    </div>
 
-    <div class="top">
-
-        <h1>
-
-            🛒 Achats
-
-        </h1>
-
-        <a href="{% url 'purchases:create' %}" class="add">
-
-            + Nouvel achat
-
-        </a>
-
-    </div>
-
-
-    {% if request.user.is_authenticated %}
-        {% if request.user.role == 'owner' %}
-            <div class="stats">
-                <div class="resume total">
-                    <p>Total achat</p>
-                    <h2>{{ total_purchase|intcomma }} FCFA</h2>
+                    <div class="resume remaining">
+                        <p>Reste à payer</p>
+                        <h2>{{ total_remaining|intcomma }} FCFA</h2>
+                    </div>
                 </div>
-
-                <div class="resume paid">
-                    <p>Total payé</p>
-                    <h2>{{ total_paid|intcomma }} FCFA</h2>
-                </div>
-
-                <div class="resume remaining">
-                    <p>Reste à payer</p>
-                    <h2>{{ total_remaining|intcomma }} FCFA</h2>
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
-
-
-    <div class="card">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Date</th>
-
-                    <th>Fournisseur</th>
-
-                    <th>Magasin</th>
-
-                    <th>Référence</th>
-
-                    <th>Total</th>
-                    <th>Reste à payer</th>
-
-                    <th>
-
-                    Statut
-
-                    </th>
-
-                    <th>
-
-                    Actions
-
-                    </th>
-
-                    <th>
-
-                    Comptoir
-
-                    </th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                {% for purchase in purchases %}
-
-                <tr>
-
-                    <td>
-
-                        {{ purchase.purchase_date }}
-
-                    </td>
-
-                    <td>
-
-                        {{ purchase.supplier }}
-
-                    </td>
-
-                    <td>
-
-                        {{ purchase.store }}
-
-                    </td>
-
-                    <td>
-
-                        {{ purchase.reference }}
-
-                    </td>
-
-                    <td>
-                        {{ purchase.total|intcomma }} FCFA
-                    </td>
-
-                    <td>
-                        {{ purchase.remaining_amount|intcomma }} FCFA
-                    </td>
-
-                    <td>
-                        {% if purchase.status == 'draft' %}
-                            <a href="{% url 'purchases:update' purchase.id %}" style="text-decoration: none;">
-                                <span class="draft">
-                                    Brouillon
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="20" heigth="20" fill="#f39b00"><path d="M416.9 85.2L372 130.1L509.9 268L554.8 223.1C568.4 209.6 576 191.2 576 172C576 152.8 568.4 134.4 554.8 120.9L519.1 85.2C505.6 71.6 487.2 64 468 64C448.8 64 430.4 71.6 416.9 85.2zM338.1 164L122.9 379.1C112.2 389.8 104.4 403.2 100.3 417.8L64.9 545.6C62.6 553.9 64.9 562.9 71.1 569C77.3 575.1 86.2 577.5 94.5 575.2L222.3 539.7C236.9 535.6 250.2 527.9 261 517.1L476 301.9L338.1 164z"/></svg>
-                                </span>
-                            </a>
-                        {% elif purchase.status == 'received' %}
-                            <span class="received">
-                                Réceptionné
-                            </span>
-                        {% else %}
-
-                            <span class="cancelled">
-                                Annulé
-                            </span>
-                        {% endif %}
-                    </td>
-
-
-                    <td>
-                        {% if purchase.status == 'draft' %}
-                            <a class="receive" href="{% url 'purchases:update_status' purchase.id 'received' %}"
-                            onclick="return confirm('Confirmer la réception ?')">
-                                Réceptionner
-                            </a>
-
-                            <a class="cancel" href="{% url 'purchases:update_status' purchase.id 'cancelled' %}"
-                            onclick="return confirm('Annuler cet achat ?')">
-                                Annuler
-                            </a>
-                        {% else %}
-
-                            —
-
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if purchase.payment_status == 'unpaid' or purchase.payment_status == 'partial' %}
-                            {% if purchase.payment_status == 'paid' %}
-                                <span class="validated">
-                                    Payé
-                                </span>
-                            {% elif purchase.status == 'cancelled'  %}
-                                <span class="cancelled">
-                                    Annulé
-                                </span>
-                            {% elif purchase.status == 'received' %}
-                                <a class="pay" href="{% url 'payments:create' %}?type=purchase&id={{ purchase.id }}">
-                                    Payer
-                                </a>
-                            {% endif %}
-                        {% else %}
-                            <span class="received">
-                                Payé
-                            </span>
-                        {% endif %}
-                    </td>
-
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">
-                « Premier
-            </a>
-
-            <a href="?page={{ page_obj.previous_page_number }}">
-                ←
-            </a>
+            {% endif %}
         {% endif %}
 
-        <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        {% include "components/search_bar.html" with id="purchase-search" placeholder="Rechercher un achat par référence ou fournisseur" %}
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">
-                →
-            </a>
 
-            <a href="?page={{ page_obj.paginator.num_pages }}">
-                Dernier »
+        <div class="top">
+            <h1>🛒 Achats</h1>
+
+            <a href="{% url 'purchases:create' %}" class="add">
+                + Nouvel achat
             </a>
-        {% endif %}
+        </div>
+
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Fournisseur</th>
+                        <th>Magasin</th>
+                        <th>Référence</th>
+                        <th>Total</th>
+                        <th>Reste à payer</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                        <th>Comptoir</th>
+                    </tr>
+                </thead>
+
+                <tbody id="purchase-table">
+                    {% for purchase in purchases %}
+                        <tr>
+                            <td>{{ purchase.purchase_date }}</td>
+                            <td>{{ purchase.supplier }}</td>
+                            <td>{{ purchase.store }}</td>
+                            <td>{{ purchase.reference }}</td>
+                            <td>{{ purchase.total|intcomma }} FCFA</td>
+                            <td>{{ purchase.remaining_amount|intcomma }} FCFA</td>
+                            <td>
+                                {% if purchase.status == 'draft' %}
+                                    <a href="{% url 'purchases:update' purchase.id %}" style="text-decoration: none;">
+                                        <span class="draft">
+                                            Brouillon
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="20" heigth="20" fill="#f39b00"><path d="M416.9 85.2L372 130.1L509.9 268L554.8 223.1C568.4 209.6 576 191.2 576 172C576 152.8 568.4 134.4 554.8 120.9L519.1 85.2C505.6 71.6 487.2 64 468 64C448.8 64 430.4 71.6 416.9 85.2zM338.1 164L122.9 379.1C112.2 389.8 104.4 403.2 100.3 417.8L64.9 545.6C62.6 553.9 64.9 562.9 71.1 569C77.3 575.1 86.2 577.5 94.5 575.2L222.3 539.7C236.9 535.6 250.2 527.9 261 517.1L476 301.9L338.1 164z"/></svg>
+                                        </span>
+                                    </a>
+                                {% elif purchase.status == 'received' %}
+                                    <span class="received">
+                                        Réceptionné
+                                    </span>
+                                {% else %}
+
+                                    <span class="cancelled">
+                                        Annulé
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if purchase.status == 'draft' %}
+                                    <a class="receive" href="{% url 'purchases:update_status' purchase.id 'received' %}"
+                                    onclick="return confirm('Confirmer la réception ?')">
+                                        Réceptionner
+                                    </a>
+
+                                    <a class="cancel" href="{% url 'purchases:update_status' purchase.id 'cancelled' %}"
+                                    onclick="return confirm('Annuler cet achat ?')">
+                                        Annuler
+                                    </a>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if purchase.payment_status == 'unpaid' or purchase.payment_status == 'partial' %}
+                                    {% if purchase.payment_status == 'paid' %}
+                                        <span class="validated">
+                                            Payé
+                                        </span>
+                                    {% elif purchase.status == 'cancelled'  %}
+                                        <span class="cancelled">
+                                            Annulé
+                                        </span>
+                                    {% elif purchase.status == 'received' %}
+                                        <a class="pay" href="{% url 'payments:create' %}?type=purchase&id={{ purchase.id }}">
+                                            Payer
+                                        </a>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="received">
+                                        Payé
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
-</div>
+    {% include "components/pagination.html" %}
+{% endblock %}
 
+
+
+{% block scripts %}
+    <script src="{% static 'js/search.js' %}"></script>
+    <script>
+        // script pour bar de recherche d'achat
+        const PURCHASE_URL = "{% url 'purchases:search_api' 'purchases' %}";
+        new LiveSearch({
+            input:"#purchase-search",
+            table:"#purchase-table",
+            url:PURCHASE_URL,
+            renderer:this.renderPurchases
+        });
+    </script>
 {% endblock %}
