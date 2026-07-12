@@ -5,237 +5,139 @@
 {% load static %}
 
 {% block head%}
-<link rel="stylesheet" href="{% static 'css/sales/sale_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sales/sale_list.css' %}">
 {% endblock %}
 
 
 {% block content %}
+    <div class="page">
+        {% if request.user.is_authenticated %}
+            {% if request.user.role == 'owner' %}
+                <div class="stats">
+                    <div class="resume total">
+                        <p>Total vente</p>
+                        <h2>{{ total_sale|intcomma }} FCFA</h2>
+                    </div>
 
-<div class="page">
+                    <div class="resume paid">
+                        <p>Total encaissé</p>
+                        <h2>{{ total_paid|intcomma }} FCFA</h2>
+                    </div>
 
-    <div class="top">
-
-        <h1>
-
-            💳 Ventes
-
-        </h1>
-
-        <a href="{% url 'sales:create' %}" class="add">
-
-            + Nouvelle vente
-
-        </a>
-
-    </div>
-
-    {% if request.user.is_authenticated %}
-        {% if request.user.role == 'owner' %}
-            <div class="stats">
-                <div class="resume total">
-                    <p>Total vente</p>
-                    <h2>{{ total_sale|intcomma }} FCFA</h2>
+                    <div class="resume remaining">
+                        <p>Total impayé</p>
+                        <h2>{{ total_remaining|intcomma }} FCFA</h2>
+                    </div>
                 </div>
-
-                <div class="resume paid">
-                    <p>Total encaissé</p>
-                    <h2>{{ total_paid|intcomma }} FCFA</h2>
-                </div>
-
-                <div class="resume remaining">
-                    <p>Total impayé</p>
-                    <h2>{{ total_remaining|intcomma }} FCFA</h2>
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
-
-
-    <div class="table-card">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Date de vente</th>
-
-                    <th>Référence</th>
-
-                    <th>Client</th>
-
-                    <th>Magasin</th>
-
-                    <th>Total</th>
-
-                    <th>Reste à payer</th>
-
-                    <th>Statut</th>
-
-                    <th>Actions</th>
-
-                    <th>Comptoir</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                {% for sale in sales %}
-
-                <tr>
-
-                    <td>
-
-                        {{ sale.created_at }}
-
-                    </td>
-
-                    <td>
-
-                        {{ sale.reference }}
-
-                    </td>
-
-                    <td>
-
-                        {{ sale.customer|default:'Client libre' }}
-
-                    </td>
-
-                    <td>
-
-                        {{ sale.store }}
-
-                    </td>
-
-                    <td>
-
-                        {{ sale.total_ttc|intcomma }}
-
-                        FCFA
-
-                    </td>
-
-                    <td>
-
-                        {{ sale.remaining_amount|intcomma }} FCFA
-
-                    </td>
-
-
-                    <td>
-
-                        {% if sale.status == 'draft' %}
-
-                        <a href="{% url 'sales:update' sale.id %}" style="text-decoration: none;">
-                            <span class="draft">
-                                Brouillon
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="20" heigth="20" fill="#f39b00"><path d="M416.9 85.2L372 130.1L509.9 268L554.8 223.1C568.4 209.6 576 191.2 576 172C576 152.8 568.4 134.4 554.8 120.9L519.1 85.2C505.6 71.6 487.2 64 468 64C448.8 64 430.4 71.6 416.9 85.2zM338.1 164L122.9 379.1C112.2 389.8 104.4 403.2 100.3 417.8L64.9 545.6C62.6 553.9 64.9 562.9 71.1 569C77.3 575.1 86.2 577.5 94.5 575.2L222.3 539.7C236.9 535.6 250.2 527.9 261 517.1L476 301.9L338.1 164z"/></svg>
-                            </span>
-                        </a>
-
-                        {% elif sale.status == 'cancelled' %}
-                        <span class="cancelled">
-
-                            Annulé
-
-                        </span>
-                        {% else %}
-
-                        <span class="validated">
-
-                            Validée
-
-                        </span>
-
-                        {% endif %}
-
-                    </td>
-
-
-                    <td>
-
-                        {% if sale.status == 'draft' %}
-
-                        <a class="validate" href="{% url 'sales:validate' sale.id %}"
-                            onclick="return confirm('Valider la vente ?')">
-
-                            Valider
-
-                        </a>
-
-                        {% elif sale.status == 'validated' %}
-
-                        <a class="btn btn-primary" href="{% url 'sales:print_invoice' sale.id %}" target="_blank">
-                            🖨 Facture
-                        </a>
-
-                        <a class="cancel" href="{% url 'sales:cancel' sale.id %}"
-                            onclick="return confirm('Annuler la vente ?')">
-                            Annuler
-                        </a>
-
-                        {% else %}
-
-                        —
-
-                        {% endif %}
-
-                    </td>
-
-                    <td>
-                        {% if sale.status == 'validated' %}
-                        {% if sale.payment_status == 'paid' %}
-                        <span class="validated">
-                            Payé
-                        </span>
-                        {% else %}
-                        <a class="pay" href="{% url 'payments:create' %}?type=sale&id={{ sale.id }}">
-                            Payer
-                        </a>
-                        {% endif %}
-                        {% else %}
-                        —
-                        {% endif %}
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-        </table>
-    </div>
-
-    <div class="pagination">
-
-        {% if page_obj.has_previous %}
-            <a href="?page=1">
-                « Premier
-            </a>
-
-            <a href="?page={{ page_obj.previous_page_number }}">
-                ←
-            </a>
+            {% endif %}
         {% endif %}
 
-        <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        {% include "components/search_bar.html" with id="sale-search" placeholder="Rechercher une vente par référence ou client" %}
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">
-                →
+        <div class="top">
+            <h1>💳 Ventes</h1>
+            <a href="{% url 'sales:create' %}" class="add">
+                + Nouvelle vente
             </a>
+        </div>
 
-            <a href="?page={{ page_obj.paginator.num_pages }}">
-                Dernier »
-            </a>
-        {% endif %}
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date de vente</th>
+                        <th>Référence</th>
+                        <th>Client</th>
+                        <th>Magasin</th>
+                        <th>Total</th>
+                        <th>Reste à payer</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                        <th>Comptoir</th>
+                    </tr>
+                </thead>
+
+                <tbody id="sales-table">
+                    {% for sale in sales %}
+                        <tr>
+                            <td>{{ sale.created_at }}</td>
+                            <td>{{ sale.reference }}</td>
+                            <td>{{ sale.customer|default:'Client libre' }}</td>
+                            <td>{{ sale.store }}</td>
+                            <td>{{ sale.total_ttc|intcomma }} FCFA</td>
+                            <td>{{ sale.remaining_amount|intcomma }} FCFA</td>
+                            <td>
+                                {% if sale.status == 'draft' %}
+                                    <a href="{% url 'sales:update' sale.id %}" style="text-decoration: none;">
+                                        <span class="draft">
+                                            Brouillon
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="20" heigth="20" fill="#f39b00"><path d="M416.9 85.2L372 130.1L509.9 268L554.8 223.1C568.4 209.6 576 191.2 576 172C576 152.8 568.4 134.4 554.8 120.9L519.1 85.2C505.6 71.6 487.2 64 468 64C448.8 64 430.4 71.6 416.9 85.2zM338.1 164L122.9 379.1C112.2 389.8 104.4 403.2 100.3 417.8L64.9 545.6C62.6 553.9 64.9 562.9 71.1 569C77.3 575.1 86.2 577.5 94.5 575.2L222.3 539.7C236.9 535.6 250.2 527.9 261 517.1L476 301.9L338.1 164z"/></svg>
+                                        </span>
+                                    </a>
+                                {% elif sale.status == 'cancelled' %}
+                                    <span class="cancelled">Annulé</span>
+                                {% else %}
+                                    <span class="validated">Validée</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if sale.status == 'draft' %}
+                                    <a class="validate" href="{% url 'sales:validate' sale.id %}"
+                                        onclick="return confirm('Valider la vente ?')">
+                                        Valider
+                                    </a>
+                                {% elif sale.status == 'validated' %}
+                                    <a class="btn btn-primary" href="{% url 'sales:print_invoice' sale.id %}" target="_blank">
+                                        🖨 Facture
+                                    </a>
+
+                                    <a class="cancel" href="{% url 'sales:cancel' sale.id %}"
+                                        onclick="return confirm('Annuler la vente ?')">
+                                        Annuler
+                                    </a>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if sale.status == 'validated' %}
+                                    {% if sale.payment_status == 'paid' %}
+                                        <span class="validated">
+                                            Payé
+                                        </span>
+                                    {% else %}
+                                        <a class="pay" href="{% url 'payments:create' %}?type=sale&id={{ sale.id }}">
+                                            Payer
+                                        </a>
+                                    {% endif %}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
-</div>
+    {% include "components/pagination.html" %}
+{% endblock %}
 
+
+
+{% block scripts %}
+    <script src="{% static 'js/search.js' %}"></script>
+    <script>
+        // script pour bar de recherche de vente
+        const SALE_URL = "{% url 'sales:search_api' 'sales' %}";
+        new LiveSearch({
+            input:"#sale-search",
+            table:"#sales-table",
+            url:SALE_URL,
+            renderer:this.renderSales
+        });
+    </script>
 {% endblock %}

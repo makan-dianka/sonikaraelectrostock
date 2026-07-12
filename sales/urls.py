@@ -1,4 +1,5 @@
 from django.urls import path
+from common.search import search_api
 
 from . import views
 
@@ -12,4 +13,5 @@ urlpatterns=[
     path('<int:pk>/update/', views.update_sale, name='update'),
 
     path("invoice/<int:pk>/", views.print_invoice, name="print_invoice",),
+    path("search/<str:entity>/", search_api, name="search_api"),
 ]
