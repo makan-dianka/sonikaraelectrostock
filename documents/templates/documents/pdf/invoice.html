@@ -589,6 +589,13 @@
                 </div>
             {% endif %}
 
+            {% if sale.reduction %}
+                <div class="total-line">
+                    <span>Remise ({{ sale.reduction }}%)</span>
+                    <span>-{{ sale.reduction_amount|intcomma }} FCFA</span>
+                </div>
+            {% endif %}
+
             <div class="total-line">
                 <span>Reste</span>
                 <span style="color: red;">{{ sale.remaining_amount|intcomma }} FCFA</span>

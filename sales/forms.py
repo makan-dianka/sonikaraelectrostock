@@ -57,6 +57,13 @@ class SaleForm(forms.ModelForm):
                 }
             ),
 
+            'reduction':
+            forms.NumberInput(
+                attrs={
+                    'class':'form-control',
+                }
+            ),
+
             'delivery_fee':forms.NumberInput(
                 attrs={
                     'class':'form-control'
@@ -80,6 +87,7 @@ class SaleForm(forms.ModelForm):
             'vat_rate': 'Pourcentage TVA (%)',
             'delivery_fee': 'Frais de livraison',
             'warranty': "Garantie",
+            'reduction': "Réduction (%)",
         }
 
 

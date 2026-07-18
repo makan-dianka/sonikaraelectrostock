@@ -39,6 +39,7 @@ class Sale(TimeStampedModel):
     total = models.IntegerField(default=0)
     vat_rate = models.IntegerField(default=0)
     delivery_fee = models.IntegerField(default=0)
+    reduction = models.IntegerField(default=0)
 
     status = models.CharField(
         max_length=20,
@@ -75,10 +76,14 @@ class Sale(TimeStampedModel):
     def vat_amount(self):
         return round(self.total * self.vat_rate / 100)
 
+    @property
+    def reduction_amount(self):
+        return int(self.total / 100 * self.reduction)
+
 
     @property
     def total_ttc(self):
-        return self.total + self.vat_amount + self.delivery_fee
+        return ((self.total + self.vat_amount + self.delivery_fee) - self.reduction_amount)
 
 
     @property
