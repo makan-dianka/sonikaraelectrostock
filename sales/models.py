@@ -90,6 +90,7 @@ class Sale(TimeStampedModel):
     def remaining_amount(self):
         return (self.total_ttc - self.paid_amount)
 
+
     # pour recalculer le total après un update
     def recalc_total(self):
         total = sum(item.subtotal for item in self.items.all())

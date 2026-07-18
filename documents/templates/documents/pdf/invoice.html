@@ -597,6 +597,11 @@
             {% endif %}
 
             <div class="total-line">
+                <span>Payé</span>
+                <span>{{ sale.paid_amount|intcomma }} FCFA</span>
+            </div>
+
+            <div class="total-line">
                 <span>Reste</span>
                 <span style="color: red;">{{ sale.remaining_amount|intcomma }} FCFA</span>
             </div>
