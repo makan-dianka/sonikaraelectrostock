@@ -85,23 +85,33 @@ WSGI_APPLICATION = 'sonikaraelectrostock.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 if PRODUCTION:
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('MYSQL_SONI_DB'),
-        'USER': os.getenv('MYSQL_SONI_USER'),
-        'PASSWORD': os.getenv('MYSQL_SONI_PASSWORD'),
-        'HOST': os.getenv('MYSQL_SONI_HOST'),
-        'PORT': os.getenv('MYSQL_SONI_PORT'),
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('MYSQL_SONI_DB'),
+            'USER': os.getenv('MYSQL_SONI_USER'),
+            'PASSWORD': os.getenv('MYSQL_SONI_PASSWORD'),
+            'HOST': os.getenv('MYSQL_SONI_HOST'),
+            'PORT': os.getenv('MYSQL_SONI_PORT'),
         }
     }
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('MYSQL_LOCAL_DB'),
+            'USER': os.getenv('MYSQL_LOCAL_USER'),
+            'PASSWORD': os.getenv('MYSQL_LOCAL_PASSWORD'),
+            'HOST': os.getenv('MYSQL_LOCAL_HOST'),
+            'PORT': os.getenv('MYSQL_LOCAL_PORT'),
         }
     }
 
