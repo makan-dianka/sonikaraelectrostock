@@ -563,7 +563,6 @@
     </table>
 
 
-
     <!-- TOTAL -->
 
     <div class="total-area">
@@ -626,6 +625,11 @@
             {{ sale.warranty|linebreaksbr }}
         </div>
     {% endif %}
+
+    {% if sale.status == 'cancelled' %}
+        <h1 style="color: red;">Vente Annulé</h1>
+    {% endif %}
+
     
     <div class="signature">
 

@@ -81,23 +81,23 @@
                                 {% endif %}
                             </td>
 
-                            <td>
+                            <td class="actions">
                                 {% if sale.status == 'draft' %}
                                     <a class="validate" href="{% url 'sales:validate' sale.id %}"
                                         onclick="return confirm('Valider la vente ?')">
                                         Valider
                                     </a>
                                 {% elif sale.status == 'validated' %}
-                                    <a class="btn btn-primary" href="{% url 'sales:print_invoice' sale.id %}" target="_blank">
-                                        🖨 Facture
-                                    </a>
-
                                     <a class="cancel" href="{% url 'sales:cancel' sale.id %}"
                                         onclick="return confirm('Annuler la vente ?')">
                                         Annuler
                                     </a>
-                                {% else %}
-                                    —
+                                {% endif %}
+
+                                {% if sale.status != 'draft' %}
+                                    <a class="btn btn-primary" href="{% url 'sales:print_invoice' sale.id %}" target="_blank">
+                                        🖨 Imprimer
+                                    </a>
                                 {% endif %}
                             </td>
 

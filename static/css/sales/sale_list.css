@@ -136,7 +136,7 @@ td {
 
     color: white;
 
-    padding: 10px 16px;
+    padding: 8px 16px;
 
     border-radius: 10px;
 
@@ -324,4 +324,10 @@ td {
 
     font-weight: 700;
 
+}
+
+td.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
