@@ -84,7 +84,7 @@
                                     </span>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="actions">
                                 {% if purchase.status == 'draft' %}
                                     <a class="receive" href="{% url 'purchases:update_status' purchase.id 'received' %}"
                                     onclick="return confirm('Confirmer la réception ?')">

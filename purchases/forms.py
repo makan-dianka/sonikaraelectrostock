@@ -8,6 +8,8 @@ from .models import (
     PurchaseItem
 )
 
+from django.utils import timezone
+
 
 class PurchaseForm(forms.ModelForm):
 
@@ -20,6 +22,8 @@ class PurchaseForm(forms.ModelForm):
             first_store = Store.objects.order_by('id').first()
             if first_store:
                 self.fields['store'].initial = first_store
+
+            self.fields['purchase_date'].initial = timezone.now().date()
 
     class Meta:
         model = Purchase
