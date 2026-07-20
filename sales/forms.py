@@ -38,6 +38,8 @@ class SaleForm(forms.ModelForm):
 
             'payment_status',
 
+            'quote',
+
         ]
 
         widgets = {
@@ -70,6 +72,14 @@ class SaleForm(forms.ModelForm):
                 }
             ),
 
+            'labor_cost':
+            forms.NumberInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Ex : 25 000'
+                }
+            ),
+
             'warranty': forms.Textarea(
                 attrs={
                     'class': 'form-control',
@@ -87,6 +97,7 @@ class SaleForm(forms.ModelForm):
             'vat_rate': 'Pourcentage TVA (%)',
             'delivery_fee': 'Frais de livraison',
             'warranty': "Garantie",
+            'labor_cost': "Main d'oeuvre",
             'reduction': "Réduction (%)",
         }
 

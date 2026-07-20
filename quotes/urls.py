@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:pk>/update/', update_quote, name='update_quote'),
     path('generate/pdf', generate_quote_pdf, name='generate_quote_pdf'),
     path('<int:pk>/print/', print_quote, name='print_quote'),
+    path('<int:pk>/convert/to/sale', convert_to_sale, name='convert_to_sale'),
 ]

@@ -26,7 +26,8 @@ class Quote(TimeStampedModel):
             ('draft','Brouillon'),
             ('sent','Envoyé'),
             ('accepted','Accepté'),
-            ('rejected','Refusé')
+            ('rejected','Refusé'),
+            ("invoiced", "Facturé"),
         ],
         default='draft'
     )

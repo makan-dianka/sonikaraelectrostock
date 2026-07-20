@@ -39,6 +39,7 @@ class Sale(TimeStampedModel):
     total = models.IntegerField(default=0)
     vat_rate = models.IntegerField(default=0)
     delivery_fee = models.IntegerField(default=0)
+    labor_cost = models.IntegerField(default=0, verbose_name="Coût main d'œuvre")
     reduction = models.IntegerField(default=0)
 
     status = models.CharField(
@@ -63,6 +64,14 @@ class Sale(TimeStampedModel):
         default='unpaid'
     )
 
+    quote = models.OneToOneField(
+        "quotes.Quote",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="sale"
+    )
+
 
     def __str__(self):
         return self.reference
@@ -83,7 +92,7 @@ class Sale(TimeStampedModel):
 
     @property
     def total_ttc(self):
-        return ((self.total + self.vat_amount + self.delivery_fee) - self.reduction_amount)
+        return ((self.total + self.vat_amount + self.delivery_fee + self.labor_cost) - self.reduction_amount)
 
 
     @property

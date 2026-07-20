@@ -574,6 +574,13 @@
                 <span>{{ sale.total|intcomma }} FCFA</span>
             </div>
 
+            {% if sale.labor_cost %}
+                <div class="total-line">
+                    <span>Main d'oeuvre</span>
+                    <span>{{ sale.labor_cost|intcomma }} FCFA</span>
+                </div>
+            {% endif %}
+
             {% if sale.vat_rate %}
                 <div class="total-line">
                     <span>TVA ({{ sale.vat_rate }}%)</span>

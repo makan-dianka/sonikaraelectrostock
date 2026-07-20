@@ -12,6 +12,8 @@ from .forms import (
     QuoteItemFormSet
 )
 
+from django.contrib import messages
+
 
 from django.template.loader import render_to_string
 from sonikaraelectrostock.tools import generate_reference
@@ -24,6 +26,57 @@ from django.conf import settings
 import os
 from django.utils import timezone
 from django.core.paginator import Paginator
+
+from sales.models import Sale, SaleItem
+from sonikaraelectrostock import tools
+
+
+
+
+@login_required(login_url='accounts:login')
+def convert_to_sale(request, pk):
+
+    quote = get_object_or_404(Quote, pk=pk)
+
+    if hasattr(quote, "sale"):
+        messages.warning(request, "Ce devis a déjà été transformé.")
+        return redirect("quotes:list")
+
+    sale = Sale.objects.create(
+        customer=quote.customer,
+        reference=tools.generate_reference('VTE', Sale),
+        store=quote.store,
+        vat_rate=quote.vat_rate,
+        delivery_fee=quote.delivery_fee,
+        labor_cost=quote.labor_cost,
+        user=request.user,
+        reduction = quote.reduction,
+        quote=quote,
+    )
+
+    total = 0
+
+    for item in quote.items.all():
+
+        SaleItem.objects.create(
+            sale=sale,
+            product=item.product,
+            quantity=item.quantity,
+            unit_price=item.unit_price,
+            subtotal=item.subtotal,
+        )
+
+        total += item.subtotal
+
+    sale.total = total
+    sale.save()
+
+    quote.status = "invoiced"
+    quote.save(update_fields=["status"])
+
+    messages.success(request, "Facture créée avec succès.")
+
+    return redirect("sales:update", sale.id)
 
 
 
