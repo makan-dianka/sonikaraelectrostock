@@ -559,6 +559,10 @@
         </div>
     </div>
 
+    {% if purchase.status == 'cancelled' %}
+        <h1 style="color: red;">Achat Annulé</h1>
+    {% endif %}
+
 
     <!-- information bancaire -->
     <div class="bank-footer">

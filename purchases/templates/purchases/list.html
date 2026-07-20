@@ -96,7 +96,9 @@
                                         Annuler
                                     </a>
                                 {% else %}
-                                    —
+                                    <a class="btn btn-primary" href="{% url 'purchases:print_purchase' purchase.id %}" target="_blank">
+                                        🖨 Imprimer
+                                    </a>
                                 {% endif %}
                             </td>
                             <td>

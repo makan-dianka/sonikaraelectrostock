@@ -36,7 +36,7 @@ def print_invoice(request, pk):
     if not document:
         document = Document.objects.create(
             document_type='invoice',
-            reference=tools.generate_reference('VTE', Document),
+            reference=tools.generate_reference('DOC', Document),
             sale=sale,
             generated_by=request.user,
         )

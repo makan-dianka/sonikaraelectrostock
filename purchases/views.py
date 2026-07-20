@@ -21,6 +21,11 @@ from .services import receive_purchase, cancel_purchase
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+from sonikaraelectrostock import tools
+from documents.services import generate_pdf
+
+from django.http import FileResponse
+from documents.models import Document
 
 
 
@@ -158,3 +163,31 @@ def update_status(request, pk, status):
 
     messages.success(request, "Statut mis à jour")
     return redirect('purchases:list')
+
+
+
+
+
+@login_required(login_url='accounts:login')
+def print_purchase(request, pk):
+
+    purchase = get_object_or_404(
+        Purchase,
+        pk=pk
+    )
+
+    document = Document.objects.filter(
+        purchase=purchase,
+        document_type="purchase_order"
+    ).first()
+
+    if not document:
+        document = Document.objects.create(
+            document_type='purchase_order',
+            reference=tools.generate_reference('DOC', Document),
+            purchase=purchase,
+            generated_by=request.user,
+        )
+        generate_pdf(document)
+
+    return FileResponse(document.pdf.open("rb"), content_type="application/pdf")
