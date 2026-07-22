@@ -61,6 +61,12 @@
                             {{ line.unit_price }}
                         </div>
 
+                        <div>
+                            <label>Sous-total</label>
+                            <input type="text" class="subtotal" readonly>
+
+                        </div>
+
                         <div class="delete">
                             {% if line.instance.pk %}
                             <label>Supprimer</label>
@@ -104,36 +110,25 @@
                         {{ formset.empty_form.unit_price }}
                     </div>
 
+                    <div>
+                        <label>Sous-total</label>
+                        <input
+                            type="text"
+                            class="subtotal"
+                            readonly
+                        >
+                    </div>
+
                     <div></div>
 
                 </div>
             </div>
 
-
-            <!-- TEMPLATE VIDE -->
-            <template id="empty-form">
-
-                <div class="line">
-
-                    {{ formset.empty_form.id }}
-
-                    <div>
-                        <label>Produit</label>
-                        {{ formset.empty_form.product }}
-                    </div>
-
-                    <div>
-                        <label>Quantité</label>
-                        {{ formset.empty_form.quantity }}
-                    </div>
-
-                    <div>
-                        <label>Prix unité</label>
-                        {{ formset.empty_form.unit_price }}
-                    </div>
-                </div>
-            </template>
-
+            <br />
+            <div class="sale-total-box">
+                <span>Total :</span>
+                <strong id="sale-total">0 FCFA</strong>
+            </div>
 
             <br />
             <div class="buttons">
@@ -167,6 +162,7 @@
             const searchInput = lineEl.querySelector('.product-search-input');
             const resultsBox = lineEl.querySelector('.product-search-results');
             const hiddenProductInput = lineEl.querySelector('[id$="-product"]');
+            const hiddenProductQuantity = lineEl.querySelector('[id$="-quantity"]');
             const unitPriceInput = lineEl.querySelector('[id$="-unit_price"]');
 
             if (!searchInput || searchInput.dataset.initialized) return;
@@ -199,6 +195,7 @@
                     <div class="result-item"
                         data-id="${p.id}"
                         data-price="${p.sale_price}"
+                        data-quantity=1
                         data-label="${p.reference} - ${p.name}">
                         <strong>${p.reference}</strong> — ${p.name}
                         <span class="result-category">${p.category}</span>
@@ -223,11 +220,13 @@
                 if (!item) return;
 
                 hiddenProductInput.value = item.dataset.id;
+                hiddenProductQuantity.value = item.dataset.quantity;
                 unitPriceInput.value = item.dataset.price;
                 searchInput.value = item.dataset.label;
 
                 resultsBox.innerHTML = '';
                 resultsBox.style.display = 'none';
+                updateLineSubtotal(lineEl); // <-- recalcul immédiat après sélection
             });
 
             // fermer le dropdown si on clique ailleurs
@@ -264,6 +263,72 @@
 
             totalForms.value = formIndex + 1;
         });
+
+
+
+        // calcul de sous-total et total
+
+        function formatAmount(value) {
+            return new Intl.NumberFormat('fr-FR').format(value);
+        }
+
+
+        function updateLineSubtotal(line) {
+            const qty = parseFloat(line.querySelector('[id$="-quantity"]')?.value) || 0;
+            const price = parseFloat(line.querySelector('[id$="-unit_price"]')?.value) || 0;
+            const subtotal = qty * price;
+            const field = line.querySelector('.subtotal');
+            if (field) {
+                field.value = formatAmount(subtotal) + ' FCFA';
+            }
+            updateSaleTotal();
+        }
+
+
+        function updateSaleTotal() {
+            let total = 0;
+            document.querySelectorAll('#lines .line').forEach(line => {
+                    const qty = parseFloat(line.querySelector('[id$="-quantity"]')?.value) || 0;
+                    const price = parseFloat(line.querySelector('[id$="-unit_price"]')?.value) || 0;
+                    total += (qty * price);
+                }
+            );
+            document.getElementById('sale-total').innerText = formatAmount(total) + ' FCFA';
+        }
+
+
+        function initCalculation(line) {
+            const qty = line.querySelector('[id$="-quantity"]');
+            const price = line.querySelector('[id$="-unit_price"]');
+            if (qty) {
+                qty.addEventListener('input', () => updateLineSubtotal(line));
+            }
+
+            if (price) {
+                price.addEventListener('input', () => updateLineSubtotal(line));
+            }
+
+            updateLineSubtotal(line);
+        }
+
+
+        // lignes existantes
+        document.querySelectorAll('#lines .line').forEach(line => {
+            initCalculation(line);
+            }
+        );
+
+
+        // ajout dynamique
+        addButton.addEventListener('click', function () {setTimeout(() => {
+                const newLine = container.lastElementChild;
+                initProductSearch(newLine);
+                initCalculation(newLine);
+            }, 50);
+        });
+
+        // FIN de calcul de sous-total et total
+
     </script>
 
 {% endblock %}
