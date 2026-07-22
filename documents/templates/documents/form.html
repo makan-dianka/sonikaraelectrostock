@@ -8,168 +8,49 @@
 
 {% block content %}
 
-<div class="document-page">
+    <div class="document-page">
 
-    <div class="card">
+        <div class="card">
+            <h1>📄 Générer un document</h1>
+            <form method="POST"> {% csrf_token %}
+                <div class="field">
+                    <label>Type document</label>
+                    {{ form.document_type }}
+                </div>
 
-        <h1>
+                <div class="field" id="purchase-box">
+                    <label>Achat</label>
+                    {{ form.purchase }}
+                </div>
 
-            📄 Générer un document
+                <div class="field" id="sale-box">
+                    <label>Vente</label>
+                    {{ form.sale }}
+                </div>
 
-        </h1>
-
-
-        <form method="POST">
-
-            {% csrf_token %}
-
-
-            <div class="field">
-
-                <label>
-
-                    Type document
-
-                </label>
-
-                {{ form.document_type }}
-
-            </div>
-
-
-            <div class="field" id="purchase-box">
-
-                <label>
-
-                    Achat
-
-                </label>
-
-                {{ form.purchase }}
-
-            </div>
-
-
-            <div class="field" id="sale-box">
-
-                <label>
-
-                    Vente
-
-                </label>
-
-                {{ form.sale }}
-
-            </div>
-
-
-            <div class="buttons">
-
-                <a href="/" class="cancel">
-
-                    Retour
-
-                </a>
-
-
-                <button>
-
-                    Générer
-
-                </button>
-
-            </div>
-
-        </form>
-
+                <div class="buttons">
+                    <a href="{% url 'documents:list' %}" class="cancel">Retour</a>
+                    <button>Générer</button>
+                </div>
+            </form>
+        </div>
     </div>
-
-</div>
 
 {% endblock %}
 
 
-{% block custom_javascrpt %}
+{% block scripts %}
+    <script>
+        const type = document.getElementById('id_document_type')
+        const purchase =document.getElementById('purchase-box')
+        const sale = document.getElementById('sale-box')
 
-<script>
-
-    const type =
-
-        document.getElementById(
-            'id_document_type'
-        )
-
-    const purchase =
-
-        document.getElementById(
-            'purchase-box'
-        )
-
-    const sale =
-
-        document.getElementById(
-            'sale-box'
-        )
-
-
-
-    function toggleFields() {
-
-        const value =
-
-            type.value
-
-
-        purchase.style.display =
-
-            value ===
-                'purchase_order'
-
-                ?
-
-                'block'
-
-                :
-
-                'none'
-
-
-        sale.style.display =
-
-            [
-
-                'invoice',
-
-                'delivery_note'
-
-            ]
-
-                .includes(
-                    value
-                )
-
-                ?
-
-                'block'
-
-                :
-
-                'none'
-
-    }
-
-
-
-    toggleFields()
-
-    type.addEventListener(
-
-        'change',
-
-        toggleFields
-
-    )
-
-</script>
-
+        function toggleFields() {
+            const value = type.value
+            purchase.style.display = value === 'purchase_order' ? 'block' : 'none'
+            sale.style.display = ['invoice', 'delivery_note'].includes(value) ? 'block' : 'none'
+        }
+        toggleFields()
+        type.addEventListener('change', toggleFields)
+    </script>
 {% endblock %}
