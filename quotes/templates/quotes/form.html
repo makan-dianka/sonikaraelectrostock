@@ -41,6 +41,7 @@
                                 class="form-control"
                                 id="customer-search"
                                 placeholder="Rechercher par nom ou téléphone"
+                                required="required"
                                 value="{% if form.instance.customer %}{{ form.instance.customer.name }}{% endif %}">
 
                                 <div id="customer-results"></div>
@@ -170,6 +171,30 @@
                 </button>
             </div>
         </form>
+
+        <div id="customer-modal">
+            <div class="modal-card">
+                <h2>Nouveau client</h2>
+                <form id="customer-form"> {% csrf_token %}
+                    <input name="name" placeholder="Nom" required>
+                    <input name="phone" placeholder="Téléphone" required>
+                    <input name="email" placeholder="Email">
+
+                    <textarea name="address" placeholder="Adresse"></textarea>
+
+                    <div class="modal-buttons">
+                        <button type="button" id="close-modal">
+                            Annuler
+                        </button>
+
+                        <button>
+                            Créer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
 
@@ -417,6 +442,42 @@
         });
 
         // FIN de recherche client
+
+
+
+        // ajouter un popup form  pour creer un user
+
+        const modal = document.getElementById('customer-modal');
+
+        document.getElementById('open-customer-modal').onclick = () => {
+            modal.style.display = 'flex';
+        };
+
+        document.getElementById('close-modal').onclick = () => {
+            modal.style.display = 'none';
+        };
+
+        document.getElementById('customer-form').addEventListener('submit', async function (e) {
+
+            e.preventDefault();
+
+            const form =new FormData(this);
+            const response = await fetch("{% url 'customers:create_customer_api' %}", {method:'POST', body: form});
+            const data = await response.json();
+
+            if (response.ok) {
+                customerInput.value = `${data.name}`;
+                customerHidden.value = data.id;
+                modal.style.display = 'none';
+                this.reset();
+            }
+
+            else {
+                alert(Object.values(data).join('\n'));
+            }
+        });
+
+        // FIN de la creation d'un nouveau client via modalform popup
 
     </script>
 
