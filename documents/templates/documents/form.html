@@ -5,7 +5,6 @@
 {% endblock %}
 
 
-
 {% block content %}
 
     <div class="document-page">
@@ -20,11 +19,29 @@
 
                 <div class="field" id="purchase-box">
                     <label>Achat</label>
+                    <div class="search-field-wrapper">
+                        <input
+                            type="text"
+                            id="purchase-search"
+                            class="search-input form-control"
+                            placeholder="Rechercher un achat par référence"
+                            autocomplete="off">
+                        <div class="search-results" id="purchase-results"></div>
+                    </div>
                     {{ form.purchase }}
                 </div>
 
                 <div class="field" id="sale-box">
                     <label>Vente</label>
+                    <div class="search-field-wrapper">
+                        <input
+                            type="text"
+                            id="sale-search"
+                            class="search-input form-control"
+                            placeholder="Rechercher une vente par référence"
+                            autocomplete="off">
+                        <div class="search-results" id="sale-results"></div>
+                    </div>
                     {{ form.sale }}
                 </div>
 
@@ -40,17 +57,37 @@
 
 
 {% block scripts %}
+    <script src="{% static 'js/search.js' %}"></script>
     <script>
         const type = document.getElementById('id_document_type')
-        const purchase =document.getElementById('purchase-box')
-        const sale = document.getElementById('sale-box')
+        const purchaseBox = document.getElementById('purchase-box')
+        const saleBox = document.getElementById('sale-box')
 
         function toggleFields() {
             const value = type.value
-            purchase.style.display = value === 'purchase_order' ? 'block' : 'none'
-            sale.style.display = ['invoice', 'delivery_note'].includes(value) ? 'block' : 'none'
+            purchaseBox.style.display = value === 'purchase_order' ? 'block' : 'none'
+            saleBox.style.display = ['invoice', 'delivery_note'].includes(value) ? 'block' : 'none'
         }
         toggleFields()
         type.addEventListener('change', toggleFields)
+
+        document.getElementById('id_purchase').style.display = 'none'
+        document.getElementById('id_sale').style.display = 'none'
+
+        new SearchSelect({
+            input: "#purchase-search",
+            results: "#purchase-results",
+            hidden: "#id_purchase",
+            url: "{% url 'purchases:search_api' 'purchases' %}",
+            renderer: this.renderPurchaseOptions
+        });
+
+        new SearchSelect({
+            input: "#sale-search",
+            results: "#sale-results",
+            hidden: "#id_sale",
+            url: "{% url 'sales:search_api' 'sales' %}",
+            renderer: this.renderSaleOptions
+        });
     </script>
 {% endblock %}

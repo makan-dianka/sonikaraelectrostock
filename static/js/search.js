@@ -66,6 +66,97 @@ class LiveSearch {
 
 
 /**
+ * Recherche pour sélectionner UN élément dans un formulaire
+ * (ex: choisir une vente/un achat via sa référence).
+ * Contrairement à LiveSearch, ne recharge jamais la page et
+ * remplit un champ caché (select/input) au clic sur un résultat.
+ */
+class SearchSelect {
+
+    constructor(options){
+        this.input = document.querySelector(options.input);
+        this.results = document.querySelector(options.results);
+        this.hidden = document.querySelector(options.hidden);
+        this.url = options.url;
+        this.renderer = options.renderer;
+        this.onSelect = options.onSelect || function(){};
+        this.delay = options.delay || 200;
+
+        this.timer = null;
+
+        this.init();
+    }
+
+    init(){
+        if(!this.input){
+            console.error("Input introuvable");
+            return;
+        }
+
+        if(!this.results){
+            console.error("Conteneur de résultats introuvable");
+            return;
+        }
+
+        // préremplir si une valeur est déjà sélectionnée (cas édition)
+        if(this.hidden && this.hidden.options){
+            const selected = this.hidden.options[this.hidden.selectedIndex];
+            if(selected && selected.value){
+                this.input.value = selected.textContent.trim();
+            }
+        }
+
+        this.input.addEventListener("input", ()=>{
+            clearTimeout(this.timer);
+
+            const q = this.input.value.trim();
+            if(q === ""){
+                this.results.innerHTML = "";
+                return;
+            }
+
+            this.timer = setTimeout(()=>{
+                this.search(q);
+            }, this.delay);
+        });
+
+        document.addEventListener("click", (e)=>{
+            if(!this.input.contains(e.target) && !this.results.contains(e.target)){
+                this.results.innerHTML = "";
+            }
+        });
+    }
+
+    async search(q){
+        const response = await fetch(`${this.url}?q=${encodeURIComponent(q)}`);
+        const data = await response.json();
+
+        this.results.innerHTML = this.renderer(data.results);
+
+        this.results.querySelectorAll("[data-select-id]").forEach(el=>{
+            el.addEventListener("click", ()=>{
+                this.select(el.dataset.selectId, el.dataset.selectLabel);
+            });
+        });
+    }
+
+    select(id, label){
+        if(this.hidden){
+            this.hidden.value = id;
+        }
+        this.input.value = label;
+        this.results.innerHTML = "";
+        this.onSelect(id, label);
+    }
+}
+
+
+
+
+
+
+
+/**
  *  rendu des clients dans le tableau
  * @param {*} customers 
  * @returns 
@@ -477,5 +568,39 @@ function renderPurchases(purchases){
             <td>${setupActions(purchase)}</td>
             <td>${setupComptoir(purchase)}</td>
         </tr>
+    `).join("");
+}
+
+
+
+
+
+
+function renderSaleOptions(sales){
+    if(sales.length===0){
+        return `<div class="search-empty">Aucune vente trouvée</div>`;
+    }
+
+    return sales.map(sale=>`
+        <div class="search-item" data-select-id="${sale.id}" data-select-label="${sale.reference}">
+            <strong>${sale.reference}</strong>
+            <span>${sale.customer || 'Client'}</span>
+            <span>${sale.total} FCFA</span>
+        </div>
+    `).join("");
+}
+
+
+function renderPurchaseOptions(purchases){
+    if(purchases.length===0){
+        return `<div class="search-empty">Aucun achat trouvé</div>`;
+    }
+
+    return purchases.map(purchase=>`
+        <div class="search-item" data-select-id="${purchase.id}" data-select-label="${purchase.reference}">
+            <strong>${purchase.reference}</strong>
+            <span>${purchase.supplier || 'Fournisseur'}</span>
+            <span>${purchase.total} FCFA</span>
+        </div>
     `).join("");
 }
