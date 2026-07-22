@@ -13,6 +13,7 @@ from .forms import (
 )
 
 from django.contrib import messages
+from common.pagination import paginate_queryset
 
 
 from django.template.loader import render_to_string
@@ -116,11 +117,7 @@ def quote_list(request):
 
     )
 
-
-
-    paginator = Paginator(quotes, 6)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginate_queryset(request, quotes)
 
     context = {
         'quotes': page_obj,
