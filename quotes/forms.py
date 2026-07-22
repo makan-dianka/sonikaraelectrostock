@@ -2,9 +2,20 @@ from django import forms
 from django.forms import inlineformset_factory
 
 from .models import Quote, QuoteItem
+from stores.models import Store
 
 
 class QuoteForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Sélectionner automatiquement le premier magasin
+        if not self.instance.pk:
+            first_store = Store.objects.order_by('id').first()
+            if first_store:
+                self.fields['store'].initial = first_store
+
 
     class Meta:
 
