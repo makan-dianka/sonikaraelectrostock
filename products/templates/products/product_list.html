@@ -11,16 +11,7 @@
 
 {% block content %}
     <!-- bar de rechercher -->
-    <div class="search-card col-md-5">
-            <input
-                id="product-search"
-                required
-                type="text"
-                name="q"
-                value="{{ q }}"
-                placeholder="Rechercher un produit par nom ou référence"
-            >
-    </div>
+    {% include "components/search_bar.html" with id="product-search" placeholder="Rechercher un produit par nom ou référence" %}
     <!-- fin de bar de recherche -->
 
     <div class="page-header">
