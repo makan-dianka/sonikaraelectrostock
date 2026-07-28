@@ -102,11 +102,6 @@ body {
 
 /* CONTENT */
 
-.content {
-    padding: 25px;
-
-}
-
 .title-card {
 
     background: green;
@@ -265,6 +260,16 @@ span {
 
         grid-template-columns: 1fr;
 
+    }
+
+
+    .title-card {
+        background: green;
+        color: white;
+        text-align: center;
+        padding: 18px;
+        font-size: 25px;
+        margin-bottom: 30px;
     }
 
 }
