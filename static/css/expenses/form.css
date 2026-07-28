@@ -46,14 +46,12 @@ font-weight:600;
 
 }
 
-.form-control{
-
-padding:12px;
-
-border:1px solid #ddd;
-
-border-radius:8px;
-
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }
 
 textarea{
@@ -206,4 +204,56 @@ grid-template-columns:1fr;
     color: white;
     cursor: pointer;
     font-size: 20px;
+}
+
+
+
+/* mobile */
+
+@media (max-width: 768px) {
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .expense-page {
+        padding: 20px;
+    }
+
+    .card {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .expense-page {
+        padding: 12px;
+    }
+
+    .card {
+        padding: 18px;
+        border-radius: 14px;
+    }
+
+    .form-control {
+        font-size: 16px; /* évite le zoom automatique iOS au focus */
+        padding: 14px;
+    }
+
+    .buttons {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .cancel{
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    #customer-modal .modal-card {
+        max-width: 92vw;
+        padding: 20px;
+    }
 }

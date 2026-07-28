@@ -44,14 +44,6 @@ tbody tr:hover {
     background: #fafafa;
 }
 
-@media(max-width:900px) {
-
-    .table-card {
-        overflow: auto;
-    }
-
-}
-
 
 /* BADGES */
 .badge {
@@ -87,4 +79,50 @@ tbody tr:hover {
     color: #1d8d4a;
     padding: 8px 12px;
     border-radius: 10px;
+}
+
+
+
+@media (max-width: 768px) {
+
+    .page {
+        padding: 15px;
+    }
+
+    .header {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .page {
+        padding: 12px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .header h2 {
+        font-size: 20px;
+    }
+
+    .add {
+        text-align: center;
+        padding: 14px 20px;
+    }
+}
+
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+    min-width: 1000px;
 }

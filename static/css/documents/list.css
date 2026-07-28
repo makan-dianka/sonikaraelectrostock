@@ -253,3 +253,65 @@ tbody tr:hover {
     font-weight: 700;
 
 }
+
+
+
+@media (max-width: 768px) {
+
+    .document-page {
+        padding: 15px;
+    }
+
+    .page-header {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .document-page {
+        padding: 12px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+        margin-bottom: 6px;
+    }
+
+    .page-header p {
+        font-size: 14px;
+    }
+
+    .btn-add {
+        text-align: center;
+        padding: 14px 20px;
+    }
+
+    .actions {
+        flex-wrap: wrap;
+    }
+
+    .view,
+    .delete {
+        flex: 1;
+        min-width: 90px;
+        text-align: center;
+    }
+}
+
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+    min-width: 650px;
+}

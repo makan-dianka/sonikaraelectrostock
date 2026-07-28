@@ -133,6 +133,19 @@ tbody tr:hover {
 }
 
 
+.stock {
+    background: #f39b00;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+.stock:hover {
+    opacity: .9;
+}
+
+
 .delete {
 
     background: #ef4444;
@@ -153,4 +166,50 @@ tbody tr:hover {
 
     opacity: .9;
 
+}
+
+
+
+@media (max-width: 768px) {
+
+    .page {
+        padding: 15px;
+    }
+
+    .top {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .page {
+        padding: 12px;
+    }
+
+    .top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .top h1 {
+        font-size: 24px;
+    }
+
+    .btn-add {
+        text-align: center;
+        padding: 14px 20px;
+    }
+
+    .actions {
+        flex-wrap: wrap;
+    }
+
+    .edit,
+    .delete {
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+    }
 }

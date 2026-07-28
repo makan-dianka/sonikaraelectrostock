@@ -1,152 +1,200 @@
-.client-page{
+.client-page {
 
-padding:30px;
-
-}
-
-
-.page-header{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:30px;
+    padding: 30px;
 
 }
 
 
-.page-header h1{
+.page-header {
 
-font-size:34px;
+    display: flex;
 
-margin-bottom:10px;
+    justify-content: space-between;
 
-}
+    align-items: center;
 
-
-.page-header p{
-
-color:#777;
+    margin-bottom: 30px;
 
 }
 
 
-.btn-add{
+.page-header h1 {
 
-background:#f39b00;
+    font-size: 34px;
 
-padding:16px 22px;
-
-color:white;
-
-border-radius:14px;
-
-text-decoration:none;
-
-font-weight:700;
+    margin-bottom: 10px;
 
 }
 
 
-.btn-add:hover{
+.page-header p {
 
-transform:translateY(-2px);
-
-}
-
-
-.table-card{
-
-background:white;
-
-border-radius:24px;
-
-overflow:hidden;
-
-box-shadow:
-
-0 20px 50px rgba(
-0,
-0,
-0,
-0.08
-);
+    color: #777;
 
 }
 
 
-table{
+.btn-add {
 
-width:100%;
+    background: #f39b00;
 
-border-collapse:collapse;
+    padding: 16px 22px;
+
+    color: white;
+
+    border-radius: 14px;
+
+    text-decoration: none;
+
+    font-weight: 700;
 
 }
 
 
-thead{
+.btn-add:hover {
 
-background:#f39b00;
+    transform: translateY(-2px);
 
-color:white;
+}
+
+
+.table-card {
+
+    background: white;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    box-shadow:
+
+        0 20px 50px rgba(0,
+            0,
+            0,
+            0.08);
+
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+thead {
+
+    background: #f39b00;
+
+    color: white;
 
 }
 
 
 th,
-td{
+td {
 
-padding:18px;
+    padding: 18px;
 
-text-align:left;
-
-}
-
-
-tbody tr:hover{
-
-background:#fff8eb;
+    text-align: left;
 
 }
 
 
-.actions{
+tbody tr:hover {
 
-display:flex;
-
-gap:10px;
+    background: #fff8eb;
 
 }
 
 
-.edit{
+.actions {
 
-background:#39cc57;
+    display: flex;
 
-color:white;
-
-padding:10px 14px;
-
-border-radius:10px;
-
-text-decoration:none;
+    gap: 10px;
 
 }
 
 
-.delete{
+.edit {
 
-background:#ef4444;
+    background: #39cc57;
 
-color:white;
+    color: white;
 
-padding:10px 14px;
+    padding: 10px 14px;
 
-border-radius:10px;
+    border-radius: 10px;
 
-text-decoration:none;
+    text-decoration: none;
 
+}
+
+
+.delete {
+
+    background: #ef4444;
+
+    color: white;
+
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+}
+
+
+
+@media (max-width: 768px) {
+
+    .client-page {
+        padding: 15px;
+    }
+
+    .page-header {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .client-page {
+        padding: 12px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+        margin-bottom: 6px;
+    }
+
+    .page-header p {
+        font-size: 14px;
+    }
+
+    .btn-add {
+        text-align: center;
+        padding: 14px 20px;
+    }
+
+    .actions {
+        flex-wrap: wrap;
+    }
+
+    .edit,
+    .delete {
+        flex: 1;
+        text-align: center;
+    }
 }

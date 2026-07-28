@@ -10,22 +10,12 @@
 
 
 .card {
-
-    width: 700px;
-
+    width: 100%;
+    max-width: 700px;
     background: white;
-
     padding: 40px;
-
     border-radius: 24px;
-
-    box-shadow:
-
-        0 20px 50px rgba(0,
-            0,
-            0,
-            0.08);
-
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
 }
 
 
@@ -50,13 +40,11 @@
 
 
 .form-control {
-
+    width: 100%;
+    box-sizing: border-box;
     padding: 15px;
-
     border-radius: 12px;
-
     border: 2px solid #eee;
-
 }
 
 
@@ -176,4 +164,51 @@ button {
     font-size: 13px;
     color: #888;
     text-align: center;
+}
+
+
+/* mobile */
+
+@media (max-width: 768px) {
+
+    .document-page {
+        padding: 20px;
+    }
+
+    .card {
+        padding: 25px;
+        border-radius: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .document-page {
+        padding: 12px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .card h1 {
+        font-size: 22px;
+        margin-bottom: 25px;
+    }
+
+    .form-control {
+        font-size: 16px; /* évite le zoom automatique iOS au focus */
+        padding: 14px;
+    }
+
+    .buttons {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .cancel{
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
 }

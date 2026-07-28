@@ -159,27 +159,64 @@ tbody tr:hover {
 
 }
 
-@media(max-width:900px) {
 
-    .table-card {
+.delete {
 
-        overflow: auto;
+    background: #ef4444;
 
-    }
+    color: white !important;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
 
 }
 
 
-.delete{
 
-background:#ef4444;
+@media (max-width: 768px) {
 
-color:white !important;
+    .page {
+        padding: 15px;
+    }
 
-padding:10px 16px;
+    .header {
+        gap: 15px;
+    }
+}
 
-border-radius:10px;
+@media (max-width: 480px) {
 
-text-decoration:none;
+    .page {
+        padding: 12px;
+    }
 
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .header h1 {
+        font-size: 22px;
+    }
+
+    .add {
+        text-align: center;
+        padding: 14px 20px;
+    }
+}
+
+
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+    min-width: 900px;
 }

@@ -2,13 +2,6 @@
     padding: 30px;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
 
 .table-card {
     background: white;
@@ -36,16 +29,6 @@ td {
 tbody tr:hover {
     background: #fafafa;
 }
-
-
-@media(max-width:900px) {
-
-    .table-card {
-        overflow: auto;
-    }
-
-}
-
 
 
 .amount {
@@ -120,4 +103,40 @@ tbody tr:hover {
 
 .expense h2 {
     color: #e5484d;
+}
+
+
+
+/* mobile */
+@media (max-width: 768px) {
+
+    .page {
+        padding: 15px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .page {
+        padding: 12px;
+    }
+
+    .card h2 {
+        font-size: 24px;
+    }
+}
+
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+    min-width: 900px;
 }

@@ -38,7 +38,7 @@
                                 <a href="{% url 'stores:update' store.id %}" class="edit">
                                     Modifier
                                 </a>
-                                <a class="edit" href="{% url 'stores:store_stock' store.id %}" style="background-color: orange;">
+                                <a class="stock" href="{% url 'stores:store_stock' store.id %}" style="background-color: orange;">
                                     Voir le stock
                                 </a>
                                 <a href="{% url 'stores:delete' store.id %}" class="delete" onclick="return confirm('Supprimer ce magasin ?')">

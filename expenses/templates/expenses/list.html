@@ -64,31 +64,6 @@
                 </thead>
 
                 <tbody id="expenses-table">
-                    {% if expenses %}
-                        {% for expense in expenses %}
-                            <tr>
-                                <td>{{ expense.reference }}</td>
-                                <td>{{ expense.expense_date }}</td>
-                                <td>{{ expense.store }}</td>
-                                <td>{{ expense.category }}</td>
-                                <td>{{ expense.amount|intcomma }} FCFA</td>
-                                <td>{{ expense.get_payment_method_display }}</td>
-                                <td>{{ expense.description|default:"—"|truncatechars:50 }}</td>
-                                <td>
-                                    <a class="delete" href="{% url 'expenses:delete' expense.id %}"
-                                        onclick="return confirm('Supprimer cette dépense ?')">
-                                        Supprimer
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="7">
-                                Aucune dépense enregistrée.
-                            </td>
-                        </tr>
-                    {% endif %}
                     {% for expense in expenses %}
                         <tr>
                             <td>{{ expense.reference }}</td>
@@ -106,13 +81,11 @@
                             </td>
                         </tr>
                     {% empty %}
-
                         <tr>
-                            <td colspan="7">
+                            <td colspan="8">
                                 Aucune dépense enregistrée.
                             </td>
                         </tr>
-
                     {% endfor %}
                 </tbody>
             </table>

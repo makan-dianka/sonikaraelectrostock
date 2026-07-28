@@ -99,12 +99,9 @@ td {
 }
 
 
-
-
 .pay {
 
     background: #f39b00;
-    ;
 
     padding: 10px 16px;
 
@@ -260,20 +257,6 @@ td {
 
 
 
-@media(max-width:768px) {
-
-    .stats {
-
-        grid-template-columns:
-
-            1fr;
-
-    }
-
-}
-
-
-
 /* pagination */
 
 .pagination {
@@ -330,4 +313,44 @@ td.actions {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+
+
+@media (max-width: 768px) {
+
+    .page {
+        padding: 15px;
+    }
+
+    .top {
+        gap: 15px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .page {
+        padding: 12px;
+    }
+
+    .top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .top h1 {
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .add {
+        text-align: center;
+        padding: 14px 20px;
+    }
 }

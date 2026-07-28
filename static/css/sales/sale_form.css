@@ -274,75 +274,71 @@
 
 
 /* pour le formulaire */
-.line{
+.line {
 
-    display:grid;
+    display: grid;
 
     grid-template-columns:
-        3fr
-        1fr
-        1fr
-        1fr
-        auto;
+        3fr 1fr 1fr 1fr auto;
 
-    gap:15px;
+    gap: 15px;
 
-    align-items:end;
+    align-items: end;
 
 }
 
 
-@media(max-width:768px){
+@media(max-width:768px) {
 
-    .line{
+    .line {
 
-        display:flex;
+        display: flex;
 
-        flex-direction:column;
+        flex-direction: column;
 
-        gap:15px;
+        gap: 15px;
 
-        background:#fff;
+        background: #fff;
 
-        padding:15px;
+        padding: 15px;
 
-        border-radius:12px;
+        border-radius: 12px;
 
-        box-shadow:0 2px 8px rgba(0,0,0,.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
 
-        margin-bottom:20px;
+        margin-bottom: 20px;
 
     }
 
-    .line > div{
+    .line>div {
 
-        width:100%;
+        width: 100%;
 
     }
 
     .line input,
-    .line select{
+    .line select {
 
-        width:100%;
-
-    }
-
-    .remove-row{
-
-        align-self:flex-end;
-
-        margin-top:10px;
+        width: 100%;
 
     }
 
+    .remove-row {
 
-    .line label{
+        align-self: flex-end;
 
-        display:block;
+        margin-top: 10px;
 
-        margin-bottom:6px;
+    }
 
-        font-weight:bold;
+
+    .line label {
+
+        display: block;
+
+        margin-bottom: 6px;
+
+        font-weight: bold;
 
     }
 
@@ -352,11 +348,11 @@
 
 /* TABLETTE */
 
-@media(max-width:992px){
+@media(max-width:992px) {
 
-    .header-grid{
+    .header-grid {
 
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns: repeat(2, 1fr);
 
     }
 
@@ -365,13 +361,13 @@
 
 /* MOBILE */
 
-@media(max-width:768px){
+@media(max-width:768px) {
 
-    .header-grid{
+    .header-grid {
 
-        grid-template-columns:1fr;
+        grid-template-columns: 1fr;
 
-        gap:16px;
+        gap: 16px;
 
     }
 
@@ -379,6 +375,59 @@
 
 .field input,
 .field select,
-.field textarea{
-    width:100%;
+.field textarea {
+    width: 100%;
+}
+
+
+/* mobile */
+
+@media (max-width: 768px) {
+
+    .sale-card {
+        padding: 20px;
+        border-radius: 18px;
+    }
+
+    .form-control,
+    input,
+    select,
+    textarea {
+        font-size: 16px; /* évite le zoom automatique iOS au focus, et agrandit visuellement le champ */
+        padding: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .sale-card {
+        padding: 15px;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .buttons button {
+        width: 100%;
+    }
+
+    .sale-total-box {
+        flex-direction: column;
+        align-items: flex-end;
+        font-size: 20px;
+        gap: 8px;
+    }
+
+    #customer-modal .modal-card {
+        max-width: 92vw;
+        padding: 20px;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    .customer-label {
+        flex-wrap: wrap;
+    }
 }
