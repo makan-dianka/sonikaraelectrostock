@@ -79,3 +79,39 @@
     text-decoration: none;
 
 }
+
+
+
+.menu-toggle{
+
+    display:none;
+
+    border:none;
+
+    background:none;
+
+    color:white;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+}
+
+@media(max-width:900px){
+
+    .navbar{
+
+        justify-content:space-between;
+
+        padding:0 18px;
+
+    }
+
+    .menu-toggle{
+
+        display:block;
+
+    }
+
+}

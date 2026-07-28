@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
-    'sonikaraelectrostock.middleware.DesktopOnlyMiddleware',
+    # 'sonikaraelectrostock.middleware.DesktopOnlyMiddleware',
 
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]

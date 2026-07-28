@@ -8,6 +8,7 @@
   <title>
     {% block title %}Sonikara électronique - Gestion de stock et facture{% endblock %}
   </title>
+  <div id="sidebar-overlay"></div>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -71,7 +72,6 @@
 
 
   <script>
-
     document.querySelectorAll('.close-message').forEach((btn) => {
           btn.addEventListener('click', () => {
               btn.parentElement.remove()
@@ -85,6 +85,43 @@
               el.remove()
             })
       }, 4000)
+
+
+  // sidebar
+  const menu=document.getElementById("menu-toggle");
+
+  const sidebar=document.querySelector(".sidebar-wrapper");
+
+  const overlay=document.getElementById("sidebar-overlay");
+
+  menu?.addEventListener("click",()=>{
+
+      sidebar.classList.toggle("open");
+
+      overlay.classList.toggle("show");
+
+  });
+
+  overlay?.addEventListener("click",()=>{
+
+      sidebar.classList.remove("open");
+
+      overlay.classList.remove("show");
+
+  });
+
+  // fermer après cliquer sur un item dans sidebar
+  document.querySelectorAll(".sidebar a").forEach(link=>{
+
+      link.addEventListener("click",()=>{
+
+          sidebar.classList.remove("open");
+
+          overlay.classList.remove("show");
+
+      });
+
+  });
   </script>
 </body>
 

@@ -269,3 +269,116 @@
     cursor: pointer;
     font-size: 20px;
 }
+
+
+
+
+/* pour le formulaire */
+.line{
+
+    display:grid;
+
+    grid-template-columns:
+        3fr
+        1fr
+        1fr
+        1fr
+        auto;
+
+    gap:15px;
+
+    align-items:end;
+
+}
+
+
+@media(max-width:768px){
+
+    .line{
+
+        display:flex;
+
+        flex-direction:column;
+
+        gap:15px;
+
+        background:#fff;
+
+        padding:15px;
+
+        border-radius:12px;
+
+        box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+        margin-bottom:20px;
+
+    }
+
+    .line > div{
+
+        width:100%;
+
+    }
+
+    .line input,
+    .line select{
+
+        width:100%;
+
+    }
+
+    .remove-row{
+
+        align-self:flex-end;
+
+        margin-top:10px;
+
+    }
+
+
+    .line label{
+
+        display:block;
+
+        margin-bottom:6px;
+
+        font-weight:bold;
+
+    }
+
+}
+
+
+
+/* TABLETTE */
+
+@media(max-width:992px){
+
+    .header-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .header-grid{
+
+        grid-template-columns:1fr;
+
+        gap:16px;
+
+    }
+
+}
+
+.field input,
+.field select,
+.field textarea{
+    width:100%;
+}

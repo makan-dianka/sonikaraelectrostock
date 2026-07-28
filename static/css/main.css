@@ -73,25 +73,82 @@ body {
 
 /* MOBILE */
 
-@media(max-width:900px) {
+@media(max-width:900px){
 
-    .layout {
+    .layout{
 
-        grid-template-columns: 1fr;
-
-    }
-
-    .sidebar-wrapper {
-
-        display: none;
+        grid-template-columns:1fr;
 
     }
 
-    .content {
+    .card{
 
-        grid-column: 1;
+        padding:15px;
 
     }
+
+    .content{
+
+        grid-column:1;
+
+        padding:15px;
+
+    }
+
+    .sidebar-wrapper{
+
+        display:block;
+
+        position:fixed;
+
+        top:70px;
+
+        left:-300px;
+
+        width:260px;
+
+        height:calc(100vh - 70px);
+
+        background:white;
+
+        z-index:1000;
+
+        transition:.3s;
+
+        overflow-y:auto;
+
+    }
+
+    .sidebar-wrapper.open{
+
+        left:0;
+
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+#sidebar-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:none;
+
+    z-index:900;
+
+}
+
+#sidebar-overlay.show{
+
+    display:block;
 
 }
 
@@ -215,4 +272,47 @@ body {
 
     }
 
+}
+
+
+/* tablette */
+@media(min-width:900px) and (max-width:1200px){
+
+    .layout{
+
+        grid-template-columns:90px 1fr;
+
+    }
+
+    .sidebar a{
+
+        justify-content:center;
+
+        padding:14px;
+
+    }
+
+    .sidebar a{
+
+        font-size:0;
+
+    }
+
+    .sidebar a i{
+
+        font-size:20px;
+
+    }
+
+    .logo-box img{
+
+        width:60px;
+
+    }
+
+}
+
+/* pour tout les tables (les listes) */
+.table-responsive{
+    overflow-x:auto;
 }
