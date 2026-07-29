@@ -6,7 +6,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Créer un utilisateur</title>
+        <title>Mettre à jour un utilisateur</title>
         <link rel="stylesheet" href="{% static 'css/register.css' %}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
     </head>
@@ -17,8 +17,8 @@
 
                 <div class="header">
                     <!-- <img src="{% static 'images/sonikara_elec_logo.png' %}" alt="logo"> -->
-                    <h1>Créer un utilisateur</h1>
-                    <p>Ajouter un nouveau collaborateur</p>
+                    <h1>Édit...</h1>
+                    <p>Mise à jour d'un collaborateur</p>
                 </div>
 
 
@@ -76,25 +76,11 @@
                             {{ form.phone }}
                             {{ form.phone.errors }}
                         </div>
-
-
-                        <div class="field">
-                            <label>{{ form.password1.label }}</label>
-                            {{ form.password1 }}
-                            {{ form.password1.errors }}
-                        </div>
-
-
-                        <div class="field">
-                            <label>{{ form.password2.label }}</label>
-                            {{ form.password2 }}
-                            {{ form.password2.errors }}
-                        </div>
                     </div>
 
                     <div class="actions">
                         <a href="javascript:history.back()" class="btn-secondary">Annuler</a>
-                        <button type="submit">Créer le compte </button>
+                        <button type="submit">Mettre à jour</button>
                     </div>
                 </form>
             </div>

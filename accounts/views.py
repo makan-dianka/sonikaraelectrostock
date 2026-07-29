@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 
-from accounts.forms import CreateUserForm
+from accounts.forms import CreateUserForm, UpdateUserForm
 from .models import CustomUser
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMultiAlternatives
@@ -166,3 +166,24 @@ def resetpwd(request):
                 print("formulaire n'est pas valide.")
     form = PasswordResetForm()
     return render(request, 'accounts/passwords/resetpwd.html', {'form':form, 'email': email})
+
+
+
+
+
+@login_required(login_url='account:login')
+def edit_collaborator(request, user_id):
+    user_obj = get_object_or_404(CustomUser, id=user_id)
+
+    if request.user.role not in ['owner']:
+        return HttpResponseForbidden("Vous n'êtes pas autorisé à accéder à cette page.")
+
+    if request.method == 'POST':
+        form = UpdateUserForm(request.POST, instance=user_obj, current_user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:user_list')
+    else:
+        form = UpdateUserForm(instance=user_obj, current_user=request.user)
+
+    return render(request, 'accounts/edit_collaborator.html', {'form': form, 'is_edit': True})

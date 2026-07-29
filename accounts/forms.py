@@ -36,3 +36,46 @@ class CreateUserForm(UserCreationForm):
             'email': 'Adresse email',
             'phone': 'Numéro de téléphone',
         }
+
+
+
+
+class UpdateUserForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        current_user = kwargs.pop('current_user')
+        super().__init__(*args, **kwargs)
+
+        if current_user.role == 'platform_admin':
+            self.fields['role'].choices = [
+                ('owner', 'Propriétaire boutique'),
+            ]
+
+        elif current_user.role == 'owner':
+            self.fields['role'].choices = [
+                ('cashier', 'Caissier'),
+                ('seller', 'Vendeur'),
+            ]
+        else:
+            self.fields['role'].choices = []
+
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'role', 'email', 'phone']
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'role': forms.Select(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+        labels = {
+            'first_name': 'Prénom',
+            'last_name': 'Nom',
+            'role': 'Rôle',
+            'store': 'Magasin',
+            'email': 'Adresse email',
+            'phone': 'Numéro de téléphone',
+        }
