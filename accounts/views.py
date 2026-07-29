@@ -186,4 +186,4 @@ def edit_collaborator(request, user_id):
     else:
         form = UpdateUserForm(instance=user_obj, current_user=request.user)
 
-    return render(request, 'accounts/edit_collaborator.html', {'form': form, 'is_edit': True})
+    return render(request, 'accounts/edit_collaborator.html', {'form': form})

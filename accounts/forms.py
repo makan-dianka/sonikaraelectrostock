@@ -60,7 +60,7 @@ class UpdateUserForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'role', 'email', 'phone']
+        fields = ['first_name', 'last_name', 'role', 'email', 'phone', 'is_active']
 
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -68,6 +68,7 @@ class UpdateUserForm(forms.ModelForm):
             'role': forms.Select(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'is_active': forms.CheckboxInput(),
         }
 
 
@@ -78,4 +79,5 @@ class UpdateUserForm(forms.ModelForm):
             'store': 'Magasin',
             'email': 'Adresse email',
             'phone': 'Numéro de téléphone',
+            'is_active': 'Activer',
         }
