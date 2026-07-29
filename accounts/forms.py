@@ -7,6 +7,23 @@ from django.contrib.auth.forms import (
 
 
 class CreateUserForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        current_user = kwargs.pop('current_user')
+        super().__init__(*args, **kwargs)
+
+        if current_user.role == 'platform_admin':
+            self.fields['role'].choices = [
+                ('owner', 'Propriétaire boutique'),
+            ]
+
+        elif current_user.role == 'owner':
+            self.fields['role'].choices = [
+                ('cashier', 'Caissier'),
+                ('seller', 'Vendeur'),
+                ('manager', 'Gérant'),
+            ]
+        else:
+            self.fields['role'].choices = []
 
     password1 = forms.CharField(max_length=16, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Saisir un nouveau mot de passe'}), label="Mot de passe")
     password2 = forms.CharField(max_length=16, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmez votre mot de passe'}), label="Confirmer mot de passe")
@@ -54,6 +71,7 @@ class UpdateUserForm(forms.ModelForm):
             self.fields['role'].choices = [
                 ('cashier', 'Caissier'),
                 ('seller', 'Vendeur'),
+                ('manager', 'Gérant'),
             ]
         else:
             self.fields['role'].choices = []

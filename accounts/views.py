@@ -85,7 +85,7 @@ def register_page(request):
 
 
     if request.method == 'POST':
-        form = CreateUserForm(request.POST)
+        form = CreateUserForm(request.POST, current_user=request.user)
         if form.is_valid():
 
             form = form.save(commit=False)
@@ -97,7 +97,7 @@ def register_page(request):
         else:
             messages.info(request, 'Il y a une erreur dans le formulaire. Merci de corriger ')
     else:
-        form = CreateUserForm()
+        form = CreateUserForm(current_user=request.user)
     return render(request, 'accounts/register.html', {'form': form})
 
 
