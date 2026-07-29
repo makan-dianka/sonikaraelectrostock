@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>reset password</title>
+        <link rel="stylesheet" href="{% static 'css/register.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    </head>
+
+    <body>
+        <div class="register-container">
+            <div class="register-card">
+
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <p id="info">Nous enverrons les instructions pour créer un nouveau mot de passe.</p>
+                 <br />
+
+                <form method="POST" action="">{% csrf_token %}
+                    {{ form.as_p }}
+                    <br />
+                    <button class="btn reset-btn" type="submit" style="background-color: #412018; color: #F0D79F;">Soumettre</button> <br />  <br />
+                </form>
+                
+                <a href="{% url 'accounts:settings' %}">
+                    <button class="btn" type="boutton" style="background-color: red; color: white;">Annuler</button>
+                </a>
+
+            </div>
+        </div>
+    </body>
+
+    <script>
+    
+        emailInputDecoration = () => {
+            const emailInput = document.querySelector('#id_email');
+            emailInput.placeholder="Entrer l'Adresse Email Ici";
+            emailInput.classList.add('form-control');
+    
+            const email = "{{ email }}";
+            if (email !== 'None') {
+                emailInput.value = email;
+                emailInput.readOnly = true;
+            }
+    
+        }
+        emailInputDecoration()
+    
+    </script>
+</html>

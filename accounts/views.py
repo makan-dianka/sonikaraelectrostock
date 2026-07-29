@@ -6,6 +6,16 @@ from django.http import HttpResponseForbidden
 
 from accounts.forms import CreateUserForm
 from .models import CustomUser
+from django.contrib.auth.forms import PasswordResetForm
+from django.core.mail import EmailMultiAlternatives
+from django.db.models.query_utils import Q
+
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.template.loader import render_to_string
+from django.conf import settings
+import os
 
 
 
@@ -103,3 +113,56 @@ def logout_user(request):
 @login_required(login_url='accounts:login')
 def user_settings(request):
     return render(request, 'accounts/settings.html')
+
+
+
+
+
+@login_required(login_url='account:login')
+def resetpwd(request):
+    email = request.user.email
+    if request.method=="POST":
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            user = CustomUser.objects.filter(Q(email=email))
+            if user.exists():
+                for user in user:
+ 
+                    info = {
+                        'username' : user.first_name,
+                        'email': email,
+                        'domain': os.getenv('DOMAIN'),
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'user': user,
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'https://'
+                    }
+
+                    template_email = render_to_string('accounts/passwords/password_reset_email.html', info)
+                    text_content = render_to_string('accounts/passwords/password_reset_email.txt', info)
+
+                    objet = 'Réinitialisation du mot de passe'
+
+                    email = EmailMultiAlternatives(
+                        objet, 
+                        text_content,
+                        settings.EMAIL_HOST_USER, 
+                        [email],
+                        [settings.EMAIL_CC],
+                        )
+
+                    email.attach_alternative(template_email, "text/html")
+                    email.fail_silently = False
+
+  
+                    try:
+                        email.send()
+                        return render(request, 'accounts/passwords/password_reset_done.html')
+                    except Exception as e:
+                        print(e)
+                        print("Fail to send mail")
+            else:
+                messages.info(request, "[ Ce email n'exist pas ]")
+                print("formulaire n'est pas valide.")
+    form = PasswordResetForm()
+    return render(request, 'accounts/passwords/resetpwd.html', {'form':form, 'email': email})

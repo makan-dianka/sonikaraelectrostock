@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth import views as auth_views
 
 
 app_name = "accounts"
@@ -21,6 +22,11 @@ urlpatterns = [
     path('quotes/', include("quotes.urls")),
     path('credits/', include("credits.urls")),
     path('expenses/', include("expenses.urls")),
+
+
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='accounts/passwords/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="accounts/passwords/password_reset_confirm.html"), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='accounts/passwords/password_reset_complete.html'), name='password_reset_complete'),
 ]
 
 
