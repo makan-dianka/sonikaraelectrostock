@@ -97,3 +97,9 @@ def register_page(request):
 def logout_user(request):
     logout(request)
     return redirect('accounts:login')
+
+
+
+@login_required(login_url='accounts:login')
+def user_settings(request):
+    return render(request, 'accounts/settings.html')
