@@ -55,12 +55,13 @@ def login_page(request):
         return redirect("dashboard:dashboard")
 
 
-
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, username=email, password=password)
         if user is not None:
+            if user.is_active == False:
+                messages.info(request, 'Votre compte est desactivé. Veuillez contacter votre employeur.')
             login(request, user)
             return redirect('dashboard:dashboard') # -> redirection vers le tableau de bord
         else:
