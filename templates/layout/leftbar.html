@@ -18,78 +18,78 @@
             {% if request.user.role == 'owner' %}
                 <a href="{% url 'dashboard:dashboard' %}">
                     <i class="fa-solid fa-house"></i>
-                    Dashboard
+                    <span>Dashboard</span>
                 </a>
             {% endif %}
         {% endif %}
 
         <a href="{% url 'products:product_list' %}">
             <i class="fa-solid fa-box"></i>
-            Produits
+            <span>Produits</span>
         </a>
 
         <a href="{% url 'purchases:list' %}">
             <i class="fa-solid fa-cart-shopping"></i>
-            Achats
+            <span>Achats</span>
         </a>
 
         <a href="{% url 'sales:list' %}">
             <i class="fa-solid fa-sack-dollar"></i>
-            Ventes
+            <span>Ventes</span>
         </a>
 
         <a href="{% url 'customers:list' %}">
             <i class="fa-solid fa-users"></i>
-            Clients
+            <span>Clients</span>
         </a>
 
         <a href="{% url 'suppliers:list' %}">
             <i class="fa-solid fa-truck"></i>
-            Fournisseurs
+            <span>Fournisseurs</span>
         </a>
 
         <a href="{% url 'stores:store_list' %}">
             <i class="fa-solid fa-store"></i>
-            Magasins
+            <span>Magasins</span>
         </a>
 
         <a href="{% url 'payments:list' %}">
             <i class="fa-solid fa-building-columns"></i>
-            Paiements
+            <span>Paiements</span>
         </a>
 
         <a href="{% url 'quotes:quote_list' %}">
             <i class="fa-solid fa-file-invoice"></i>
-            Devis
+            <span>Devis</span>
         </a>
 
         <a href="{% url 'documents:list' %}">
             <i class="fa-solid fa-file-invoice"></i>
-            Documents
+            <span>Documents</span>
         </a>
 
         {% if request.user.is_authenticated %}
             {% if request.user.role == 'owner' %}
                 <a href="{% url 'accounts:user_list' %}">
                     <i class="fa-solid fa-user-tie"></i>
-                    Personnel
+                    <span>Personnel</span>
                 </a>
             {% endif %}
         {% endif %}
 
         <a href="{% url 'expenses:list' %}">
             <i class="fa-solid fa-wallet"></i>
-            Dépenses
+            <span>Dépenses</span>
         </a>
 
         <a href="{% url 'credits:credit_list' %}">
             <i class="fa-solid fa-credit-card"></i>
-            Crédits
+            <span>Crédits</span>
         </a>
 
         <a href="{% url 'credits:credit_remboursement' %}">
             <i class="fa-solid fa-credit-card"></i>
-            Remboursé
+            <span>Remboursé</span>
         </a>
 
         <!-- <a>

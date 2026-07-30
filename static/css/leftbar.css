@@ -1,70 +1,168 @@
-/* LEFT */
-
 .sidebar-wrapper{
     padding:20px;
 }
 
+
+/* LOGO */
+
 .logo-box{
-
     height:120px;
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
 }
 
 .logo-box img{
-
     width:180px;
-
 }
+
+
+/* SIDEBAR */
 
 .sidebar{
 
     background:#f39b00;
-
     border-radius:20px;
 
     padding:25px 0;
 
     display:flex;
-
     flex-direction:column;
-
     gap:10px;
 
+    width:80px;
+
+    transition:0.3s;
+
+    overflow:hidden;
 }
+
+
+/* agrandissement au survol */
+
+.sidebar:hover{
+
+    width:230px;
+
+}
+
+
+/* LIENS */
 
 .sidebar a{
 
     color:white;
 
-    padding:12px 30px;
+    padding:12px 25px;
 
     text-decoration:none;
 
     display:flex;
 
+    align-items:center;
+
+    gap:15px;
+
     cursor:pointer;
-    
+
     transition:0.2s;
-    
-    gap:12px;
+
+    white-space:nowrap;
 
 }
+
+
+/* ICONES */
+
+.sidebar i{
+
+    min-width:30px;
+
+    text-align:center;
+
+    font-size:20px;
+
+}
+
+
+/* TEXTE CACHE PAR DEFAUT */
+
+.sidebar span{
+
+    opacity:0;
+
+    transition:0.2s;
+
+    color: white;
+
+}
+
+
+/* TEXTE VISIBLE AU SURVOL */
+
+.sidebar:hover span{
+
+    opacity:1;
+
+}
+
+
+/* HOVER ITEM */
 
 .sidebar a:hover{
 
     background:rgba(255,255,255,.15);
+
     transform:translateX(4px);
 
 }
 
+
 .sidebar .active{
-
     font-weight:bold;
+}
 
+
+@media(max-width:900px){
+
+    /* sidebar mobile normale */
+
+    .sidebar{
+        width:260px;
+        height:auto;        /* au lieu de laisser height:100% actif */
+        overflow-y:auto;    /* remplace overflow:hidden hérité */
+        overflow-x:hidden;
+        border-radius:0 20px 20px 0;
+        min-height:100%;
+    }
+
+    .logo-box{
+        display:none;
+    }
+
+    .sidebar:hover{
+        width:260px;
+    }
+
+    /* afficher les textes directement */
+    .sidebar span{
+        opacity:1;
+    }
+
+    .sidebar a{
+        justify-content:flex-start;
+        padding:12px 30px;
+    }
+
+    .sidebar a:hover{
+        transform:none;
+    }
+
+    .sidebar-wrapper .sidebar{
+        width:100%;
+        height:100%;         /* garde la pleine hauteur du wrapper */
+        overflow-y:auto;     /* mais permet de scroller dedans si le contenu déborde */
+        border-radius:20px;
+        padding:0;
+    }
 }
