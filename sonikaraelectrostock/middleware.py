@@ -40,7 +40,7 @@ class SubscriptionMiddleware:
         if any(request.path.startswith(prefix) for prefix in self.EXEMPT_PREFIXES):
             return self.get_response(request)
 
-        company = getattr(request.user, "company", None)
+        company = getattr(request.user, "owned_company", None)
         if company is None:
             return self.get_response(request)
 
