@@ -39,6 +39,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True, null=True)
 
+    company = models.ForeignKey(
+        "subscriptions.Company",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="users"
+    )
+
     created_by = models.ForeignKey(
         'self',
         null=True,

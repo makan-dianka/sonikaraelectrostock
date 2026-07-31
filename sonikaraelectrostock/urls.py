@@ -22,6 +22,7 @@ urlpatterns = [
     path('quotes/', include("quotes.urls")),
     path('credits/', include("credits.urls")),
     path('expenses/', include("expenses.urls")),
+    path('subscriptions/', include("subscriptions.urls")),
 
 
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='accounts/passwords/password_reset_done.html'), name='password_reset_done'),

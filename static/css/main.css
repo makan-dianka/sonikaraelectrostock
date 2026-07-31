@@ -334,3 +334,32 @@ body {
 .table-responsive td {
     white-space: nowrap;
 }
+
+
+
+/* les alerts */
+
+.subscription-alert{
+    padding:16px;
+    text-align:center;
+    font-size:18px;
+    font-weight:600;
+    color:white !important;
+    border: 5px dashed red;
+}
+
+.subscription-alert span{
+    color:white !important;
+}
+
+.subscription-alert.warning{
+    background:#f39b00 !important;
+}
+
+.subscription-alert.danger{
+    background:#dc3545 !important;
+}
+
+.subscription-alert.expired{
+    background:#000 !important;
+}

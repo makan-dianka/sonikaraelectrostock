@@ -28,6 +28,36 @@
 
 
 <body>
+  {% if request.user.is_superuser %}
+    <a href="{% url 'subscriptions:dashboard' %}" style="text-decoration: none;">
+      <div style="text-align: center; background-color: black; padding: 15px; font-size: 20px;">
+        Dashboard - Abonnement
+      </div>
+    </a>
+  {% endif %}
+
+  {% with days=request.user.company.subscription.remaining_days %}
+
+      {% if days <= 3 and days >= 1 %}
+          <div class="subscription-alert danger">
+              ⚠️ Votre abonnement expire dans <strong>{{ days }}</strong> jour{{ days|pluralize }}. <br />
+              <span style="font-size: 13px; font-style: italic;">veuillez renouveler votre abonnement avant toute coupure de service. Contacter: +33 7 68 69 54 58</span>
+          </div>
+
+      {% elif days <= 10 and days > 3 %}
+          <div class="subscription-alert warning">
+              ⏳ Votre abonnement expire dans <strong>{{ days }}</strong> jours. <br />
+              <span style="font-size: 13px; font-style: italic;">Penser à renouveler votre abonnement. Contacter: +33 7 68 69 54 58</span>
+          </div>
+
+      {% elif days <= 0 %}
+          <div class="subscription-alert expired">
+              ❌ Votre abonnement a expiré. <br />
+              <span style="font-size: 13px; font-style: italic;">Urgent. Contacter immédiatement: +33 7 68 69 54 58</span>
+          </div>
+      {% endif %}
+
+  {% endwith %}
 
   <div class="layout">
     {% include 'layout/navbar.html' %}

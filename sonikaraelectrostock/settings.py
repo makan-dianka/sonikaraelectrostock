@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'quotes',
     'credits',
     'expenses',
+    'subscriptions',
 
 
     # autre app
@@ -58,6 +59,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
+
+
+    'sonikaraelectrostock.middleware.SubscriptionMiddleware',
+
     # 'sonikaraelectrostock.middleware.DesktopOnlyMiddleware',
 
     "whitenoise.middleware.WhiteNoiseMiddleware",
