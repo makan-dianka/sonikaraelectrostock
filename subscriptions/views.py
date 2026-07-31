@@ -34,9 +34,8 @@ def dashboard(request):
     active_subscription = Subscription.objects.filter(status="active").count()
     expired_subscription = Subscription.objects.filter(end_date__lt=today).count()
 
-    payment_month = (
+    payment_year = (
         Payment.objects.filter(
-            payment_date__month=today.month,
             payment_date__year=today.year,
         ).aggregate(total=Sum("amount"))["total"] or 0
     )
@@ -60,7 +59,7 @@ def dashboard(request):
         "company_count": company_count,
         "active_subscription": active_subscription,
         "expired_subscription": expired_subscription,
-        "payment_month": payment_month,
+        "payment_year": payment_year,
         "expiring_subscriptions": expiring_subscriptions,
         "last_payments": last_payments,
     })
