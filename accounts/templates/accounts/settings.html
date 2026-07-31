@@ -55,6 +55,11 @@
 
 
                         <div class="field">
+                            <label>Entreprise:</label>
+                            {{ request.user.owned_company.name }}
+                        </div>
+
+                        <div class="field">
                             <label>Magasin:</label>
                             {{ request.user.store }}
                         </div>
