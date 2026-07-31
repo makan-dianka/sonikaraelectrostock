@@ -36,7 +36,7 @@
     </a>
   {% endif %}
 
-  {% with days=request.user.company.subscription.remaining_days %}
+  {% with days=request.user.owned_company.subscription.remaining_days %}
 
       {% if days <= 3 and days >= 1 %}
           <div class="subscription-alert danger">
