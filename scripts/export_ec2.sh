@@ -7,14 +7,14 @@ set -e  # Stoppe le script à la moindre erreur
 # ============================================
 
 # ---- CONFIG À ADAPTER PAR CLIENT ----
-CLIENT_NAME="sonikaraelectro"                         # nom court du client (sans espace)
+CLIENT_NAME="sonikaraelectro"                              # nom court du client (sans espace)
 DB_NAME="SonikaraElectroStockDB"                           # nom de la base MySQL
-DB_USER="sonikaraelectro"                             # user MySQL avec accès à cette base
-APP_PATH="/home/ubuntu/sonikaraelectrostock"             # chemin de l'app sur EC2
-MEDIA_PATH="$APP_PATH/media"                     # dossier des fichiers uploadés
-VPS_USER="ubuntu"                                # user SSH sur le VPS OVH
-VPS_HOST="164.132.76.165"                           # IP du VPS OVH
-VPS_TMP_PATH="/tmp/migration_$CLIENT_NAME"       # dossier temporaire sur le VPS
+DB_USER="sonikaraelectro"                                  # user MySQL avec accès à cette base
+APP_PATH="/home/ubuntu/sonikaraelectrostock"               # chemin de l'app sur EC2
+MEDIA_PATH="$APP_PATH/media"                               # dossier des fichiers uploadés
+VPS_USER="ubuntu"                                          # user SSH sur le VPS OVH
+VPS_HOST="164.132.76.165"                                  # IP du VPS OVH
+VPS_TMP_PATH="/tmp/migration_$CLIENT_NAME"                 # dossier temporaire sur le VPS
 # --------------------------------------
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
