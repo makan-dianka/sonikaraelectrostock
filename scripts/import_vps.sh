@@ -8,13 +8,13 @@ set -e
 
 # ---- CONFIG À ADAPTER PAR CLIENT ----
 CLIENT_NAME="sonikaraelectro"
-DB_NAME="sonikaraslectroDB"
+DB_NAME="SonikaraElectroDB"
 DB_USER="sonikaraelectro"
 DB_PASSWORD="oklm"                                               # mot de passe MySQL pour ce user (créé au préalable)
 APP_PATH="/home/ubuntu/sonikaraelectrostock"                     # chemin cible de l'app sur le VPS
 MEDIA_PATH="$APP_PATH/media"
 VPS_TMP_PATH="/tmp/migration_$CLIENT_NAME"
-VENV_PATH="/home/ubuntu/.venv"
+VENV_PATH="/home/ubuntu/.venv/sonikaraelecstock_env"
 # --------------------------------------
 
 echo "=== Import $CLIENT_NAME sur VPS OVH ==="
@@ -33,9 +33,9 @@ fi
 
 # --- Étape 1 : créer la base et le user MySQL si pas déjà fait ---
 echo "[1/6] Vérification de la base MySQL..."
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p -e "CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
-mysql -u root -p -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+#mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+#mysql -u root -p -e "CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
+#mysql -u root -p -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 
 # --- Étape 2 : import du dump ---
 echo "[2/6] Import du dump SQL ($SQL_FILE)..."
