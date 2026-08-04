@@ -8,4 +8,6 @@ urlpatterns=[
     path('', views.document_list, name='list'),
     path('create/', views.create_document, name='create'),
     path('delete/<int:pk>/', views.delete_document, name='delete'),
+
+    path('download/<int:pk>/', views.document_pdf, name='document-download'),
 ]

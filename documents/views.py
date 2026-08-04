@@ -4,13 +4,12 @@ from .forms import DocumentForm
 from .models import Document
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, FileResponse, Http404
 
 from django.utils import timezone
 from django.core.paginator import Paginator
 
 from .services import generate_pdf
-
 
 
 
@@ -40,6 +39,18 @@ def generate_reference():
         f"-{count:04d}"
     )
 
+
+
+@login_required(login_url='accounts:login')
+def document_pdf(request, pk):
+    document = get_object_or_404(Document, pk=pk)
+    if not document.pdf:
+        raise Http404()
+
+    return FileResponse(
+        document.pdf.open("rb"),
+        content_type="application/pdf"
+    )
 
 
 

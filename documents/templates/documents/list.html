@@ -163,7 +163,7 @@
 
                         {% if document.pdf %}
 
-                        <a href="{{ document.pdf.url }}" target="_blank" class="view">
+                        <a href="{% url 'documents:document-download' document.id %}" target="_blank" class="view">
 
                             Voir PDF
 
