@@ -71,11 +71,12 @@ def company_create(request):
     if not request.user.is_superuser:
         return HttpResponseForbidden()
 
-    form = CompanyForm(request.POST or None)
+    form = CompanyForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
-        form.reference = generate_reference('CMP', Company)
-        form.save()
+        company = form.save(commit=False)
+        company.reference = generate_reference('CMP', Company)
+        company.save()
         messages.success(request, "Entreprise créée avec succès.")
         return redirect("subscriptions:dashboard")
 
