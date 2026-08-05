@@ -19,6 +19,7 @@ class CompanyForm(forms.ModelForm):
             "phone",
             "email",
             "is_active",
+            "logo",
         ]
 
         widgets = {
@@ -47,6 +48,10 @@ class CompanyForm(forms.ModelForm):
                 "class": "form-check-input"
             }),
 
+            "logo": forms.FileInput(attrs={
+                "class": "form-control"
+            }),
+
         }
 
         labels = {
@@ -62,6 +67,8 @@ class CompanyForm(forms.ModelForm):
             "email": "Email",
 
             "is_active": "Entreprise active",
+
+            "logo": "Logo",
 
         }
 

@@ -8,17 +8,12 @@ from weasyprint import HTML
 
 from django.conf import settings
 import os
+from sonikaraelectrostock import tools
 
 
-def generate_pdf(document):
-    logo_path = os.path.join(
-        settings.BASE_DIR,
-        "static",
-        "images",
-        "sonikara_elec_logo.png"
-    )
+def generate_pdf(document, company=None):
 
-    logo_path = f"file://{logo_path}"
+    logo_path = f"file://{tools.get_company_logo_path(company)}"
 
     template = None
 

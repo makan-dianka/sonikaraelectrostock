@@ -188,6 +188,6 @@ def print_purchase(request, pk):
             purchase=purchase,
             generated_by=request.user,
         )
-        generate_pdf(document)
+        generate_pdf(document, company=request.user.company)
 
     return FileResponse(document.pdf.open("rb"), content_type="application/pdf")

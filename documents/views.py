@@ -80,7 +80,7 @@ def create_document(request):
         document.reference = generate_reference()
 
         document.save()
-        generate_pdf(document)
+        generate_pdf(document, company=request.user.company)
 
         return redirect(
 

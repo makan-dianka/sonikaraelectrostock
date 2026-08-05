@@ -7,7 +7,9 @@
     <!-- LOGO -->
      <a href="{% url 'dashboard:dashboard' %}">
          <div class="logo-box">
-             <img src="{% static 'images/sonikara_elec_logo.png' %}" alt="Logo">
+             {% if company and company.logo %}
+                <img src="{{ company.logo.url }}" alt="{{ company.name }}">
+            {% endif %}
          </div>
      </a>
 

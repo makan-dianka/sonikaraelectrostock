@@ -1,4 +1,26 @@
+import os
+
 from django.utils import timezone
+
+
+def company_logo_upload_path(instance, filename):
+    ext = filename.split(".")[-1]
+    return f"companies/{instance.uuid}/logo.{ext}"
+
+
+def get_company_logo_path(company):
+    """
+    Retourne le chemin filesystem absolu du logo de l'entreprise,
+    ou celui du logo par défaut si absent.
+    """
+    if company and company.logo:
+        try:
+            if os.path.exists(company.logo.path):
+                return company.logo.path
+        except (ValueError, FileNotFoundError):
+            pass  # fichier manquant ou champ vide malgré le check
+
+
 
 def generate_reference(prefix, model):
     """

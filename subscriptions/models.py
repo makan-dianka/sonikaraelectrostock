@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils import timezone
 import uuid
+from django.core.validators import FileExtensionValidator
+from django.core.exceptions import ValidationError
+from sonikaraelectrostock.tools import company_logo_upload_path
+
 
 
 class Company(models.Model):
@@ -21,8 +25,21 @@ class Company(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
 
+
+    logo = models.ImageField(
+        upload_to=company_logo_upload_path,
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "svg", "webp"])],
+    )
+
+    def clean(self):
+        if self.logo and self.logo.size > 2 * 1024 * 1024:  # 2 Mo
+            raise ValidationError({"logo": "Le logo ne doit pas dépasser 2 Mo."})
+
     def __str__(self):
         return self.name
+
     
 
 

@@ -90,7 +90,7 @@ def print_quote(request, pk):
         pk=pk
     )
 
-    generate_quote_pdf(quote)
+    generate_quote_pdf(quote, company=request.user.company)
 
     return FileResponse(quote.pdf.open("rb"), content_type="application/pdf")
 
@@ -161,9 +161,9 @@ def create_quote(request):
 
     ):
 
-        print("data posted :", request.POST)
-        print("form error : ", formset.errors)
-        print("Non form", formset.non_form_errors())
+        # print("data posted :", request.POST)
+        # print("form error : ", formset.errors)
+        # print("Non form", formset.non_form_errors())
 
 
         quote = (
@@ -210,7 +210,7 @@ def create_quote(request):
         quote.total = total
 
         quote.save()
-        generate_quote_pdf(quote)
+        generate_quote_pdf(quote, company=request.user.company)
 
 
         return redirect(
@@ -277,27 +277,10 @@ def update_quote(request, pk):
 
 
 
-def generate_quote_pdf(quote):
-
-    logo_path = os.path.join(
-
-        settings.BASE_DIR,
-
-        "static",
-
-        "images",
-
-        "sonikara_elec_logo.png"
-
-    )
+def generate_quote_pdf(quote, company=None):
 
 
-    logo_path = (
-
-        f"file://{logo_path}"
-
-    )
-
+    logo_path = f"file://{tools.get_company_logo_path(company)}"
 
     context = {
 
