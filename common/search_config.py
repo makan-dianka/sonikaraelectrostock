@@ -76,7 +76,9 @@ SEARCH_CONFIG = {
     },
 
     "purchases": {
-        "queryset": Purchase.objects.all(),
+        "queryset": lambda request: Purchase.objects.for_company(
+            request.user.company
+        ).filter(status__in=['draft', 'received']),
         "serializer": PurchaseSearchSerializer,
         "search_fields": ["reference", "supplier__name"],
         "order_by": "supplier__name",

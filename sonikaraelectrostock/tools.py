@@ -22,7 +22,7 @@ def get_company_logo_path(company):
 
 
 
-def generate_reference(prefix, model):
+def generate_reference(prefix, model, company=None):
     """
     Génère une référence unique.
 

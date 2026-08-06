@@ -34,6 +34,8 @@ def purchase_list(request):
 
     purchases = (
         Purchase.objects
+        .for_company(request.user.company)
+        .filter(status__in=['draft', 'received'])
         .select_related(
             'supplier',
             'store'
@@ -74,6 +76,7 @@ def purchase_create(request):
         form = PurchaseForm(request.POST)
         if form.is_valid():
             purchase = form.save(commit=False)
+            purchase.company = request.user.company
             purchase.created_by = request.user
             purchase.save()
 
@@ -106,7 +109,7 @@ def update_purchase(request, pk):
         return HttpResponseForbidden("Vous n'avez pas la permission de modifier un achat.")
 
 
-    purchase = get_object_or_404(Purchase, pk=pk)
+    purchase = get_object_or_404(Purchase, pk=pk, company=request.user.company)
 
     if request.method == 'POST':
 
@@ -115,7 +118,7 @@ def update_purchase(request, pk):
 
         if form.is_valid() and formset.is_valid():
             purchase = form.save(commit=False)
-            purchase.user = request.user
+            purchase.company = request.user.company
             purchase.save()
 
             formset.instance = purchase
@@ -151,7 +154,7 @@ def update_status(request, pk, status):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission de changer l'état de l'achat.")
 
-    purchase = get_object_or_404(Purchase,id=pk)
+    purchase = get_object_or_404(Purchase, id=pk, company=request.user.company)
     if not purchase.can_change_to(status):
         messages.error(request, "Transition impossible")
         return redirect('purchases:list')
@@ -172,22 +175,25 @@ def update_status(request, pk, status):
 def print_purchase(request, pk):
 
     purchase = get_object_or_404(
-        Purchase,
+        Purchase.objects.for_company(request.user.company),
         pk=pk
     )
 
-    document = Document.objects.filter(
+    document = Document.objects.for_company(
+        request.user.company
+        ).filter(
         purchase=purchase,
         document_type="purchase_order"
     ).first()
 
     if not document:
         document = Document.objects.create(
+            company=request.user.company,
             document_type='purchase_order',
-            reference=tools.generate_reference('DOC', Document),
+            reference=tools.generate_reference('DOC', Document, company=request.user.company),
             purchase=purchase,
             generated_by=request.user,
         )
-        generate_pdf(document, company=request.user.company)
+    generate_pdf(document, company=request.user.company)
 
     return FileResponse(document.pdf.open("rb"), content_type="application/pdf")
