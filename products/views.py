@@ -25,6 +25,7 @@ def product_search_api(request):
 
     products = (
         Product.objects
+        .for_company(request.user.company)
         .filter(is_deleted=False)
         .filter(
             Q(reference__icontains=query) |
@@ -48,6 +49,7 @@ def product_list(request):
 
     products = (
         Product.objects
+        .for_company(request.user.company)
         .filter(is_deleted=False)
         .prefetch_related(
             'stocks',
@@ -86,79 +88,27 @@ def create_product(request):
         return HttpResponseForbidden("Vous n'avez pas la permission d'ajouter de produit.")
 
 
-    form = ProductForm(
-
-        request.POST or None,
-
-        request.FILES or None
-
-    )
-
+    form = ProductForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
+        store = form.cleaned_data.pop('store')
+        quantity = form.cleaned_data.pop('initial_stock')
 
-        store = (
+        product = form.save(commit=False)
+        product.company = request.user.company
+        product.save()
 
-            form.cleaned_data.pop(
-                'store'
-            )
-        )
-
-        quantity = (
-
-            form.cleaned_data.pop(
-                'initial_stock'
-            )
-        )
-
-
-        product = (
-
-            form.save()
-        )
-
-
-        if (
-
-            store
-
-            and
-
-            quantity
-
-        ):
-
+        if store and quantity:
             Stock.objects.create(
-
+                company=request.user.company,
                 product=product,
-
                 store=store,
-
                 quantity=quantity
-
             )
 
+        return redirect('products:product_list')
 
-        return redirect(
-
-            'products:product_list'
-
-        )
-
-
-    return render(
-
-        request,
-
-        'products/product_form.html',
-
-        {
-
-            'form':form
-
-        }
-
-    )
+    return render(request, 'products/product_form.html', {'form':form})
 
 
 
@@ -175,22 +125,17 @@ def create_marque(request):
 
         form = MarqueForm(request.POST)
         if form.is_valid():
-            form.save()
+            marque = form.save(commit=False)
+            marque.company = request.user.company
+            marque.save()
             return redirect(
                 'products:create'
             )
 
     else:
-
         form = MarqueForm()
 
-    return render(
-        request,
-        'products/marque_form.html',
-        {
-            'form': form
-        }
-    )
+    return render(request, 'products/marque_form.html', {'form': form})
 
 
 
@@ -200,14 +145,9 @@ def create_marque(request):
 def update_product(request, pk):
 
     if request.user.role not in ['owner']:
-        return HttpResponseForbidden(
-            "Vous n'avez pas la permission à mettre à jour un Produit."
-        )
+        return HttpResponseForbidden("Vous n'avez pas la permission à mettre à jour un Produit.")
 
-    product = get_object_or_404(
-        Product,
-        id=pk
-    )
+    product = get_object_or_404(Product, id=pk, company=request.user.company)
 
 
     initial = {}
@@ -253,13 +193,7 @@ def update_product(request, pk):
 
             return redirect('products:product_list')
 
-    return render(
-        request,
-        'products/product_form.html',
-        {
-            'form': form
-        }
-    )
+    return render(request, 'products/product_form.html',  {'form': form})
 
 
 
@@ -267,7 +201,7 @@ def update_product(request, pk):
 def delete_product(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission de supprimer un produit.")
-    product = get_object_or_404(Product, id=pk)
+    product = get_object_or_404(Product, id=pk, company=request.user.company)
     product.is_deleted = True
     product.save()
     return redirect('products:product_list')
