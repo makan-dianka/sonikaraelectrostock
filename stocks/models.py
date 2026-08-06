@@ -1,7 +1,7 @@
 from django.db import models
-from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 
-class Stock(TimeStampedModel):
+class Stock(TimeStampedModel, CompanyOwnedModel):
 
     store = models.ForeignKey("stores.Store", on_delete=models.CASCADE, related_name='stocks')
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name='stocks')

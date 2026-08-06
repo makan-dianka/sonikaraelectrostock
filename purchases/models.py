@@ -1,10 +1,10 @@
 from django.db import models
-from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 from sonikaraelectrostock.tools import generate_reference
 from django.utils import timezone
 
 
-class Purchase(TimeStampedModel):
+class Purchase(TimeStampedModel, CompanyOwnedModel):
 
     STATUS = [
         ('draft', 'Brouillon'),
@@ -112,7 +112,7 @@ class Purchase(TimeStampedModel):
 
 
 
-class PurchaseItem(TimeStampedModel):
+class PurchaseItem(TimeStampedModel, CompanyOwnedModel):
 
     purchase = models.ForeignKey(
         Purchase,

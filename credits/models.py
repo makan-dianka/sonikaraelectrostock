@@ -1,8 +1,8 @@
 from django.db import models
-from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 
 
-class Credit(TimeStampedModel):
+class Credit(TimeStampedModel, CompanyOwnedModel):
 
     PENDING = "pending"
     PARTIAL = "partial"
@@ -77,7 +77,7 @@ class Credit(TimeStampedModel):
 
 
 
-class CreditPayment(TimeStampedModel):
+class CreditPayment(TimeStampedModel, CompanyOwnedModel):
 
     reference = models.CharField(max_length=100, unique=True, null=True, blank=True)
 

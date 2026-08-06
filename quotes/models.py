@@ -1,8 +1,8 @@
 from django.db import models
-from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 
 
-class Quote(TimeStampedModel):
+class Quote(TimeStampedModel, CompanyOwnedModel):
 
     reference = models.CharField(max_length=100, unique=True)
 

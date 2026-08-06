@@ -7,3 +7,16 @@ class TimeStampedModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class CompanyOwnedModel(models.Model):
+    company = models.ForeignKey(
+        "subscriptions.Company",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="%(class)ss"
+    )
+
+    class Meta:
+        abstract = True

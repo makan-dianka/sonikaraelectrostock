@@ -1,9 +1,9 @@
 from django.db import models
 
-from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 
 
-class Document(TimeStampedModel):
+class Document(TimeStampedModel, CompanyOwnedModel):
 
     TYPE = [
         ('purchase_order', 'Bon achat'),

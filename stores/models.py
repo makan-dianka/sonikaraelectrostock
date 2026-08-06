@@ -1,8 +1,8 @@
 from django.db import models
-from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 
 
-class Store(TimeStampedModel):
+class Store(TimeStampedModel, CompanyOwnedModel):
     name = models.CharField(max_length=150)
 
     phone = models.CharField(

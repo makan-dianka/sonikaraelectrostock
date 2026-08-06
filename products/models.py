@@ -1,8 +1,8 @@
 from django.db import models
-from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 
 
-class Category(TimeStampedModel):
+class Category(TimeStampedModel, CompanyOwnedModel):
 
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
@@ -16,7 +16,7 @@ class Category(TimeStampedModel):
 
 
 
-class Marque(TimeStampedModel):
+class Marque(TimeStampedModel, CompanyOwnedModel):
     name = models.CharField(max_length=255, unique=True)
     note = models.CharField(max_length=255, null=True, blank=True)
     class Meta:
@@ -27,7 +27,7 @@ class Marque(TimeStampedModel):
 
 
 
-class Product(TimeStampedModel):
+class Product(TimeStampedModel, CompanyOwnedModel):
 
     name = models.CharField(max_length=250)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')

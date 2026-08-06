@@ -1,8 +1,8 @@
 from django.db import models
-from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 
 
-class Sale(TimeStampedModel):
+class Sale(TimeStampedModel, CompanyOwnedModel):
 
     STATUS = [
 

@@ -1,8 +1,8 @@
 from django.db import models
-from sonikaraelectrostock.models import TimeStampedModel
+from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 
 
-class ExpenseCategory(TimeStampedModel):
+class ExpenseCategory(TimeStampedModel, CompanyOwnedModel):
     name = models.CharField(max_length=150)
 
     def __str__(self):
@@ -11,7 +11,7 @@ class ExpenseCategory(TimeStampedModel):
 
 
 
-class Expense(TimeStampedModel):
+class Expense(TimeStampedModel, CompanyOwnedModel):
 
     reference = models.CharField(max_length=100, unique=True)
 
