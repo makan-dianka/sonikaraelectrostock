@@ -16,6 +16,7 @@ stores/__pycache__
 stores/migrations/__pycache__
 
 products/__pycache__
+products/management/commands/__pycache__
 products/migrations/__pycache__
 
 stocks/__pycache__
