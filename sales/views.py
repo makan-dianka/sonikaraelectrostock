@@ -24,11 +24,11 @@ from django.contrib.auth.decorators import login_required
 def print_invoice(request, pk):
 
     sale = get_object_or_404(
-        Sale,
+        Sale.objects.for_company(request.user.company),
         pk=pk
     )
 
-    document = Document.objects.filter(
+    document = Document.objects.for_company(request.user.company).filter(
         sale=sale,
         document_type="invoice"
     ).first()
@@ -36,11 +36,13 @@ def print_invoice(request, pk):
     if not document:
         document = Document.objects.create(
             document_type='invoice',
-            reference=tools.generate_reference('DOC', Document),
+            reference=tools.generate_reference('DOC', Document, company=request.user.company),
             sale=sale,
             generated_by=request.user,
+            company=request.user.company
         )
-        generate_pdf(document, company=request.user.company)
+
+    generate_pdf(document, company=request.user.company)
 
     return FileResponse(document.pdf.open("rb"), content_type="application/pdf")
 
@@ -49,11 +51,11 @@ def print_invoice(request, pk):
 @login_required(login_url='accounts:login')
 def sale_list(request):
 
-    sales = Sale.objects.select_related('customer', 'store').order_by('-created_at')
+    sales = Sale.objects.for_company(request.user.company).select_related('customer', 'store').order_by('-created_at')
 
-    sales_validated = Sale.objects.filter(status='validated').select_related('customer', 'store')
+    sales_validated = Sale.objects.for_company(request.user.company).filter(status='validated').select_related('customer', 'store')
     total_sale = sales.filter(status='validated').aggregate(total=Sum('total'))['total'] or 0
-    sales_validated = Sale.objects.filter(status='validated').select_related('customer', 'store').order_by('-created_at')
+    sales_validated = Sale.objects.for_company(request.user.company).filter(status='validated').select_related('customer', 'store').order_by('-created_at')
     total_paid = sum(sale.paid_amount for sale in sales_validated)
     total_remaining = total_sale - total_paid
 
@@ -75,18 +77,16 @@ def sale_list(request):
 def create_sale(request):
 
     if request.method == 'POST':
-
         form = SaleForm(request.POST)
-
         sale = Sale()
-
         formset = SaleItemFormSet(request.POST, instance=sale, prefix='items')
 
         if form.is_valid() and formset.is_valid():
             sale = form.save(commit=False)
             if not sale.reference:
-                sale.reference = tools.generate_reference('VTE', Sale)
+                sale.reference = tools.generate_reference('VTE', Sale, company=request.user.company)
             sale.user = request.user
+            sale.company = request.user.company
             sale.save()
 
             formset.instance = sale
@@ -109,12 +109,7 @@ def create_sale(request):
     else:
 
         form = SaleForm()
-
-        formset = (
-            SaleItemFormSet(
-                prefix='items'
-                )
-            )
+        formset = SaleItemFormSet(prefix='items')
 
     return render(request, 'sales/form.html', {'form':form, 'formset':formset})
 
@@ -127,8 +122,7 @@ def update_sale(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission de modifier une vente.")
 
-
-    sale = get_object_or_404(Sale, pk=pk)
+    sale = get_object_or_404(Sale.objects.for_company(request.user.company), pk=pk)
 
     if request.method == 'POST':
 
@@ -138,6 +132,7 @@ def update_sale(request, pk):
         if form.is_valid() and formset.is_valid():
             sale = form.save(commit=False)
             sale.user = request.user
+            sale.company = request.user.company
             sale.save()
 
             formset.instance = sale
@@ -165,7 +160,7 @@ def update_sale(request, pk):
 @login_required(login_url='accounts:login')
 def validate_sale_view(request, pk):
 
-    sale = (Sale.objects.get(id=pk))
+    sale = get_object_or_404(Sale.objects.for_company(request.user.company), id=pk)
 
     try:
 
@@ -188,7 +183,7 @@ def cancel_sale_view(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission d'annuler une vente.")
 
-    sale = (Sale.objects.get(id=pk))
+    sale = get_object_or_404(Sale.objects.for_company(request.user.company), id=pk)
 
     try:
 
