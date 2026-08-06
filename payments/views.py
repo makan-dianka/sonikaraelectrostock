@@ -33,11 +33,11 @@ def create_payment(request):
     # verification de parametre url
     # et mettre à jour obj
     if payment_type == "sale":
-        obj = get_object_or_404(Sale, id=object_id)
+        obj = get_object_or_404(Sale, id=object_id, company=request.user.company)
         form = PaymentForm(request.POST or None, sale=obj)
 
     elif payment_type == "purchase":
-        obj = get_object_or_404(Purchase, id=object_id)
+        obj = get_object_or_404(Purchase, id=object_id, company=request.user.company)
         form = PaymentForm(request.POST or None, purchase=obj)
 
     else:
@@ -48,7 +48,7 @@ def create_payment(request):
     if form.is_valid():
 
         payment = form.save(commit=False)
-
+        payment.company = request.user.company
         payment.created_by = request.user
         payment.reference = generate_reference('PYT', Payment)
 
@@ -136,7 +136,9 @@ def create_payment(request):
 @login_required(login_url='accounts:login')
 def payment_list(request):
 
-    payments = Payment.objects.select_related('sale').all().order_by('-id')
+    payments = Payment.objects.for_company(
+        request.user.company
+    ).select_related('sale').all().order_by('-id')
     total_received = payments.filter(sale__isnull=False, sale__status='validated').aggregate(total=Sum('amount'))['total'] or 0
     total_sent = payments.filter(purchase__isnull=False, purchase__status='received').aggregate(total=Sum('amount'))['total'] or 0
 

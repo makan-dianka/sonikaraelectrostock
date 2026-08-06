@@ -58,14 +58,18 @@ SEARCH_CONFIG = {
     },
 
     "payments": {
-        "queryset": Payment.objects.all(),
+        "queryset": lambda request: Payment.objects.for_company(
+            request.user.company
+        ),
         "serializer": PaymentSearchSerializer,
         "search_fields": ["reference"],
         "order_by": "reference",
     },
 
     "sales": {
-        "queryset": Sale.objects.all(),
+        "queryset": lambda request: Sale.objects.for_company(
+            request.user.company
+        ).filter(status__in=['draft', 'validated']),
         "serializer": SaleSearchSerializer,
         "search_fields": ["reference", "customer__name"],
         "order_by": "customer__name",
