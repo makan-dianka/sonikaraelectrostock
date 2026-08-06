@@ -19,7 +19,9 @@ from purchases.serializers import PurchaseSearchSerializer
 SEARCH_CONFIG = {
 
     "customers": {
-        "queryset": Customer.objects.filter(is_deleted=False),
+        "queryset": lambda request: Customer.objects.for_company(
+            request.user.company
+        ).filter(is_deleted=False),
         "serializer": CustomerSearchSerializer,
         "search_fields": ["name", "phone"],
         "order_by": "name",

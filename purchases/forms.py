@@ -32,7 +32,8 @@ class PurchaseForm(forms.ModelForm):
             'created_by',
             'status',
             'reference',
-            'payment_status'
+            'payment_status',
+            'company',
         ]
 
         widgets = {

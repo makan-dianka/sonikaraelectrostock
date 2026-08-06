@@ -23,7 +23,7 @@ def search_api(request, entity):
         q |= Q(**{f"{field}__icontains": query})
 
     queryset = (
-        config["queryset"]
+        config["queryset"](request)
         .filter(q)
         .order_by(config["order_by"])[:20]
     )

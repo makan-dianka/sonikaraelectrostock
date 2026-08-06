@@ -50,6 +50,7 @@ def customer_search_api(request):
 
     customers = (
         Customer.objects
+        .for_company(request.user.company)
         .filter(is_deleted=False)
         .filter(
             Q(phone__icontains=query) |
@@ -66,9 +67,9 @@ def customer_search_api(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_customer_api(request):
-    serializer = CustomerCreateSerializer(data=request.data)
+    serializer = CustomerCreateSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
-        customer = serializer.save()
+        customer = serializer.save(company=request.user.company)
         return Response({
                 'success': True,
                 'id': customer.id,
@@ -83,7 +84,7 @@ def create_customer_api(request):
 @login_required(login_url='accounts:login')
 def customer_list(request):
 
-    customers = Customer.objects.filter(is_deleted=False).order_by('-created_at')
+    customers = Customer.objects.for_company(request.user.company).filter(is_deleted=False).order_by('-created_at')
 
     page_obj = paginate_queryset(request, customers)
 
@@ -102,7 +103,9 @@ def customer_create(request):
         return HttpResponseForbidden("Vous n'avez pas la permission d'ajouter un client.")
     form = CustomerForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        customer = form.save(commit=False)
+        customer.company = request.user.company
+        customer.save()
         return redirect('customers:list')
 
     return render(request, 'customers/form.html', {'form':form})
@@ -116,10 +119,11 @@ def update_customer(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission à mettre à jour le client.")
 
-    customer = get_object_or_404(Customer, id=pk)
+    customer = get_object_or_404(Customer, id=pk, company=request.user.company)
     form = CustomerForm(request.POST or None, instance=customer)
     if form.is_valid():
-        form.save()
+        customer = form.save(commit=False)
+        customer.save()
         return redirect('customers:list')
     return render(request, 'customers/form.html', {'form':form})
 
@@ -131,7 +135,7 @@ def update_customer(request, pk):
 def delete_customer(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission de supprimer un client.")
-    customer = get_object_or_404(Customer, id=pk)
+    customer = get_object_or_404(Customer, id=pk, company=request.user.company)
     customer.is_deleted = True
     customer.save()
     return redirect('customers:list')

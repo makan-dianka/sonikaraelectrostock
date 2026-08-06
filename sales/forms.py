@@ -40,6 +40,8 @@ class SaleForm(forms.ModelForm):
 
             'quote',
 
+            'company',
+
         ]
 
         widgets = {

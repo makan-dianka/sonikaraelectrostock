@@ -7,7 +7,8 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         exclude = [
-            'is_deleted'
+            'is_deleted',
+            'company',
         ]
 
         widgets = {
