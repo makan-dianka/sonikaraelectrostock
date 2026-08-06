@@ -18,10 +18,8 @@ def generate_pdf(document, company=None):
     template = None
 
     context = {
-
         'document':document,
         'logo_path' : logo_path
-
     }
 
 

@@ -10,40 +10,12 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 
 from .services import generate_pdf
-
-
-
-
-# Generation of reference number
-def generate_reference():
-
-    """Generation of reference number
-
-    Returns:
-        str: reference number
-    """
-
-    now = timezone.now()
-
-    prefix = (
-        f"DOC-"
-        f"{now:%Y%m}"
-    )
-
-    count = Document.objects.count() + 1
-
-    return (
-
-        f"{prefix}"
-
-        f"-{count:04d}"
-    )
-
+from sonikaraelectrostock import tools
 
 
 @login_required(login_url='accounts:login')
 def document_pdf(request, pk):
-    document = get_object_or_404(Document, pk=pk)
+    document = get_object_or_404(Document, pk=pk, company=request.user.company)
     if not document.pdf:
         raise Http404()
 
@@ -59,49 +31,19 @@ def document_pdf(request, pk):
 @login_required(login_url='accounts:login')
 def create_document(request):
 
-    form = (
-
-        DocumentForm(
-
-            request.POST
-
-            or None
-
-        )
-
-    )
-
-
+    form = DocumentForm(request.POST or None)
     if form.is_valid():
-
         document = form.save(commit=False)
-
+        document.company = request.user.company
         document.generated_by = request.user
-        document.reference = generate_reference()
-
+        document.reference = tools.generate_reference('DOC', Document)
         document.save()
+
         generate_pdf(document, company=request.user.company)
 
-        return redirect(
+        return redirect('documents:list')
 
-            'documents:list'
-
-        )
-
-
-    return render(
-
-        request,
-
-        'documents/form.html',
-
-        {
-
-            'form':form
-
-        }
-
-    )
+    return render(request, 'documents/form.html', {'form':form})
 
 
 
@@ -112,27 +54,14 @@ def create_document(request):
 def document_list(request):
 
     documents = (
-
-        Document.objects
-        .filter(
-            is_deleted=False
-        )
+        Document.objects.for_company(request.user.company)
+        .filter(is_deleted=False)
         .select_related(
-
             'purchase',
-
             'sale',
-
             'generated_by'
-
         )
-
-        .order_by(
-
-            '-created_at'
-
-        )
-
+        .order_by('-created_at')
     )
 
     paginator = Paginator(documents, 6)
@@ -159,17 +88,13 @@ def delete_document(request, pk):
     document = (
         get_object_or_404(
             Document,
+            company=request.user.company,
             id=pk,
             is_deleted=False
         )
     )
 
     document.is_deleted = True
-
-    document.save(
-        update_fields=[
-            'is_deleted'
-        ]
-    )
+    document.save(update_fields=['is_deleted'])
 
     return redirect('documents:list')
