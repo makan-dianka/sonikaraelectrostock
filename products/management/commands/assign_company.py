@@ -18,6 +18,8 @@ from subscriptions.models import Subscription
 from suppliers.models import Supplier
 from accounts.models import CustomUser
 
+import os
+
 
 class Command(BaseCommand):
 
@@ -27,7 +29,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
 
         try:
-            company = Company.objects.get(uuid="b2652d4f-9ddb-4f87-b69d-4a51abc6be52")
+            company = Company.objects.get(uuid=os.getenv("COMPANY_UUID"))
         except Company.DoesNotExist:
             self.stdout.write(self.style.ERROR("Entreprise introuvable"))
             return
