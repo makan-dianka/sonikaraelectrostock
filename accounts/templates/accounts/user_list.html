@@ -52,6 +52,7 @@
                         <th>Nom</th>
                         <th>Email</th>
                         <th>Téléphone</th>
+                        <th>Entreprise</th>
                         <th>Magasin</th>
                         <th>Rôle</th>
                         <th>Statut</th>
@@ -81,6 +82,11 @@
 
                             <td>
                                 {{ user.phone }}
+                            </td>
+
+
+                            <td>
+                                {{ user.company|default:"—" }}
                             </td>
 
                             <td>

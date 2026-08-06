@@ -76,12 +76,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.role == 'owner'
 
     def get_collaborators(self):
-        if self.role == 'platform_admin':
-            return CustomUser.objects.filter(created_by=self, role='owner')
+        # if self.role == 'platform_admin':
+        #     return CustomUser.objects.filter(created_by=self, role='owner')
 
         if self.role == 'owner':
             return CustomUser.objects.filter(
-                created_by=self,
+                company=self.company,
                 role__in=['manager', 'cashier', 'seller']
             )
 

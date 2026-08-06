@@ -21,7 +21,7 @@ import os
 
 
 #######################################################################
-# Création d'un collaborateur                -------------------------#
+# liste des collaborateurs                -------------------------#
 #######################################################################
 @login_required(login_url='accounts:login')
 def user_list(request):
@@ -175,7 +175,7 @@ def resetpwd(request):
 
 @login_required(login_url='account:login')
 def edit_collaborator(request, user_id):
-    user_obj = get_object_or_404(CustomUser, id=user_id)
+    user_obj = get_object_or_404(CustomUser, id=user_id, company=request.user.company)
 
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'êtes pas autorisé à accéder à cette page.")
