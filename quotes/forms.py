@@ -27,7 +27,8 @@ class QuoteForm(forms.ModelForm):
             'total',
             'is_deleted',
             'status',
-            'pdf'
+            'pdf',
+            'company',
         ]
 
         widgets = {

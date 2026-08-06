@@ -37,15 +37,19 @@ from sonikaraelectrostock import tools
 @login_required(login_url='accounts:login')
 def convert_to_sale(request, pk):
 
-    quote = get_object_or_404(Quote, pk=pk)
+    quote = get_object_or_404(
+        Quote.objects.for_company(request.user.company), 
+        pk=pk,
+    )
 
     if hasattr(quote, "sale"):
         messages.warning(request, "Ce devis a déjà été transformé.")
         return redirect("quotes:list")
 
     sale = Sale.objects.create(
+        company=request.user.company,
         customer=quote.customer,
-        reference=tools.generate_reference('VTE', Sale),
+        reference=tools.generate_reference('VTE', Sale, company=request.user.company),
         store=quote.store,
         vat_rate=quote.vat_rate,
         delivery_fee=quote.delivery_fee,
@@ -86,7 +90,7 @@ def convert_to_sale(request, pk):
 def print_quote(request, pk):
 
     quote = get_object_or_404(
-        Quote,
+        Quote.objects.for_company(request.user.company),
         pk=pk
     )
 
@@ -104,13 +108,11 @@ def quote_list(request):
 
     quotes = (
 
-        Quote.objects
-
+        Quote.objects.for_company(request.user.company)
         .select_related(
             'customer',
             'store'
         )
-
         .order_by(
             '-created_at'
         )
@@ -136,70 +138,28 @@ def create_quote(request):
             "Vous n'avez pas la permission créer un devis."
         )
 
-    form = QuoteForm(
-
-        request.POST or None
-
-    )
-
+    form = QuoteForm(request.POST or None)
     formset = QuoteItemFormSet(
-
         request.POST or None,
-
         prefix='items'
-
     )
 
 
-    if (
+    if form.is_valid() and formset.is_valid():
 
-        form.is_valid()
-
-        and
-
-        formset.is_valid()
-
-    ):
-
-        # print("data posted :", request.POST)
-        # print("form error : ", formset.errors)
-        # print("Non form", formset.non_form_errors())
-
-
-        quote = (
-
-            form.save(
-                commit=False
-            )
-        )
-
-        quote.reference = generate_reference('DEV', Quote)
-
-        quote.user = (
-
-            request.user
-        )
-
+        quote = form.save( commit=False)
+        quote.company = request.user.company
+        quote.reference = generate_reference('DEV', Quote, company=request.user.company)
+        quote.user = request.user
         quote.save()
 
-        items = formset.save(
-            commit=False
-        )
+        items = formset.save(commit=False)
 
         total = 0
-
         for item in items:
-
             item.quote = quote
-
-            item.subtotal = (
-                item.quantity
-                *
-                item.unit_price
-            )
-
+            item.subtotal = item.quantity * item.unit_price
             total += item.subtotal
-
             item.save()
 
 
@@ -208,31 +168,12 @@ def create_quote(request):
 
 
         quote.total = total
-
         quote.save()
         generate_quote_pdf(quote, company=request.user.company)
 
+        return redirect('quotes:quote_list')
 
-        return redirect(
-            'quotes:quote_list'
-        )
-
-
-    return render(
-
-        request,
-
-        'quotes/form.html',
-
-        {
-
-            'form':form,
-
-            'formset':formset
-
-        }
-
-    )
+    return render(request, 'quotes/form.html', {'form':form,  'formset':formset})
 
 
 
@@ -242,8 +183,10 @@ def update_quote(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission de modifier un devis.")
 
-
-    quote = get_object_or_404(Quote, pk=pk)
+    quote = get_object_or_404(
+        Quote.objects.for_company(request.user.company),
+        pk=pk
+    )
 
     if request.method == 'POST':
 
@@ -252,6 +195,7 @@ def update_quote(request, pk):
 
         if form.is_valid() and formset.is_valid():
             quote = form.save(commit=False)
+            quote.company = request.user.company
             quote.user = request.user
             quote.save()
 
@@ -275,66 +219,16 @@ def update_quote(request, pk):
 
 
 
-
-
 def generate_quote_pdf(quote, company=None):
-
 
     logo_path = f"file://{tools.get_company_logo_path(company)}"
 
-    context = {
+    context = {'quote': quote, 'logo_path': logo_path,}
+    html = render_to_string('quotes/quote_pdf.html',  context)
 
-        'quote': quote,
+    pdf = HTML(string=html, base_url=settings.BASE_DIR).write_pdf()
 
-        'logo_path': logo_path,
+    filename = (f"devis_{quote.reference}.pdf")
 
-    }
-
-
-    html = (
-
-        render_to_string(
-
-            'quotes/quote_pdf.html',
-
-            context
-
-        )
-
-    )
-
-
-    pdf = (
-
-        HTML(
-
-            string=html,
-
-            base_url=settings.BASE_DIR
-
-        )
-
-        .write_pdf()
-
-    )
-
-
-    filename = (
-
-        f"devis_{quote.reference}.pdf"
-
-    )
-
-
-    quote.pdf.save(
-
-        filename,
-
-        ContentFile(pdf),
-
-        save=True
-
-    )
-
-
+    quote.pdf.save(filename, ContentFile(pdf), save=True)
     return quote
