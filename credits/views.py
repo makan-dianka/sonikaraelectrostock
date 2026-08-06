@@ -54,6 +54,7 @@ def create_credit(request):
             credit = form.save(commit=False)
 
             credit.user = request.user
+            credit.company = request.user.company
             credit.reference = generate_reference(Credit, 'CR')
 
             credit.save()
@@ -70,7 +71,7 @@ def create_credit(request):
 
 @login_required(login_url='accounts:login')
 def credit_list(request):
-    credits = Credit.objects.select_related('customer', 'store').all().order_by('-id')
+    credits = Credit.objects.select_related('customer', 'store').filter(company=request.user.company).order_by('-id')
     page_obj = paginate_queryset(request, credits)
     return render(request, 'credits/list.html', {'credits': page_obj, 'page_obj': page_obj})
 
@@ -95,6 +96,7 @@ def create_credit_payment(request):
         if form.is_valid():
 
             payment = form.save(commit=False)
+            payment.company = request.user.company
             payment.reference = generate_reference(CreditPayment, 'CRPY')
             payment.save()
 
@@ -121,6 +123,7 @@ def credit_remboursement(request):
         )
 
         .filter(
+            company=request.user.company,
             is_deleted=False
         )
 
