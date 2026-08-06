@@ -32,9 +32,9 @@ def create_expense_category_api(request):
             },
             status=status.HTTP_403_FORBIDDEN
         )
-    serializer = ExpenseCategoryCreateSerializer(data=request.data)
+    serializer = ExpenseCategoryCreateSerializer(data=request.data, context={"request": request})
     if serializer.is_valid():
-        category = serializer.save()
+        category = serializer.save(company=request.user.company)
         return Response({
                 'success': True,
                 'id': category.id,
@@ -54,6 +54,7 @@ def expense_list(request):
 
     expenses = (
         Expense.objects
+        .for_company(request.user.company)
         .filter(is_deleted=False)
         .select_related(
             "store",
@@ -104,11 +105,7 @@ def expense_list(request):
         "total_store": total_store,
     }
 
-    return render(
-        request,
-        "expenses/list.html",
-        context,
-    )
+    return render(request, "expenses/list.html", context)
 
 
 @login_required(login_url="accounts:login")
@@ -122,30 +119,16 @@ def expense_create(request):
     if form.is_valid():
 
         expense = form.save(commit=False)
-
-        expense.reference = generate_reference(
-            "DEP",
-            Expense
-        )
-
+        expense.company = request.user.company
+        expense.reference = generate_reference("DEP", Expense)
         expense.created_by = request.user
-
         expense.save()
 
-        messages.success(
-            request,
-            "La dépense a été enregistrée."
-        )
+        messages.success(request, "La dépense a été enregistrée.")
 
         return redirect("expenses:list")
 
-    return render(
-        request,
-        "expenses/form.html",
-        {
-            "form": form
-        }
-    )
+    return render(request, "expenses/form.html", {"form": form})
 
 
 
@@ -154,7 +137,7 @@ def expense_create(request):
 def delete_expense(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission de supprimer une dépense.")
-    expense = get_object_or_404(Expense, id=pk)
+    expense = get_object_or_404(Expense, id=pk, company=request.user.company)
     expense.is_deleted = True
     expense.save()
     return redirect('expenses:list')

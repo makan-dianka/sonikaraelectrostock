@@ -11,6 +11,7 @@ class ExpenseForm(forms.ModelForm):
             "reference",
             "created_by",
             "is_deleted",
+            "company"
         ]
 
         widgets = {

@@ -10,11 +10,20 @@ class ExpenseCategoryCreateSerializer(serializers.ModelSerializer):
 
 
     def validate_name(self, value):
-        exists = ExpenseCategory.objects.filter(name=value).exists()
+        company = self.context["request"].user.company
+
+        exists = ExpenseCategory.objects.filter(
+            company=company,
+            name=value
+        ).exists()
+
         if exists:
-            raise serializers.ValidationError("Cette catégorie existe déjà.")
+            raise serializers.ValidationError(
+                "Cette catégorie existe déjà."
+            )
+
         return value
-    
+
 
 class ExpenseSearchSerializer(serializers.ModelSerializer):
 
@@ -24,7 +33,7 @@ class ExpenseSearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Expense
-        fields = ['id', 'reference', 'store', 'category', 'amount', 'description', 'expense_date', 'payment_method', 'created_by']
+        fields = ['id', 'reference', 'store', 'category', 'amount', 'description', 'expense_date', 'payment_method', 'created_by', 'is_deleted', 'company']
 
 
     def get_expense_date(self, obj):

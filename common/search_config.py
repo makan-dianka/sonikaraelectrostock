@@ -42,9 +42,11 @@ SEARCH_CONFIG = {
     },
 
     "expenses": {
-        "queryset": Expense.objects.filter(is_deleted=False),
+        "queryset": lambda request: Expense.objects.for_company(
+            request.user.company
+        ).filter(is_deleted=False),
         "serializer": ExpenseSearchSerializer,
-        "search_fields": ["reference", "category__name"],
+        "search_fields": ["reference", "store__name", "category__name"],
         "order_by": "category__name",
     },
 
