@@ -1,5 +1,6 @@
 from django import forms
 from accounts.models import CustomUser
+from stores.models import Store
 from django.contrib.auth.forms import (
                                     UserCreationForm,
                                    )
@@ -10,6 +11,25 @@ class CreateUserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         current_user = kwargs.pop('current_user')
         super().__init__(*args, **kwargs)
+
+        #--------- store queryset and initial value
+        self.fields["store"].queryset = (
+            Store.objects
+            .for_company(current_user.company)
+            .filter(is_deleted=False)
+            .order_by("name")
+        )
+        if not self.instance.pk and current_user.company:
+            first_store = (
+                Store.objects
+                .for_company(current_user.company)
+                .filter(is_deleted=False)
+                .order_by("id")
+                .first()
+            )
+            if first_store:
+                self.fields["store"].initial = first_store
+        #--------- end of store queryset and initial value
 
         if current_user.role == 'platform_admin':
             self.fields['role'].choices = [
@@ -61,6 +81,13 @@ class UpdateUserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         current_user = kwargs.pop('current_user')
         super().__init__(*args, **kwargs)
+
+        self.fields["store"].queryset = (
+            Store.objects
+            .for_company(current_user.company)
+            .filter(is_deleted=False)
+            .order_by("name")
+        )
 
         if current_user.role == 'platform_admin':
             self.fields['role'].choices = [
