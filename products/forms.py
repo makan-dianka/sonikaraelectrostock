@@ -5,24 +5,25 @@ from stores.models import Store
 
 class ProductForm(forms.ModelForm):
 
-    store = forms.ModelChoiceField(
+    def __init__(self, *args, company=None, **kwargs):
+        super().__init__(*args, **kwargs)
 
-        queryset=Store.objects.all(),
-
-        required=False,
-
-        label="Magasin",
-
-        widget=forms.Select(
-
-            attrs={
-
-                'class':'form-control'
-
-            }
-
+        self.fields["store"].queryset = (
+            Store.objects
+            .for_company(company)
+            .filter(is_deleted=False)
         )
 
+
+    store = forms.ModelChoiceField(
+        queryset=Store.objects.none(),
+        required=False,
+        label="Magasin",
+        widget=forms.Select(
+            attrs={
+                "class": "form-control"
+            }
+        )
     )
 
 

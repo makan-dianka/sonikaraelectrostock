@@ -73,7 +73,7 @@ def purchase_create(request):
         return HttpResponseForbidden("Vous n'avez pas la permission d'effectuer un achat.")
 
     if request.method == 'POST':
-        form = PurchaseForm(request.POST)
+        form = PurchaseForm(request.POST, company=request.user.company)
         if form.is_valid():
             purchase = form.save(commit=False)
             purchase.company = request.user.company
@@ -91,7 +91,7 @@ def purchase_create(request):
                 purchase.update_total() # mettre à jour le total dans l'entité purchase
                 return redirect('purchases:list')
     else:
-        form = PurchaseForm()
+        form = PurchaseForm(company=request.user.company)
         formset = PurchaseItemFormSet(prefix='items')
 
     return render(request, 'purchases/form.html', {'form':form, 'formset':formset})
@@ -113,7 +113,7 @@ def update_purchase(request, pk):
 
     if request.method == 'POST':
 
-        form = PurchaseForm(request.POST, instance=purchase)
+        form = PurchaseForm(request.POST, instance=purchase, company=request.user.company)
         formset = PurchaseItemFormSet(request.POST, instance=purchase, prefix='items')
 
         if form.is_valid() and formset.is_valid():
@@ -129,7 +129,7 @@ def update_purchase(request, pk):
             return redirect('purchases:list')
 
     else:
-        form = PurchaseForm(instance=purchase)
+        form = PurchaseForm(instance=purchase, company=request.user.company)
         formset = PurchaseItemFormSet(instance=purchase, prefix='items')
 
     return render(request, 'purchases/form.html', {

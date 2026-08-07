@@ -88,7 +88,7 @@ def create_product(request):
         return HttpResponseForbidden("Vous n'avez pas la permission d'ajouter de produit.")
 
 
-    form = ProductForm(request.POST or None, request.FILES or None)
+    form = ProductForm(request.POST or None, request.FILES or None, company=request.user.company)
 
     if form.is_valid():
         store = form.cleaned_data.pop('store')
@@ -145,55 +145,66 @@ def create_marque(request):
 def update_product(request, pk):
 
     if request.user.role not in ['owner']:
-        return HttpResponseForbidden("Vous n'avez pas la permission à mettre à jour un Produit.")
+        return HttpResponseForbidden(
+            "Vous n'avez pas la permission à mettre à jour un Produit."
+        )
 
-    product = get_object_or_404(Product, id=pk, company=request.user.company)
+    product = get_object_or_404(
+        Product.objects.for_company(request.user.company),
+        id=pk
+    )
 
+    stock = (
+        Stock.objects
+        .for_company(request.user.company)
+        .filter(product=product)
+        .first()
+    )
 
     initial = {}
 
-    stock = product.stocks.first()
     if stock:
         initial = {
-            'store': stock.store,
-            'initial_stock': stock.quantity
+            "store": stock.store,
+            "initial_stock": stock.quantity
         }
-
 
     form = ProductForm(
         request.POST or None,
         request.FILES or None,
         instance=product,
-        initial=initial
+        initial=initial,
+        company=request.user.company
     )
 
+    if form.is_valid():
 
+        store = form.cleaned_data.get("store")
+        quantity = form.cleaned_data.get("initial_stock")
 
-    if request.method == 'POST':
+        product = form.save()
 
-        form = ProductForm(
-            request.POST,
-            request.FILES,
-            instance=product
+        if store:
+            Stock.objects.update_or_create(
+                company=request.user.company,
+                product=product,
+                store=store,
+                defaults={
+                    "quantity": quantity
+                }
+            )
+
+        return redirect(
+            "products:product_list"
         )
 
-        if form.is_valid():
-            store = form.cleaned_data.pop('store')
-            quantity = form.cleaned_data.pop('initial_stock')
-            product = form.save()
-
-            if store:
-                Stock.objects.update_or_create(
-                    product=product,
-                    store=store,
-                    defaults={
-                        'quantity':quantity
-                    }
-                )
-
-            return redirect('products:product_list')
-
-    return render(request, 'products/product_form.html',  {'form': form})
+    return render(
+        request,
+        "products/product_form.html",
+        {
+            "form": form
+        }
+    )
 
 
 

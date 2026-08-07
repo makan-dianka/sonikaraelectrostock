@@ -77,7 +77,7 @@ def sale_list(request):
 def create_sale(request):
 
     if request.method == 'POST':
-        form = SaleForm(request.POST)
+        form = SaleForm(request.POST, company=request.user.company)
         sale = Sale()
         formset = SaleItemFormSet(request.POST, instance=sale, prefix='items')
 
@@ -108,7 +108,7 @@ def create_sale(request):
 
     else:
 
-        form = SaleForm()
+        form = SaleForm(company=request.user.company)
         formset = SaleItemFormSet(prefix='items')
 
     return render(request, 'sales/form.html', {'form':form, 'formset':formset})
@@ -126,7 +126,7 @@ def update_sale(request, pk):
 
     if request.method == 'POST':
 
-        form = SaleForm(request.POST, instance=sale)
+        form = SaleForm(request.POST, instance=sale, company=request.user.company)
         formset = SaleItemFormSet(request.POST, instance=sale, prefix='items')
 
         if form.is_valid() and formset.is_valid():
@@ -143,7 +143,7 @@ def update_sale(request, pk):
             return redirect('sales:list')
 
     else:
-        form = SaleForm(instance=sale)
+        form = SaleForm(instance=sale, company=request.user.company)
         formset = SaleItemFormSet(instance=sale, prefix='items')
 
     return render(request, 'sales/form.html', {
