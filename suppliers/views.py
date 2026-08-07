@@ -26,9 +26,9 @@ logger = logging.getLogger('info_log')
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_supplier_api(request):
-    serializer = SupplierCreateSerializer(data=request.data)
+    serializer = SupplierCreateSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
-        supplier = serializer.save()
+        supplier = serializer.save(company=request.user.company)
         return Response({
             "id": supplier.id,
             "name": supplier.name,
@@ -67,6 +67,7 @@ def supplier_search_api(request):
 
     suppliers = (
         Supplier.objects
+        .for_company(request.user.company)
         .filter(is_deleted=False)
         .filter(
             Q(phone__icontains=query) |
@@ -86,7 +87,7 @@ def supplier_search_api(request):
 @login_required(login_url='accounts:login')
 def supplier_list(request):
 
-    suppliers = Supplier.objects.filter(is_deleted=False).order_by('-created_at')
+    suppliers = Supplier.objects.for_company(request.user.company).filter(is_deleted=False).order_by('-created_at')
 
     page_obj = paginate_queryset(request, suppliers)
 
@@ -105,7 +106,9 @@ def supplier_create(request):
         return HttpResponseForbidden("Vous n'avez pas la permission d'ajouter un fournisseur.")
     form = SupplierForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        supplier = form.save(commit=False)
+        supplier.company = request.user.company
+        supplier.save()
         return redirect('suppliers:list')
 
     return render(request, 'suppliers/form.html', {'form':form})
@@ -119,7 +122,7 @@ def update_supplier(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission à mettre à jour le fournisseur.")
 
-    supplier = get_object_or_404(Supplier, id=pk)
+    supplier = get_object_or_404(Supplier.objects.for_company(request.user.company), id=pk)
     form = SupplierForm(request.POST or None, instance=supplier)
     if form.is_valid():
         form.save()
@@ -134,7 +137,7 @@ def update_supplier(request, pk):
 def delete_supplier(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission de supprimer un fournisseur.")
-    supplier = get_object_or_404(Supplier, id=pk)
+    supplier = get_object_or_404(Supplier.objects.for_company(request.user.company), id=pk)
     supplier.is_deleted = True
     supplier.save()
     return redirect('suppliers:list')

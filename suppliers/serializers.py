@@ -16,7 +16,16 @@ class SupplierCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'phone', 'email', 'address']
 
     def validate_phone(self, value):
-        exists = Supplier.objects.filter(phone=value, is_deleted=False).exists()
+
+        company = self.context['request'].user.company
+
+        exists = Supplier.objects.filter(
+            company=company,
+            phone=value,
+            is_deleted=False
+        ).exists()
+
         if exists:
             raise serializers.ValidationError("Ce numéro existe déjà.")
+
         return value

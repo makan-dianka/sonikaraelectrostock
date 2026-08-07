@@ -28,14 +28,18 @@ SEARCH_CONFIG = {
     },
 
     "suppliers": {
-        "queryset": Supplier.objects.filter(is_deleted=False),
+        "queryset": lambda request: Supplier.objects.for_company(
+            request.user.company
+        ).filter(is_deleted=False),
         "serializer": SupplierSearchSerializer,
         "search_fields": ["name", "phone"],
         "order_by": "name",
     },
 
     "products": {
-        "queryset": Product.objects.filter(is_deleted=False),
+        "queryset": lambda request: Product.objects.for_company(
+            request.user.company
+        ).filter(is_deleted=False),
         "serializer": ProductSearchSerializer,
         "search_fields": ["name", "reference"],
         "order_by": "name",
@@ -51,7 +55,9 @@ SEARCH_CONFIG = {
     },
 
     "credits": {
-        "queryset": Credit.objects.filter(is_deleted=False),
+        "queryset": lambda request: Credit.objects.for_company(
+            request.user.company
+        ),
         "serializer": CreditSearchSerializer,
         "search_fields": ["reference", "customer__name"],
         "order_by": "customer__name",

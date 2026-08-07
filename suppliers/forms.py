@@ -7,7 +7,8 @@ class SupplierForm(forms.ModelForm):
     class Meta:
         model = Supplier
         exclude = [
-            'is_deleted'
+            'is_deleted',
+            'company',
         ]
 
         widgets = {
