@@ -48,7 +48,7 @@ def create_credit(request):
         )
 
     if request.method == "POST":
-        form = CreditForm(request.POST)
+        form = CreditForm(request.POST, company=request.user.company)
 
         if form.is_valid():
             credit = form.save(commit=False)
@@ -62,7 +62,7 @@ def create_credit(request):
             return redirect('credits:credit_list')
 
     else:
-        form = CreditForm()
+        form = CreditForm(company=request.user.company)
 
     return render(request, 'credits/form.html', {'form': form})
 
@@ -91,7 +91,7 @@ def create_credit_payment(request):
 
     if request.method == "POST":
 
-        form = CreditPaymentForm(request.POST)
+        form = CreditPaymentForm(request.POST, company=request.user.company)
 
         if form.is_valid():
 
@@ -104,7 +104,7 @@ def create_credit_payment(request):
 
     else:
 
-        form = CreditPaymentForm()
+        form = CreditPaymentForm(company=request.user.company)
 
     return render(request, "credits/payment.html", {"form": form})
 
@@ -116,17 +116,13 @@ def credit_remboursement(request):
 
     payments = (
 
-        CreditPayment.objects
-
+        CreditPayment.objects.for_company(request.user.company)
         .select_related(
             'credit'
         )
-
         .filter(
-            company=request.user.company,
             is_deleted=False
         )
-
         .order_by(
             '-id'
         )

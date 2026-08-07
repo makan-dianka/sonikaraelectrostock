@@ -1,7 +1,38 @@
 from django import forms
+
+from customers.models import Customer
+from stores.models import Store
 from .models import Credit, CreditPayment
 
 class CreditForm(forms.ModelForm):
+
+    def __init__(self, *args, company=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if company:
+            self.fields["customer"].queryset = (
+                Customer.objects
+                .for_company(company)
+                .filter(is_deleted=False)
+                .order_by("name")
+            )
+
+            self.fields["store"].queryset = (
+                Store.objects
+                .for_company(company)
+                .filter(is_deleted=False)
+                .order_by("name")
+            )
+            if not self.instance.pk and company:
+                first_store = (
+                    Store.objects
+                    .for_company(company)
+                    .filter(is_deleted=False)
+                    .order_by("id")
+                    .first()
+                )
+                if first_store:
+                    self.fields["store"].initial = first_store
 
     class Meta:
 
@@ -77,6 +108,17 @@ class CreditForm(forms.ModelForm):
 
 
 class CreditPaymentForm(forms.ModelForm):
+
+    def __init__(self, *args, company=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if company:
+            self.fields["credit"].queryset = (
+                Credit.objects
+                .for_company(company)
+                .filter(is_deleted=False)
+                .order_by("-id")
+            )
 
     class Meta:
 
