@@ -80,7 +80,7 @@ def login_page(request):
 @login_required(login_url='accounts:login')
 def register_page(request):
     # verifier si l'utilisateur a les droits d'accéder à cette page
-    if request.user.role not in ['owner']:
+    if request.user.role not in ['owner'] and not request.user.is_platform_admin:
         return HttpResponseForbidden("Vous n'avez pas la permission de créer un compte utilisateur.")
 
 

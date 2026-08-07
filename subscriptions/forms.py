@@ -1,5 +1,7 @@
 from django import forms
 
+from accounts.models import CustomUser
+
 from .models import (
     Company,
     Subscription,
@@ -7,8 +9,28 @@ from .models import (
     Payment
 )
 
+from django.db.models import Q
+
 
 class CompanyForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        queryset = CustomUser.objects.filter(role="owner")
+
+        if self.instance.pk:
+            queryset = queryset.filter(
+                Q(company__isnull=True) |
+                Q(pk=self.instance.owner_id)
+            )
+        else:
+            queryset = queryset.filter(company__isnull=True)
+
+        self.fields["owner"].queryset = queryset.order_by(
+            "first_name",
+            "last_name",
+        )
 
     class Meta:
         model = Company

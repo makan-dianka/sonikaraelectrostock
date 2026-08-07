@@ -23,7 +23,8 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
-        ('owner', 'Administrateur'),
+        ('admin', 'Administrateur'),
+        ('owner', 'Propriétaire'),
         ('manager', 'Gérant'),
         ('cashier', 'Caissier'),
         ('seller', 'Vendeur'),
@@ -70,7 +71,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.store}({self.role})"
+        return f"{self.first_name} {self.last_name} - {self.company}({self.role})"
+
+    @property
+    def is_platform_admin(self):
+        return self.is_superuser or self.role == "admin"
 
     def is_owner(self):
         return self.role == 'owner'

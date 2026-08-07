@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
     </head>
 
-    <body>
+    <body data-is-admin="{% if request.user.is_superuser or request.user.role == 'admin' %}true{% else %}false{% endif %}">
         <div class="register-container">
             <div class="register-card">
 
@@ -99,5 +99,19 @@
                 </form>
             </div>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const isAdmin = document.body.dataset.isAdmin === "true";
+                if (isAdmin) {
+                    const store = document.getElementById("id_store");
+                    if (store) {
+                        store.required = false;
+                        store.removeAttribute("required");
+                    }
+                }
+
+            });
+        </script>
     </body>
 </html>

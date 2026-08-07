@@ -74,9 +74,15 @@ def company_create(request):
     form = CompanyForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
+        owner = form.cleaned_data.get("owner")
         company = form.save(commit=False)
+        company.owner = owner
         company.reference = generate_reference('CMP', Company)
         company.save()
+
+        owner.company = company
+        owner.save()
+
         messages.success(request, "Entreprise créée avec succès.")
         return redirect("subscriptions:dashboard")
 

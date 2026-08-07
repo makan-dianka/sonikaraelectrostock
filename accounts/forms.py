@@ -31,7 +31,8 @@ class CreateUserForm(UserCreationForm):
                 self.fields["store"].initial = first_store
         #--------- end of store queryset and initial value
 
-        if current_user.role == 'platform_admin':
+        if current_user.is_platform_admin:
+            self.fields["store"].required = False
             self.fields['role'].choices = [
                 ('owner', 'Propriétaire boutique'),
             ]
@@ -89,7 +90,7 @@ class UpdateUserForm(forms.ModelForm):
             .order_by("name")
         )
 
-        if current_user.role == 'platform_admin':
+        if current_user.is_platform_admin:
             self.fields['role'].choices = [
                 ('owner', 'Propriétaire boutique'),
             ]
