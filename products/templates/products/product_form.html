@@ -27,6 +27,28 @@
                                         </svg>
                                     </a>
                                 </label>
+
+                        
+                            {% elif field.name == 'category' %}
+
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+
+                                    <a href="#"
+                                        title="Ajouter une catégorie"
+                                        class="add-category-icon"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#categoryModal">
+
+                                        <svg width="20" height="20" viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2">
+                                            <line x1="12" y1="5" x2="12" y2="19"/>
+                                            <line x1="5" y1="12" x2="19" y2="12"/>
+                                        </svg>
+                                    </a>
+                                </label>
                             {% else %}
                                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                             {% endif %}
@@ -58,6 +80,84 @@
 
 
 
+
+    <div class="modal fade" id="categoryModal" tabindex="-1">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Nouvelle catégorie
+                    </h5>
+
+                    <button 
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <form id="categoryCreateForm">
+
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+
+                            <label>
+                                Nom
+                            </label>
+
+                            <input 
+                                id="category_name"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label>
+                                Description
+                            </label>
+
+                            <textarea
+                                id="category_description"
+                                class="form-control">
+                            </textarea>
+
+                        </div>
+
+
+                        <button class="btn btn-primary">
+                            Ajouter
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
     <script>
         const imageInput = document.querySelector('#id_image');
         const preview = document.querySelector('#preview');
@@ -71,6 +171,98 @@
                 }
             );
         }
+
+
+        // popup modalform pour categorie
+
+        document
+        .getElementById("categoryCreateForm")
+        .addEventListener("submit", function(e){
+
+            e.preventDefault();
+
+
+            fetch("{% url 'products:create_category_api' %}", {
+
+                method: "POST",
+
+                headers: {
+                    "X-CSRFToken": document.querySelector(
+                        '[name=csrfmiddlewaretoken]'
+                    ).value,
+
+                    "Content-Type": "application/json"
+                },
+
+
+                body: JSON.stringify({
+
+                    name: document.getElementById(
+                        "category_name"
+                    ).value,
+
+
+                    description: document.getElementById(
+                        "category_description"
+                    ).value
+
+                })
+
+            })
+
+
+            .then(response => response.json())
+
+
+            .then(data => {
+
+                if(data.success){
+
+                    const select = document.getElementById(
+                        "id_category"
+                    );
+
+
+                    const option = new Option(
+                        data.name,
+                        data.id,
+                        true,
+                        true
+                    );
+
+
+                    select.add(option);
+
+
+                    bootstrap.Modal
+                    .getInstance(
+                        document.getElementById(
+                            "categoryModal"
+                        )
+                    )
+                    .hide();
+
+
+                    document.getElementById(
+                        "categoryCreateForm"
+                    ).reset();
+
+
+                }
+                else {
+
+                    alert(
+                        "Erreur : " + JSON.stringify(data)
+                    );
+
+                }
+
+            });
+
+        });
+
+
+
     </script>
 
 {% endblock %}

@@ -26,7 +26,7 @@ class ProductForm(forms.ModelForm):
 
     store = forms.ModelChoiceField(
         queryset=Store.objects.none(),
-        required=False,
+        required=True,
         label="Magasin",
         widget=forms.Select(
             attrs={

@@ -1,6 +1,7 @@
 # products/serializers.py
 from rest_framework import serializers
-from .models import Product
+from .models import Product, Category
+from django.utils.text import slugify
 
 
 # class ProductSearchSerializer(serializers.ModelSerializer):
@@ -55,3 +56,42 @@ class ProductSearchSerializer(serializers.ModelSerializer):
 
             for stock in obj.stocks.select_related("store")
         ]
+
+
+
+class CategoryCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = [
+            "name",
+            "description",
+        ]
+
+    def validate_name(self, value):
+
+        company = self.context["request"].user.company
+
+        exists = Category.objects.filter(
+            company=company,
+            name__iexact=value
+        ).exists()
+
+        if exists:
+            raise serializers.ValidationError(
+                "Cette catégorie existe déjà."
+            )
+
+        return value
+
+
+    def create(self, validated_data):
+
+        company = self.context["request"].user.company
+
+        name = validated_data["name"]
+
+        validated_data["company"] = company
+        validated_data["slug"] = slugify(name)
+
+        return super().create(validated_data)
