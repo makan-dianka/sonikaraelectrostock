@@ -138,7 +138,7 @@ def create_quote(request):
             "Vous n'avez pas la permission créer un devis."
         )
 
-    form = QuoteForm(request.POST or None)
+    form = QuoteForm(request.POST or None, company=request.user.company)
     formset = QuoteItemFormSet(
         request.POST or None,
         prefix='items'
@@ -190,7 +190,7 @@ def update_quote(request, pk):
 
     if request.method == 'POST':
 
-        form = QuoteForm(request.POST, instance=quote)
+        form = QuoteForm(request.POST, instance=quote, company=request.user.company)
         formset = QuoteItemFormSet(request.POST, instance=quote, prefix='items')
 
         if form.is_valid() and formset.is_valid():
@@ -207,7 +207,7 @@ def update_quote(request, pk):
             return redirect('quotes:quote_list')
 
     else:
-        form = QuoteForm(instance=quote)
+        form = QuoteForm(instance=quote, company=request.user.company)
         formset = QuoteItemFormSet(instance=quote, prefix='items')
 
     return render(request, 'quotes/form.html', {

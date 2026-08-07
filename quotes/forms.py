@@ -7,14 +7,28 @@ from stores.models import Store
 
 class QuoteForm(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, company=None, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Sélectionner automatiquement le premier magasin
-        if not self.instance.pk:
-            first_store = Store.objects.order_by('id').first()
+        if company:
+            self.fields["store"].queryset = (
+                Store.objects
+                .for_company(company)
+                .filter(is_deleted=False)
+            )
+
+        # Sélectionner automatiquement le premier magasin de l'entreprise
+        if not self.instance.pk and company:
+            first_store = (
+                Store.objects
+                .for_company(company)
+                .filter(is_deleted=False)
+                .order_by("id")
+                .first()
+            )
+
             if first_store:
-                self.fields['store'].initial = first_store
+                self.fields["store"].initial = first_store
 
 
     class Meta:
