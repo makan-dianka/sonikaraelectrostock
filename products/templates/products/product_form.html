@@ -49,6 +49,16 @@
                                         </svg>
                                     </a>
                                 </label>
+                            {% elif field.name == 'store' %}
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                    <a href="{% url 'stores:create' %}" title="Ajouter un magasin" class="add-store-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="12" y1="5" x2="12" y2="19"/>
+                                            <line x1="5" y1="12" x2="19" y2="12"/>
+                                        </svg>
+                                    </a>
+                                </label>
                             {% else %}
                                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                             {% endif %}
@@ -79,84 +89,44 @@
     </div>
 
 
-
-
+    <!-- Category Modal form -->
     <div class="modal fade" id="categoryModal" tabindex="-1">
-
         <div class="modal-dialog">
-
             <div class="modal-content">
-
-
                 <div class="modal-header">
-
-                    <h5 class="modal-title">
-                        Nouvelle catégorie
-                    </h5>
-
+                    <h5 class="modal-title">Nouvelle catégorie</h5>
                     <button 
                         type="button"
                         class="btn-close"
                         data-bs-dismiss="modal">
                     </button>
-
                 </div>
 
 
                 <div class="modal-body">
-
-                    <form id="categoryCreateForm">
-
-                        {% csrf_token %}
-
+                    <form id="categoryCreateForm">{% csrf_token %}
                         <div class="mb-3">
-
-                            <label>
-                                Nom
-                            </label>
-
+                            <label>Nom</label>
                             <input 
                                 id="category_name"
                                 class="form-control"
                                 required>
-
                         </div>
 
-
                         <div class="mb-3">
-
-                            <label>
-                                Description
-                            </label>
-
+                            <label>Description</label>
                             <textarea
                                 id="category_description"
                                 class="form-control">
                             </textarea>
-
                         </div>
-
-
-                        <button class="btn btn-primary">
-                            Ajouter
-                        </button>
-
+                        <button class="btn btn-primary">Ajouter</button>
                     </form>
-
                 </div>
-
-
             </div>
-
         </div>
-
     </div>
-
-
-
-
-
-
+    <!-- End of Category Modal form -->
 
     <script>
         const imageInput = document.querySelector('#id_image');
@@ -260,8 +230,7 @@
             });
 
         });
-
-
+        // Fin de category modalform
 
     </script>
 
