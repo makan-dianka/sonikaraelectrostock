@@ -114,7 +114,7 @@ def expense_create(request):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission de créer une dépense.")
 
-    form = ExpenseForm(request.POST or None)
+    form = ExpenseForm(request.POST or None, company=request.user.company)
 
     if form.is_valid():
 
