@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Expense
+from .models import Expense, ExpenseCategory
 from stores.models import Store
 
 
@@ -13,6 +13,11 @@ class ExpenseForm(forms.ModelForm):
                 Store.objects
                 .for_company(company)
                 .filter(is_deleted=False)
+            )
+
+            self.fields["category"].queryset = (
+                ExpenseCategory.objects
+                .for_company(company)
             )
 
         # Sélectionner automatiquement le premier magasin de l'entreprise

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Marque
+from .models import Category, Product, Marque
 from stores.models import Store
 
 
@@ -14,6 +14,15 @@ class ProductForm(forms.ModelForm):
             .filter(is_deleted=False)
         )
 
+        self.fields["category"].queryset = (
+            Category.objects
+            .for_company(company)
+        )
+
+        self.fields["marque"].queryset = (
+            Marque.objects
+            .for_company(company)
+        )
 
     store = forms.ModelChoiceField(
         queryset=Store.objects.none(),
