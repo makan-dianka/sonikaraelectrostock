@@ -90,7 +90,8 @@ def register_page(request):
 
             form = form.save(commit=False)
             form.created_by = request.user
-            form.company = request.user.company
+            if not request.user.is_platform_admin:
+                form.company = request.user.company
             form.save()
 
             return redirect('accounts:user_list')
