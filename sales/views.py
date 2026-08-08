@@ -51,11 +51,16 @@ def print_invoice(request, pk):
 @login_required(login_url='accounts:login')
 def sale_list(request):
 
-    sales = Sale.objects.for_company(request.user.company).select_related('customer', 'store').order_by('-created_at')
+    sales = (
+        Sale.objects.for_company(request.user.company)
+            .filter(status__in=['validated', 'draft'])
+            .select_related('customer', 'store')
+            .order_by('-created_at')
+        )
 
-    sales_validated = Sale.objects.for_company(request.user.company).filter(status='validated').select_related('customer', 'store')
+    # sales_validated = Sale.objects.for_company(request.user.company).filter(status='validated').select_related('customer', 'store')
     total_sale = sales.filter(status='validated').aggregate(total=Sum('total'))['total'] or 0
-    sales_validated = Sale.objects.for_company(request.user.company).filter(status='validated').select_related('customer', 'store').order_by('-created_at')
+    sales_validated = sales.filter(status='validated').select_related('customer', 'store').order_by('-created_at')
     total_paid = sum(sale.paid_amount for sale in sales_validated)
     total_remaining = total_sale - total_paid
 
