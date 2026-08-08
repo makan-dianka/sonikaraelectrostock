@@ -13,3 +13,13 @@ def update_payment_status(obj):
         obj.payment_status = 'paid'
 
     obj.save()
+
+
+def validate_payment_amount(payment_amount, remaining_amount):
+    if payment_amount <= 0:
+        return "Le montant doit être supérieur à 0."
+
+    if payment_amount > remaining_amount:
+        return "Montant trop élevé."
+
+    return None

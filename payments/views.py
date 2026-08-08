@@ -14,7 +14,7 @@ from .forms import PaymentForm
 from .models import Payment
 from sales.models import Sale
 from purchases.models import Purchase
-from .services import update_payment_status
+from .services import update_payment_status, validate_payment_amount
 
 from sonikaraelectrostock.tools import generate_reference
 
@@ -55,9 +55,12 @@ def create_payment(request):
         # création de paiement pour
         # une vente
         if payment_type == "sale":
-
-            if payment.amount > obj.remaining_amount:
-                messages.error(request, "Montant trop élevé")
+            error = validate_payment_amount(
+                payment.amount,
+                obj.remaining_amount
+            )
+            if error:
+                messages.error(request, error)
                 return render(request, "payments/form.html", {
                     "form": form,
                     "object": obj,
@@ -73,9 +76,12 @@ def create_payment(request):
         # création de paiement pour
         # un achat
         elif payment_type == "purchase":
-
-            if payment.amount > obj.remaining_amount:
-                messages.error(request, "Montant trop élevé")
+            error = validate_payment_amount(
+                payment.amount,
+                obj.remaining_amount
+            )
+            if error:
+                messages.error(request, error)
                 return render(request, "payments/form.html", {
                     "form": form,
                     "object": obj,
