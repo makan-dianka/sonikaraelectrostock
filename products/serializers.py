@@ -1,16 +1,14 @@
 # products/serializers.py
 from rest_framework import serializers
-from .models import Product, Category
+from .models import Marque, Product, Category
 from django.utils.text import slugify
 
 
-# class ProductSearchSerializer(serializers.ModelSerializer):
+class MarqueSearchSerializer(serializers.ModelSerializer):
 
-#     category = serializers.CharField(source='category.name', read_only=True)
-
-#     class Meta:
-#         model = Product
-#         fields = ['id', 'name', 'reference', 'category', 'purchase_price', 'sale_price']
+    class Meta:
+        model = Marque
+        fields = ['id', 'name']
 
 
 class ProductSearchSerializer(serializers.ModelSerializer):

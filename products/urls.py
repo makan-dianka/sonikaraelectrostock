@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from common.search import search_api
 
 
 app_name = "products"
@@ -11,6 +12,7 @@ urlpatterns = [
     path('<int:pk>/update/', views.update_product, name="update"),
     path('<int:pk>/delete/', views.delete_product, name="delete"),
     path('api/products/search/', views.product_search_api, name='product_search_api'),
+    path('api/marques/search/', views.marque_search_api, name='marque_search_api'),
     path("api/category/create/", views.create_category_api, name="create_category_api")
 
     # path('addstock/<int:product_id>/<int:store_id>/', views.add_stock, name='add_stock'),
