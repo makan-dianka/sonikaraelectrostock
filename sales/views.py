@@ -14,6 +14,7 @@ from django.http import HttpResponseForbidden
 
 from .services import validate_sale, cancel_sale
 from documents.services import generate_pdf
+from payments.services import update_payment_status
 from django.http import FileResponse
 from documents.models import Document
 
@@ -144,6 +145,8 @@ def update_sale(request, pk):
             formset.save()
 
             sale.recalc_total()
+
+            update_payment_status(sale)
 
             return redirect('sales:list')
 

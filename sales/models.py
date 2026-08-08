@@ -97,7 +97,8 @@ class Sale(TimeStampedModel, CompanyOwnedModel):
 
     @property
     def remaining_amount(self):
-        return (self.total_ttc - self.paid_amount)
+        remaining = self.total_ttc - self.paid_amount
+        return remaining if remaining > 0 else 0
 
 
     # pour recalculer le total après un update

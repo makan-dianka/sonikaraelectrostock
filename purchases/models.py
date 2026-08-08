@@ -105,7 +105,8 @@ class Purchase(TimeStampedModel, CompanyOwnedModel):
 
     @property
     def remaining_amount(self):
-        return (self.total - self.paid_amount)
+        remaining = self.total - self.paid_amount
+        return remaining if remaining > 0 else 0
 
 
 

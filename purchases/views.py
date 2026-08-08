@@ -4,6 +4,8 @@ from django.shortcuts import (
     get_object_or_404
 )
 
+from payments.services import update_payment_status
+
 from .models import Purchase
 
 from .forms import (
@@ -125,6 +127,8 @@ def update_purchase(request, pk):
             formset.save()
 
             purchase.recalc_total()
+
+            update_payment_status(purchase)
 
             return redirect('purchases:list')
 
