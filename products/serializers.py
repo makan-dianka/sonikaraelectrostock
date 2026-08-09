@@ -57,6 +57,13 @@ class ProductSearchSerializer(serializers.ModelSerializer):
 
 
 
+class CategorySearchSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
+
+
 class CategoryCreateSerializer(serializers.ModelSerializer):
 
     class Meta:

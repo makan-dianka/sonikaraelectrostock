@@ -2,13 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 
-from . models import Product, Marque
+from . models import Category, Product, Marque
 from .forms import ProductForm, MarqueForm
 from stocks.models import Stock
 
 from django.db.models import Q
 from .models import Product
-from .serializers import ProductSearchSerializer, CategoryCreateSerializer, MarqueSearchSerializer
+from .serializers import CategorySearchSerializer, ProductSearchSerializer, CategoryCreateSerializer, MarqueSearchSerializer
 from django.core.paginator import Paginator
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -87,6 +87,27 @@ def marque_search_api(request):
     )
 
     serializer = MarqueSearchSerializer(marques, many=True)
+    return Response({'results': serializer.data})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def category_search_api(request):
+    query = request.GET.get('q', '').strip()
+
+    if len(query) < 1:
+        return Response({'results': []})
+
+    categories = (
+        Category.objects
+        .for_company(request.user.company)
+        .filter(
+            Q(name__icontains=query)
+        )
+        .order_by('name')[:20]
+    )
+
+    serializer = CategorySearchSerializer(categories, many=True)
     return Response({'results': serializer.data})
 
 

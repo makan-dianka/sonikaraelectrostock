@@ -3,6 +3,7 @@
 
 {% block head%}
     <link rel="stylesheet" href="{% static 'css/products/product_form.css' %}">
+    <script src="{% static 'js/search_select.js' %}" defer></script>
 {% endblock %}
 
 
@@ -28,16 +29,18 @@
                                     </a>
                                 </label>
 
-                                <div class="customer-search-wrapper">
+                                <div class="search-select-wrapper"
+                                    data-search-url="{% url 'products:marque_search_api' %}"
+                                    data-hidden-input="{{ field.id_for_label }}">
+
                                     <input type="text"
-                                        class="form-control"
-                                        id="customer-search"
+                                        class="form-control search-select-input"
                                         placeholder="Rechercher par nom de marque"
-                                        value="{% if form.instance.marque %}{{ form.instance.marque.name }} {% endif %}">
+                                        value="{% if form.instance.marque %}{{ form.instance.marque.name }}{% endif %}">
 
-                                        <div id="customer-results"></div>
+                                    <div class="search-select-results"></div>
                                 </div>
-
+ 
                             {% elif field.name == 'category' %}
 
                                 <label for="{{ field.id_for_label }}">
@@ -58,6 +61,18 @@
                                         </svg>
                                     </a>
                                 </label>
+
+                                <div class="search-select-wrapper"
+                                    data-search-url="{% url 'products:category_search_api' %}"
+                                    data-hidden-input="{{ field.id_for_label }}">
+
+                                    <input type="text"
+                                        class="form-control search-select-input"
+                                        placeholder="Rechercher une catégorie"
+                                        value="{% if form.instance.category %}{{ form.instance.category.name }}{% endif %}">
+
+                                    <div class="search-select-results"></div>
+                                </div>
                             {% elif field.name == 'store' %}
                                 <label for="{{ field.id_for_label }}">
                                     {{ field.label }}
@@ -240,73 +255,6 @@
 
         });
         // Fin de category modalform
-
-
-
-
-    // rechercher un marque
-
-    const CUSTOMER_URL = "{% url 'products:marque_search_api' %}";
-
-    function debounce(fn, delay) {
-        let timer;
-        return function (...args) {
-            clearTimeout(timer);
-            timer = setTimeout(() => fn.apply(this, args), delay);
-        };
-    }
-
-    const customerInput = document.getElementById('customer-search');
-    const customerHidden = document.getElementById('id_marque');
-    const customerResults = document.getElementById('customer-results');
-
-    const searchCustomer = debounce(async function (query) {
-        if (query.length < 1) {
-            customerResults.style.display = 'none';
-            return;
-        }
-
-        const response = await fetch(`${CUSTOMER_URL}?q=${query}`);
-        const data = await response.json();
-        renderCustomers(data.results);
-    }, 200);
-
-
-    function renderCustomers(results) {
-        if (!results.length) {
-            customerResults.innerHTML = '<div class="customer-item">Aucune marque trouvée</div>';
-            customerResults.style.display = 'block';
-            return;
-        }
-
-        customerResults.innerHTML = results.map(c => `
-                <div class="customer-item" data-id="${c.id}" data-label="${c.name}">
-                    <strong>${c.name}</strong>
-                </div>`
-        ).join('');
-
-        customerResults.style.display = 'block';
-    }
-
-    customerInput.addEventListener('input', function () {
-        searchCustomer(this.value.trim());
-    });
-
-    customerResults.addEventListener('click', function (e) {
-        const item = e.target.closest('.customer-item');
-        if (!item) return;
-
-        customerHidden.value = item.dataset.id;
-        customerInput.value = item.dataset.label;
-        customerResults.style.display = 'none';
-    });
-
-    document.addEventListener('click', function (e) {
-        if (!customerInput.contains(e.target) && !customerResults.contains(e.target)) {
-            customerResults.style.display = 'none';
-        }
-    });
-    // fin de recherche marque
 
     </script>
 

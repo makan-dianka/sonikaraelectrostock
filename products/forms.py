@@ -94,11 +94,7 @@ class ProductForm(forms.ModelForm):
                 }
             ),
 
-            'category': forms.Select(
-                attrs={
-                    'class':'form-control'
-                }
-            ),
+            'category': forms.HiddenInput(),
 
             'marque': forms.HiddenInput(),
 
