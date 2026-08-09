@@ -5,11 +5,21 @@ from sonikaraelectrostock.models import CompanyOwnedModel, TimeStampedModel
 class Category(TimeStampedModel, CompanyOwnedModel):
 
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField()
     description = models.TextField(max_length=100, blank=True)
 
     class Meta:
         verbose_name_plural = "Categories"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["company", "name"],
+                name="unique_category_name_per_company"
+            ),
+            models.UniqueConstraint(
+                fields=["company", "slug"],
+                name="unique_category_slug_per_company"
+            ),
+        ]
 
     def __str__(self):
         return self.name
@@ -17,10 +27,18 @@ class Category(TimeStampedModel, CompanyOwnedModel):
 
 
 class Marque(TimeStampedModel, CompanyOwnedModel):
-    name = models.CharField(max_length=255, unique=True)
+
+    name = models.CharField(max_length=255)
     note = models.CharField(max_length=255, null=True, blank=True)
+
     class Meta:
         verbose_name_plural = "Marques"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["company", "name"],
+                name="unique_marque_per_company"
+            )
+        ]
 
     def __str__(self):
         return self.name
