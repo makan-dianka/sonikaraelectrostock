@@ -273,3 +273,116 @@ span {
     }
 
 }
+
+
+
+
+/* =========================
+   FILTRE DASHBOARD
+========================= */
+
+.dashboard-filters {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    padding: 20px;
+    margin: 20px 0 30px;
+
+    background: #ffffff;
+    border-radius: 16px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Formulaire */
+
+.dashboard-filters form {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Chaque filtre */
+
+.dashboard-filters form > div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 180px;
+}
+
+/* Labels */
+
+.dashboard-filters label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Select */
+
+.dashboard-filters select {
+    width: 100%;
+    min-height: 44px;
+
+    padding: 10px 40px 10px 14px;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    background-color: #fff;
+    color: #333;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    outline: none;
+
+    transition: all 0.2s ease;
+}
+
+/* Focus */
+
+.dashboard-filters select:focus {
+    border-color: #f39b00;
+
+    box-shadow: 0 0 0 3px rgba(243, 155, 0, 0.15);
+}
+
+/* Hover */
+
+.dashboard-filters select:hover {
+    border-color: #f39b00;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+    .dashboard-filters {
+        padding: 15px;
+        margin: 15px 0 25px;
+    }
+
+    .dashboard-filters form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .dashboard-filters form > div {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .dashboard-filters select {
+        width: 100%;
+        min-height: 46px;
+    }
+}

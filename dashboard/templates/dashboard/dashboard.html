@@ -31,13 +31,80 @@
     </div>
 
 
+    <div class="dashboard-filters">
+
+        <form method="get">
+
+            {% if selected_store %}
+                <input
+                    type="hidden"
+                    name="store_id"
+                    value="{{ selected_store.id }}"
+                >
+            {% endif %}
+
+            <div>
+                <label>Année</label>
+
+                <select name="year" onchange="this.form.submit()">
+
+                    {% for year in years %}
+
+                        <option
+                            value="{{ year }}"
+                            {% if year == selected_year %}selected{% endif %}
+                        >
+                            {{ year }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+            </div>
+
+
+            <div>
+
+                <label>Mois</label>
+
+                <select name="month" onchange="this.form.submit()">
+
+                    {% for number, name in months %}
+
+                        <option
+                            value="{{ number }}"
+                            {% if number == selected_month %}selected{% endif %}
+                        >
+                            {{ name }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
 
     <div class="col-md-12 current_ca">
         <div class="card p-4 shadow-sm rounded-4" style="margin-bottom: 65px; background-color: #d88600;">
             <div class="row text-center">
                 <div class="col-md-4 mb-3">
                     <div class="p-3 border rounded-3 bg-light">
-                        <h6 class="text-muted">💰 Benefice brut du mois</h6>
+                        <h6 class="text-muted">💰 Bénéfice brut</h6>
+                        <h6 class="text-muted">
+                            {% for number, name in months %}
+                                {% if number == selected_month %}
+                                    <h6>
+                                        {{ name }} {{ selected_year }}
+                                    </h6>
+                                {% endif %}
+                            {% endfor %}
+                        </h6>
 
                         <h2 class="fw-bold" style="color: #2196f3;">{{ profit_month|intcomma }} FCFA</h2>
                     </div>
@@ -46,7 +113,16 @@
 
                 <div class="col-md-4 mb-3">
                     <div class="p-3 border rounded-3 bg-light">
-                        <h6 class="text-muted">💸 Dépense du mois</h6>
+                        <h6 class="text-muted">💸 Dépense</h6>
+                        <h6>
+                            {% for number, name in months %}
+                                {% if number == selected_month %}
+                                    <h6>
+                                        {{ name }} {{ selected_year }}
+                                    </h6>
+                                {% endif %}
+                            {% endfor %}
+                        </h6>
 
                         <h3 class="fw-bold" style="color: #d88600;">{{ expense_month|intcomma }} FCFA</h3>
                     </div>
@@ -56,7 +132,16 @@
 
                 <div class="col-md-4 mb-3">
                     <div class="p-3 border rounded-3" style="background:#eafaf1; border:2px solid #1fa971;">
-                        <h6 class="text-muted">🏆 Benefice réel du mois</h6>
+                        <h6 class="text-muted">🏆 Bénéfice réel</h6>
+                        <h6>
+                            {% for number, name in months %}
+                                {% if number == selected_month %}
+                                    <h6>
+                                        {{ name }} {{ selected_year }}
+                                    </h6>
+                                {% endif %}
+                            {% endfor %}
+                        </h6>
 
                         <h3 class="fw-bold text-success">{{ real_profit|intcomma }} FCFA</h3>
                     </div>
@@ -73,8 +158,9 @@
     <!-- ventes effectué -->
     <div class="col-md-12 current_ca">
         <div class="card p-4 shadow-sm rounded-4" style="background-color: green;">
-
-
+        <p style="color: white; text-align: center;">
+            Vente réalisé
+        </p>
 
             <!-- Stats -->
             <div class="row text-center">
@@ -82,6 +168,39 @@
                 <div class="col-md-4 mb-3">
                     <div class="p-3 border rounded-3 bg-light">
                         <h6 class="text-muted">JOUR</h6>
+                        <h6>
+                            <div class="period-selector">
+                                <form method="get">
+                                    <input
+                                        type="hidden"
+                                        name="year"
+                                        value="{{ selected_year }}"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="month"
+                                        value="{{ selected_month }}"
+                                    >
+
+                                    <select
+                                        name="day"
+                                        onchange="this.form.submit()"
+                                    >
+
+                                        {% for item in days %}
+
+                                            <option
+                                                value="{{ item.date|date:'Y-m-d' }}"
+                                                {% if item.date == selected_day %}selected{% endif %}
+                                            >
+                                                {{ item.label }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                        </h6>
 
 
                         <span class="{% if ca_day_change >= 0 %} positive {% else %} negative {% endif %}">
@@ -103,6 +222,25 @@
                 <div class="col-md-4 mb-3">
                     <div class="p-3 border rounded-3 bg-light">
                         <h6 class="text-muted">SEMAINE</h6>
+                        <h6>
+                            <div class="period-selector">
+                                <form method="get">
+                                    <select
+                                        name="week_start"
+                                        onchange="this.form.submit()"
+                                    >
+                                        {% for week in weeks %}
+                                            <option
+                                                value="{{ week.start|date:'Y-m-d' }}"
+                                                {% if week.start == selected_week_start %}selected{% endif %}
+                                            >
+                                                {{ week.label }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                        </h6>
                         <span class="{% if ca_week_change >= 0 %} positive {% else %} negative {% endif %}">
 
                             {% if ca_week_change > 0 %}
@@ -119,6 +257,15 @@
                 <div class="col-md-4 mb-3">
                     <div class="p-3 border rounded-3 bg-light">
                         <h6 class="text-muted">MOIS</h6>
+                        <h6>
+                            {% for number, name in months %}
+                                {% if number == selected_month %}
+                                    <h6>
+                                        {{ name }} {{ selected_year }}
+                                    </h6>
+                                {% endif %}
+                            {% endfor %}
+                        </h6>
                         <span class="{% if ca_month_change >= 0 %} positive {% else %} negative {% endif %}">
 
                             {% if ca_month_change > 0 %}
@@ -135,6 +282,9 @@
                 <div class="col-md-6 mb-3">
                     <div class="p-3 border rounded-3 bg-light">
                         <h6 class="text-muted">ANNÉE</h6>
+                        <h6 >
+                            {{ selected_year }}
+                        </h6>
                         <span class="{% if ca_year_change >= 0 %} positive {% else %} negative {% endif %}">
 
                             {% if ca_year_change > 0 %}
@@ -150,7 +300,16 @@
 
                 <div class="col-md-6 mb-3">
                     <div class="p-3 border rounded-3 bg-light">
-                        <h6 class="text-muted">Benefice du mois</h6>
+                        <h6 class="text-muted">BÉNÉFICE</h6>
+                        <h6 class="text-muted">
+                            {% for number, name in months %}
+                                {% if number == selected_month %}
+                                    <h6>
+                                        {{ name }} {{ selected_year }}
+                                    </h6>
+                                {% endif %}
+                            {% endfor %}
+                        </h6>
                         <span class="{% if profit_month_change >= 0 %} positive {% else %} negative {% endif %}">
 
                             {% if profit_month_change > 0 %}
