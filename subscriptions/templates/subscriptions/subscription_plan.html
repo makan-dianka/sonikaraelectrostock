@@ -4,16 +4,218 @@
 
 
 {%  block head %}
+    <link rel="stylesheet" href="{% static 'css/subscriptions/plan.css' %}">
 {% endblock %}
 
 
 {% block content %}
-    <div class="container">
-        <div class="row justify-content-center" style="margin-top: 120px;">
-            <div class="col-md-8">
-                <h4 class="text-white" style="background-color: green; padding: 15px; text-align: center;">Une fois le paiement effectué, votre accès sera immédiatement rétabli.</h4> <br /><br />
-                <p>Contacter sur whatsapp pour payer : +33 7 68 69 54 58</p>
-            </div>
+    <section class="pricing-section">
+
+        <div class="pricing-header">
+            <span class="pricing-badge">Tarifs</span>
+
+            <h1>
+                Choisissez la formule qui vous convient
+            </h1>
+
+            <p>
+                Accédez à toutes les fonctionnalités du logiciel,
+                quelle que soit la formule choisie.
+            </p>
         </div>
-    </div>
+
+
+        <div class="pricing-grid">
+
+
+            <!-- Mensuel -->
+            <div class="pricing-card">
+
+                <div class="pricing-card-header">
+                    <span class="pricing-duration">
+                        Sans engagement
+                    </span>
+
+                    <h2>Mensuel</h2>
+
+                    <p>
+                        Pour rester totalement flexible.
+                    </p>
+                </div>
+
+
+                <div class="pricing-price">
+                    <strong>60 000</strong>
+                    <span>FCFA</span>
+                    <small>/ mois</small>
+                </div>
+
+
+                <div class="pricing-divider"></div>
+
+
+                <ul class="pricing-features">
+                    <li>
+                        <span>✓</span>
+                        Accès complet au logiciel
+                    </li>
+
+                    <li>
+                        <span>✓</span>
+                        Toutes les fonctionnalités
+                    </li>
+
+                    <li>
+                        <span>✓</span>
+                        Sans engagement
+                    </li>
+                </ul>
+
+
+                <a href="#" class="pricing-button secondary">
+                    Choisir cette formule
+                </a>
+
+            </div>
+
+
+
+            <!-- 6 mois -->
+            <div class="pricing-card">
+
+                <div class="pricing-card-header">
+                    <span class="pricing-duration">
+                        Engagement 6 mois
+                    </span>
+
+                    <h2>6 mois</h2>
+
+                    <p>
+                        Un meilleur tarif pour un engagement de 6 mois.
+                    </p>
+                </div>
+
+
+                <div class="pricing-price">
+                    <strong>50 000</strong>
+                    <span>FCFA</span>
+                    <small>/ mois</small>
+                </div>
+
+
+                <div class="pricing-total">
+                    300 000 FCFA pour 6 mois
+                </div>
+
+
+                <div class="pricing-saving">
+                    Économisez 60 000 FCFA
+                </div>
+
+
+                <div class="pricing-divider"></div>
+
+
+                <ul class="pricing-features">
+                    <li>
+                        <span>✓</span>
+                        Accès complet au logiciel
+                    </li>
+
+                    <li>
+                        <span>✓</span>
+                        Toutes les fonctionnalités
+                    </li>
+
+                    <li>
+                        <span>✓</span>
+                        Engagement de 6 mois
+                    </li>
+                </ul>
+
+
+                <a href="#" class="pricing-button secondary">
+                    Choisir cette formule
+                </a>
+
+            </div>
+
+
+
+            <!-- 12 mois -->
+            <div class="pricing-card featured">
+
+                <div class="popular-badge">
+                    ⭐ Meilleur choix
+                </div>
+
+
+                <div class="pricing-card-header">
+                    <span class="pricing-duration">
+                        Engagement 12 mois
+                    </span>
+
+                    <h2>12 mois</h2>
+
+                    <p>
+                        Le meilleur tarif pour un engagement annuel.
+                    </p>
+                </div>
+
+
+                <div class="pricing-price">
+                    <strong>30 000</strong>
+                    <span>FCFA</span>
+                    <small>/ mois</small>
+                </div>
+
+
+                <div class="pricing-total">
+                    360 000 FCFA pour 12 mois
+                </div>
+
+
+                <div class="pricing-saving">
+                    Économisez 360 000 FCFA
+                </div>
+
+
+                <div class="pricing-divider"></div>
+
+
+                <ul class="pricing-features">
+                    <li>
+                        <span>✓</span>
+                        Accès complet au logiciel
+                    </li>
+
+                    <li>
+                        <span>✓</span>
+                        Toutes les fonctionnalités
+                    </li>
+
+                    <li>
+                        <span>✓</span>
+                        Engagement de 12 mois
+                    </li>
+                </ul>
+
+
+                <a href="#" class="pricing-button primary">
+                    Choisir cette formule
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="pricing-note">
+            <strong>Un seul, toutes les fonctionnalités.</strong>
+            <br>
+            La différence entre les formules concerne uniquement
+            la durée d'engagement et le tarif.
+        </div>
+
+    </section>
 {% endblock %}
