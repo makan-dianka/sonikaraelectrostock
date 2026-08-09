@@ -480,7 +480,7 @@ def dashboard(request, store_id=None):
             "end": week_end,
             "label": (
                 f"{week_start.strftime('%d/%m')}"
-                f" → "
+                f" au "
                 f"{week_end.strftime('%d/%m/%Y')}"
             )
         })
