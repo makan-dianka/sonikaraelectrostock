@@ -51,7 +51,7 @@ class SubscriptionPlan(models.Model):
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.monthly_price} FCFA/mois'
 
 
 
