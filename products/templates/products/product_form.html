@@ -167,94 +167,113 @@
         }
 
 
+
         // popup modalform pour categorie
 
         document
-        .getElementById("categoryCreateForm")
-        .addEventListener("submit", function(e){
+            .getElementById("categoryCreateForm")
+            .addEventListener("submit", function(e) {
 
-            e.preventDefault();
+                e.preventDefault();
 
+                fetch("{% url 'products:create_category_api' %}", {
 
-            fetch("{% url 'products:create_category_api' %}", {
+                    method: "POST",
 
-                method: "POST",
+                    headers: {
+                        "X-CSRFToken": document.querySelector(
+                            '#categoryCreateForm [name=csrfmiddlewaretoken]'
+                        ).value,
 
-                headers: {
-                    "X-CSRFToken": document.querySelector(
-                        '[name=csrfmiddlewaretoken]'
-                    ).value,
+                        "Content-Type": "application/json"
+                    },
 
-                    "Content-Type": "application/json"
-                },
+                    body: JSON.stringify({
 
+                        name: document.getElementById(
+                            "category_name"
+                        ).value,
 
-                body: JSON.stringify({
+                        description: document.getElementById(
+                            "category_description"
+                        ).value
 
-                    name: document.getElementById(
-                        "category_name"
-                    ).value,
-
-
-                    description: document.getElementById(
-                        "category_description"
-                    ).value
+                    })
 
                 })
 
-            })
+                .then(response => response.json())
+
+                .then(data => {
+
+                    if (data.success) {
+
+                        // Champ caché Django
+                        const hiddenInput = document.getElementById(
+                            "id_category"
+                        );
+
+                        // Champ visible de recherche
+                        const searchInput = document.querySelector(
+                            '.search-select-wrapper[data-hidden-input="id_category"] .search-select-input'
+                        );
+
+                        // On sélectionne la nouvelle catégorie
+                        hiddenInput.value = data.id;
+
+                        // On affiche son nom dans le champ visible
+                        searchInput.value = data.name;
 
 
-            .then(response => response.json())
-
-
-            .then(data => {
-
-                if(data.success){
-
-                    const select = document.getElementById(
-                        "id_category"
-                    );
-
-
-                    const option = new Option(
-                        data.name,
-                        data.id,
-                        true,
-                        true
-                    );
-
-
-                    select.add(option);
-
-
-                    bootstrap.Modal
-                    .getInstance(
-                        document.getElementById(
+                        // Fermer le modal
+                        const modalElement = document.getElementById(
                             "categoryModal"
-                        )
-                    )
-                    .hide();
+                        );
+
+                        const modal = bootstrap.Modal.getInstance(
+                            modalElement
+                        );
+
+                        if (modal) {
+                            modal.hide();
+                        }
 
 
-                    document.getElementById(
-                        "categoryCreateForm"
-                    ).reset();
+                        // Réinitialiser le formulaire du modal
+                        document.getElementById(
+                            "categoryCreateForm"
+                        ).reset();
 
+                    }
 
-                }
-                else {
+                    else {
+
+                        alert(
+                            "Erreur : " + JSON.stringify(data)
+                        );
+
+                    }
+
+                })
+
+                .catch(error => {
+
+                    console.error(
+                        "Erreur lors de la création de la catégorie :",
+                        error
+                    );
 
                     alert(
-                        "Erreur : " + JSON.stringify(data)
+                        "Une erreur est survenue lors de la création de la catégorie."
                     );
 
-                }
+                });
 
             });
 
-        });
         // Fin de category modalform
+
+
 
     </script>
 
