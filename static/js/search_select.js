@@ -14,12 +14,19 @@ function debounce(fn, delay) {
 class SearchSelect {
 
     constructor(wrapper) {
+
         this.wrapper = wrapper;
 
-        this.input = wrapper.querySelector(".search-select-input");
-        this.results = wrapper.querySelector(".search-select-results");
+        this.input = wrapper.querySelector(
+            ".search-select-input"
+        );
+
+        this.results = wrapper.querySelector(
+            ".search-select-results"
+        );
 
         this.url = wrapper.dataset.searchUrl;
+
         this.hiddenInputId = wrapper.dataset.hiddenInput;
 
         this.hiddenInput = document.getElementById(
@@ -37,42 +44,67 @@ class SearchSelect {
 
     init() {
 
-        this.input.addEventListener("input", () => {
-            this.search(this.input.value.trim());
-        });
+        // Quand l'utilisateur clique/focus sur le champ
+        this.input.addEventListener("focus", () => {
 
-
-        this.results.addEventListener("click", (event) => {
-
-            const item = event.target.closest(
-                ".search-select-item"
+            this.searchItems(
+                this.input.value.trim()
             );
 
-            if (!item) {
-                return;
-            }
-
-            this.selectItem(item);
         });
 
 
-        document.addEventListener("click", (event) => {
+        // Quand l'utilisateur tape
+        this.input.addEventListener("input", () => {
 
-            if (
-                !this.wrapper.contains(event.target)
-            ) {
-                this.hideResults();
-            }
+            // Si l'utilisateur modifie la recherche,
+            // on supprime la sélection précédente.
+            this.hiddenInput.value = "";
+
+            this.search(
+                this.input.value.trim()
+            );
+
         });
+
+
+        // Sélection d'un résultat
+        this.results.addEventListener(
+            "click",
+            (event) => {
+
+                const item = event.target.closest(
+                    ".search-select-item"
+                );
+
+                if (!item) {
+                    return;
+                }
+
+                this.selectItem(item);
+            }
+        );
+
+
+        // Fermer les résultats si clic en dehors
+        document.addEventListener(
+            "click",
+            (event) => {
+
+                if (
+                    !this.wrapper.contains(
+                        event.target
+                    )
+                ) {
+                    this.hideResults();
+                }
+
+            }
+        );
     }
 
 
     async searchItems(query) {
-
-        if (!query.length) {
-            this.hideResults();
-            return;
-        }
 
         try {
 
@@ -81,14 +113,18 @@ class SearchSelect {
             );
 
             if (!response.ok) {
+
                 throw new Error(
                     "Erreur lors de la recherche"
                 );
+
             }
 
             const data = await response.json();
 
-            this.renderResults(data.results);
+            this.renderResults(
+                data.results
+            );
 
         } catch (error) {
 
@@ -105,6 +141,7 @@ class SearchSelect {
     renderResults(results) {
 
         if (!results.length) {
+
             this.results.innerHTML =
                 '<div class="search-select-item">Aucun résultat trouvé</div>';
 
@@ -114,37 +151,56 @@ class SearchSelect {
         }
 
 
-        this.results.innerHTML = results.map(item => `
-            <div
-                class="search-select-item"
-                data-id="${item.id}"
-                data-label="${item.name}"
-            >
-                <strong>${item.name}</strong>
-            </div>
-        `).join("");
+        this.results.innerHTML = results.map(
+            item => `
+                <div
+                    class="search-select-item"
+                    data-id="${item.id}"
+                    data-label="${item.name}"
+                >
+                    <strong>${item.name}</strong>
+                </div>
+            `
+        ).join("");
+
 
         this.results.style.display = "block";
     }
 
 
     selectItem(item) {
-        this.hiddenInput.value = item.dataset.id;
-        this.input.value = item.dataset.label;
+
+        this.hiddenInput.value =
+            item.dataset.id;
+
+        this.input.value =
+            item.dataset.label;
+
         this.hideResults();
     }
 
 
     hideResults() {
-        this.results.style.display = "none";
+
+        this.results.style.display =
+            "none";
     }
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    document
-        .querySelectorAll(".search-select-wrapper")
-        .forEach(wrapper => {
-            new SearchSelect(wrapper);
-        });
-});
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        document
+            .querySelectorAll(
+                ".search-select-wrapper"
+            )
+            .forEach(wrapper => {
+
+                new SearchSelect(wrapper);
+
+            });
+
+    }
+);

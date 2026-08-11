@@ -72,43 +72,51 @@ def product_search_api(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def marque_search_api(request):
-    query = request.GET.get('q', '').strip()
 
-    if len(query) < 1:
-        return Response({'results': []})
+    query = request.GET.get('q', '').strip()
 
     marques = (
         Marque.objects
         .for_company(request.user.company)
         .filter(
-            Q(name__icontains=query)
+            name__icontains=query
         )
-        .order_by('name')[:20]
+        .order_by('name')
     )
 
-    serializer = MarqueSearchSerializer(marques, many=True)
-    return Response({'results': serializer.data})
+    serializer = MarqueSearchSerializer(
+        marques,
+        many=True
+    )
+
+    return Response({
+        'results': serializer.data
+    })
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def category_search_api(request):
-    query = request.GET.get('q', '').strip()
 
-    if len(query) < 1:
-        return Response({'results': []})
+    query = request.GET.get('q', '').strip()
 
     categories = (
         Category.objects
         .for_company(request.user.company)
         .filter(
-            Q(name__icontains=query)
+            name__icontains=query
         )
-        .order_by('name')[:20]
+        .order_by('name')
     )
 
-    serializer = CategorySearchSerializer(categories, many=True)
-    return Response({'results': serializer.data})
+    serializer = CategorySearchSerializer(
+        categories,
+        many=True
+    )
+
+    return Response({
+        'results': serializer.data
+    })
 
 
 
