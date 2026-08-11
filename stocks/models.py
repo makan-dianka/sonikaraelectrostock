@@ -9,4 +9,9 @@ class Stock(TimeStampedModel, CompanyOwnedModel):
     alert_threshold = models.IntegerField(default=10)
 
     class Meta:
-        unique_together = ("store", "product")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["company", "store", "product"],
+                name="unique_stock_per_company_store_product"
+            )
+        ]

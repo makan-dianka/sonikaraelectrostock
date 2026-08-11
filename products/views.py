@@ -212,23 +212,30 @@ def create_marque(request):
 
 
 # mise à jour d'un produit
-@login_required(login_url='accounts:login')
+@login_required(login_url="accounts:login")
 def update_product(request, pk):
 
-    if request.user.role not in ['owner']:
+    if request.user.role not in ["owner"]:
         return HttpResponseForbidden(
-            "Vous n'avez pas la permission à mettre à jour un Produit."
+            "Vous n'avez pas la permission de mettre à jour un produit."
         )
 
+    company = request.user.company
+
     product = get_object_or_404(
-        Product.objects.for_company(request.user.company),
+        Product.objects.for_company(company),
         id=pk
     )
 
+    # --------------------------------------------------
+    # GET : récupérer le stock existant
+    # --------------------------------------------------
+
     stock = (
         Stock.objects
-        .for_company(request.user.company)
+        .for_company(company)
         .filter(product=product)
+        .select_related("store")
         .first()
     )
 
@@ -237,7 +244,7 @@ def update_product(request, pk):
     if stock:
         initial = {
             "store": stock.store,
-            "initial_stock": stock.quantity
+            "initial_stock": stock.quantity,
         }
 
     form = ProductForm(
@@ -245,7 +252,7 @@ def update_product(request, pk):
         request.FILES or None,
         instance=product,
         initial=initial,
-        company=request.user.company
+        company=company,
     )
 
     if form.is_valid():
@@ -257,23 +264,21 @@ def update_product(request, pk):
 
         if store:
             Stock.objects.update_or_create(
-                company=request.user.company,
+                company=company,
                 product=product,
                 store=store,
                 defaults={
-                    "quantity": quantity
+                    "quantity": quantity,
                 }
             )
 
-        return redirect(
-            "products:product_list"
-        )
+        return redirect("products:product_list")
 
     return render(
         request,
         "products/product_form.html",
         {
-            "form": form
+            "form": form,
         }
     )
 
