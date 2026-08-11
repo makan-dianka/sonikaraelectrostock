@@ -7,6 +7,42 @@ from sonikaraelectrostock.tools import company_logo_upload_path
 
 
 
+class Address(models.Model):
+
+    street = models.CharField(
+        max_length=255,
+        blank=True
+    )
+
+    city = models.CharField(
+        max_length=100
+    )
+
+    postal_code = models.CharField(
+        max_length=20,
+        blank=True
+    )
+
+    country = models.CharField(
+        max_length=100,
+        default="Mali"
+    )
+
+    def __str__(self):
+        parts = [
+            self.street,
+            self.postal_code,
+            self.city,
+            self.country,
+        ]
+
+        return ", ".join(
+            part for part in parts if part
+        )
+
+
+
+
 class Company(models.Model):
 
     name = models.CharField(max_length=200)
@@ -24,6 +60,39 @@ class Company(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
+    website = models.URLField(blank=True, null=True)
+
+    nif = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+    rib = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+    bank_account = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    bank_name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    address = models.OneToOneField(
+        Address,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="company"
+    )
 
 
     logo = models.ImageField(
@@ -40,7 +109,7 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
-    
+
 
 
 class SubscriptionPlan(models.Model):

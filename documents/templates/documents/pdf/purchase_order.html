@@ -398,7 +398,11 @@
     <div class="top-header">
 
         <div class="logo">
-            <img src="{{ logo_path }}" alt="">
+            {% if purchase.created_by.company.logo %}
+                <img src="{{ logo_path }}" alt="">
+            {% else %}
+                <h3>{{ purchase.created_by.company.name }}</h3>
+            {% endif %}
         </div>
 
         <div class="document-ref">
@@ -413,10 +417,10 @@
     <div class="second-header">
 
         <div class="company">
-            <p>Mali, Bamako Coura</p>
-            <p>Imm. Pendourou, En face de Moov Africa</p>
-            <p>Boutique N°5</p>
-            <p>(+223) 79 76 76 13 / 61 54 54 34</p>
+            <p>{{ purchase.created_by.company.address.country }}, {{ purchase.created_by.company.address.city }}</p>
+            <p>{{ purchase.created_by.company.address.street }}</p>
+            <p>{{ purchase.created_by.company.address.postal_code }}</p>
+            <p>Tel : {{ purchase.created_by.company.phone }}</p>
         </div>
 
         <div class="client-box">
@@ -566,11 +570,15 @@
 
     <!-- information bancaire -->
     <div class="bank-footer">
-        <span><strong>Infos Bancaires</strong></span> <br /> <br />
-        NIF : 083342654T / RIB 50 ; Cpte Bancaire : N 62622302201 BMS.SA <br /><br />
+        {% if purchase.created_by.company.nif and purchase.created_by.company.rib and purchase.created_by.company.bank_account and purchase.created_by.company.bank_name %}
+            <span><strong>Infos Bancaires</strong></span> <br /> <br />
+            NIF : {{ purchase.created_by.company.nif }} / RIB {{ purchase.created_by.company.rib }} ; Cpte Bancaire : {{ purchase.created_by.company.bank_account }} {{ purchase.created_by.company.bank_name }} <br /><br />
+        {% endif %}
 
-        <span><strong>Site internet :</strong> sonikaraelectro.com</span> <br />
-        <span><strong>Adresse email :</strong> sonikaelectronique@gmail.com</span>
+        {% if purchase.created_by.company.website and purchase.created_by.company.email %}
+            <span><strong>Site internet :</strong> {{ quote.user.company.website }}</span> <br />
+            <span><strong>Adresse email :</strong> {{ quote.user.company.email }}</span>
+        {% endif %}
     </div>
 </body>
 

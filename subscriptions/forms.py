@@ -14,10 +14,51 @@ from django.db.models import Q
 
 class CompanyForm(forms.ModelForm):
 
+    # Champs de l'adresse
+    street = forms.CharField(
+        label="Rue / Adresse",
+        required=False,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Ex : Hamdallaye ACI 2000"
+        })
+    )
+
+    city = forms.CharField(
+        label="Ville",
+        required=True,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Ex : Bamako"
+        })
+    )
+
+    postal_code = forms.CharField(
+        label="Code postal",
+        required=False,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Ex : BP 1234"
+        })
+    )
+
+    country = forms.CharField(
+        label="Pays",
+        required=True,
+        initial="Mali",
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Ex : Mali"
+        })
+    )
+
     def __init__(self, *args, **kwargs):
+
         super().__init__(*args, **kwargs)
 
-        queryset = CustomUser.objects.filter(role="owner")
+        queryset = CustomUser.objects.filter(
+            role="owner"
+        )
 
         if self.instance.pk:
             queryset = queryset.filter(
@@ -25,29 +66,61 @@ class CompanyForm(forms.ModelForm):
                 Q(pk=self.instance.owner_id)
             )
         else:
-            queryset = queryset.filter(company__isnull=True)
+            queryset = queryset.filter(
+                company__isnull=True
+            )
 
         self.fields["owner"].queryset = queryset.order_by(
             "first_name",
             "last_name",
         )
 
+        # Si l'entreprise possède déjà une adresse,
+        # on préremplit les champs.
+        if self.instance.pk and self.instance.address:
+
+            address = self.instance.address
+
+            self.fields["street"].initial = address.street
+            self.fields["city"].initial = address.city
+            self.fields["postal_code"].initial = address.postal_code
+            self.fields["country"].initial = address.country
+
     class Meta:
+
         model = Company
+
         fields = [
             "name",
             "owner",
             "subdomain",
             "phone",
             "email",
+            "website",
+
+            # Informations fiscales
+            "nif",
+
+            # Informations bancaires
+            "rib",
+            "bank_account",
+            "bank_name",
+
             "is_active",
             "logo",
+
+            # Adresse
+            "street",
+            "city",
+            "postal_code",
+            "country",
         ]
 
         widgets = {
 
             "name": forms.TextInput(attrs={
-                "class": "form-control"
+                "class": "form-control",
+                "placeholder": "Nom de l'entreprise"
             }),
 
             "owner": forms.Select(attrs={
@@ -55,15 +128,43 @@ class CompanyForm(forms.ModelForm):
             }),
 
             "subdomain": forms.TextInput(attrs={
-                "class": "form-control"
+                "class": "form-control",
+                "placeholder": "sous domain"
             }),
 
             "phone": forms.TextInput(attrs={
-                "class": "form-control"
+                "class": "form-control",
+                "placeholder": "Téléphone"
             }),
 
             "email": forms.EmailInput(attrs={
-                "class": "form-control"
+                "class": "form-control",
+                "placeholder": "adresse email"
+            }),
+
+            "website": forms.URLInput(attrs={
+                "class": "form-control",
+                "placeholder": "https://example.com"
+            }),
+
+            "nif": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Ex : 08335454854W"
+            }),
+
+            "rib": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Ex : 50"
+            }),
+
+            "bank_account": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Ex : N 61600002201"
+            }),
+
+            "bank_name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Ex : BMS.SA"
             }),
 
             "is_active": forms.CheckboxInput(attrs={
@@ -73,29 +174,27 @@ class CompanyForm(forms.ModelForm):
             "logo": forms.FileInput(attrs={
                 "class": "form-control"
             }),
-
         }
 
         labels = {
 
             "name": "Entreprise",
-
             "owner": "Propriétaire",
-
             "subdomain": "Sous domaine",
-
             "phone": "Téléphone",
-
             "email": "Email",
+            "website": "Site web",
+
+            "nif": "NIF",
+
+            "rib": "RIB",
+            "bank_account": "Compte bancaire",
+            "bank_name": "Banque",
 
             "is_active": "Entreprise active",
-
             "logo": "Logo",
 
         }
-
-
-
 
 
 

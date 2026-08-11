@@ -400,7 +400,11 @@
 <div class="top-header">
 
     <div class="logo">
-        <img src="{{ logo_path }}" alt="test">
+        {% if quote.user.company.logo %}
+            <img src="{{ logo_path }}" alt="">
+        {% else %}
+            <h3>{{ quote.user.company.name }}</h3>
+        {% endif %}
     </div>
 
     <div class="document-ref">
@@ -415,10 +419,10 @@
 <div class="second-header">
 
     <div class="company">
-        <p>Mali, Bamako Coura</p>
-        <p>Imm. Pendourou, En face de Moov Africa</p>
-        <p>Boutique N°5</p>
-        <p>(+223) 79 76 76 13 / 61 54 54 34</p>
+        <p>{{ quote.user.company.address.country }}, {{ quote.user.company.address.city }}</p>
+        <p>{{ quote.user.company.address.street }}</p>
+        <p>{{ quote.user.company.address.postal_code }}</p>
+        <p>Tel : {{ quote.user.company.phone }}</p>
     </div>
 
     <div class="client-box">
@@ -613,11 +617,15 @@
 
     <!-- information bancaire -->
     <div class="bank-footer">
-        <span><strong>Infos Bancaires</strong></span> <br /> <br />
-        NIF : 083342654T / RIB 50 ; Cpte Bancaire : N 62622302201 BMS.SA <br /><br />
+        {% if quote.user.company.nif and quote.user.company.rib and quote.user.company.bank_account and quote.user.company.bank_name %}
+            <span><strong>Infos Bancaires</strong></span> <br /> <br />
+            NIF : {{ quote.user.company.nif }} / RIB {{ quote.user.company.rib }} ; Cpte Bancaire : {{ quote.user.company.bank_account }} {{ quote.user.company.bank_name }} <br /><br />
+        {% endif %}
 
-        <span><strong>Site internet :</strong> sonikaraelectro.com</span> <br />
-        <span><strong>Adresse email :</strong> sonikaelectronique@gmail.com</span>
+        {% if quote.user.company.website and quote.user.company.email %}
+            <span><strong>Site internet :</strong> {{ quote.user.company.website }}</span> <br />
+            <span><strong>Adresse email :</strong> {{ quote.user.company.email }}</span>
+        {% endif %}
     </div>
 </body>
 

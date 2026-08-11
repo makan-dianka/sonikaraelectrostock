@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from .models import Company, Subscription, SubscriptionPlan, Payment
+from .models import Company, Subscription, SubscriptionPlan, Payment, Address
 from .forms import CompanyForm, SubscriptionForm, SubscriptionPlanForm, PaymentForm
 from django.db.models import Sum
+from django.db import transaction
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib import messages
@@ -68,22 +69,44 @@ def dashboard(request):
 
 @login_required(login_url="accounts:login")
 def company_create(request):
+
     if not request.user.is_superuser:
         return HttpResponseForbidden()
 
-    form = CompanyForm(request.POST or None, request.FILES or None)
+    form = CompanyForm(
+        request.POST or None,
+        request.FILES or None
+    )
 
     if form.is_valid():
-        owner = form.cleaned_data.get("owner")
-        company = form.save(commit=False)
-        company.owner = owner
-        company.reference = generate_reference('CMP', Company)
-        company.save()
 
-        owner.company = company
-        owner.save()
+        with transaction.atomic():
+
+            owner = form.cleaned_data["owner"]
+
+            # Création de l'entreprise
+            company = form.save(commit=False)
+            company.owner = owner
+            company.reference = generate_reference("CMP", Company)
+            company.save()
+
+            # Création de l'adresse
+            address = Address.objects.create(
+                street=form.cleaned_data["street"],
+                city=form.cleaned_data["city"],
+                postal_code=form.cleaned_data["postal_code"],
+                country=form.cleaned_data["country"],
+            )
+
+            company.address = address
+            company.save(update_fields=["address"])
+
+            # Association du propriétaire
+            owner.company = company
+            owner.save(update_fields=["company"])
 
         messages.success(request, "Entreprise créée avec succès.")
+
         return redirect("subscriptions:dashboard")
 
     return render(
@@ -94,6 +117,7 @@ def company_create(request):
             "title": "Nouvelle entreprise"
         }
     )
+
 
 
 @login_required(login_url="accounts:login")

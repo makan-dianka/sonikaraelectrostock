@@ -1,11 +1,17 @@
 from django.contrib import admin
-from .models import Company, SubscriptionPlan, Subscription, Payment
+from .models import Company, SubscriptionPlan, Subscription, Payment, Address
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('name', 'owner', 'subdomain', 'phone', 'is_active', 'reference', "uuid", 'created_at')
     search_fields = ('name', 'phone', 'reference')
     list_filter = ('reference', 'is_active')
+
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('street', 'city', 'postal_code', 'country')
+    search_fields = ('city', 'country',)
+    list_filter = ('country', 'city')
 
 
 @admin.register(SubscriptionPlan)
