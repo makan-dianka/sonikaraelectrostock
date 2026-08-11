@@ -263,14 +263,52 @@ def update_product(request, pk):
         product = form.save()
 
         if store:
-            Stock.objects.update_or_create(
-                company=company,
-                product=product,
-                store=store,
-                defaults={
-                    "quantity": quantity,
-                }
+
+            existing_stock = (
+                Stock.objects
+                .for_company(request.user.company)
+                .filter(
+                    product=product,
+                    store=store
+                )
+                .first()
             )
+
+            if existing_stock:
+
+                existing_stock.quantity = quantity
+                existing_stock.save(
+                    update_fields=["quantity", "updated_at"]
+                )
+
+            else:
+
+                old_stock = (
+                    Stock.objects
+                    .for_company(request.user.company)
+                    .filter(
+                        product=product,
+                        store__isnull=True
+                    )
+                    .first()
+                )
+
+                if old_stock:
+
+                    old_stock.store = store
+                    old_stock.quantity = quantity
+                    old_stock.save(
+                        update_fields=["store", "quantity", "updated_at"]
+                    )
+
+                else:
+
+                    Stock.objects.create(
+                        company=request.user.company,
+                        product=product,
+                        store=store,
+                        quantity=quantity
+                    )
 
         return redirect("products:product_list")
 

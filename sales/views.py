@@ -172,7 +172,7 @@ def validate_sale_view(request, pk):
 
     try:
 
-        validate_sale(sale)
+        validate_sale(sale, request)
 
         messages.success(request,"Vente validée.")
 
@@ -195,7 +195,7 @@ def cancel_sale_view(request, pk):
 
     try:
 
-        cancel_sale(sale)
+        cancel_sale(sale, request)
 
         messages.success(request,"Vente annulé.")
 

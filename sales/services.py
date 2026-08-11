@@ -4,7 +4,7 @@ from stocks.models import Stock
 
 
 @transaction.atomic
-def validate_sale(sale):
+def validate_sale(sale, request=None):
 
     if sale.status not in ['draft', 'cancelled']:
         raise Exception("Vente déjà traitée.")
@@ -14,7 +14,7 @@ def validate_sale(sale):
     for item in sale.items.all():
 
         try:
-            stock = Stock.objects.get(store=sale.store, product=item.product)
+            stock = Stock.objects.for_company(request.user.company).get(store=sale.store, product=item.product)
 
         except Stock.DoesNotExist:
 
@@ -38,7 +38,7 @@ def validate_sale(sale):
     # Décrément
     for item in sale.items.all():
 
-        stock = Stock.objects.get(store=sale.store, product=item.product)
+        stock = Stock.objects.for_company(request.user.company).get(store=sale.store, product=item.product)
 
         stock.quantity -= item.quantity
 
@@ -54,7 +54,7 @@ def validate_sale(sale):
 
 
 @transaction.atomic
-def cancel_sale(sale):
+def cancel_sale(sale, request=None):
 
     if sale.status not in ['draft', 'validated']:
         raise Exception("Vente déjà annulé.")
@@ -64,7 +64,7 @@ def cancel_sale(sale):
     for item in sale.items.all():
 
         try:
-            stock = Stock.objects.get(store=sale.store, product=item.product)
+            stock = Stock.objects.for_company(request.user.company).get(store=sale.store, product=item.product)
 
         except Stock.DoesNotExist:
 
@@ -84,7 +84,7 @@ def cancel_sale(sale):
     # incrementer le stock
     for item in sale.items.all():
 
-        stock = Stock.objects.get(store=sale.store, product=item.product)
+        stock = Stock.objects.for_company(request.user.company).get(store=sale.store, product=item.product)
 
         stock.quantity += item.quantity
 
