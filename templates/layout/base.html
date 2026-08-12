@@ -5,6 +5,13 @@
 <html lang="fr">
 
 <head>
+
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <meta name="theme-color" content="#f39b00">
+  <link rel="apple-touch-icon" href="{% static 'images/pwa/icon-192.png' %}">
+
+
+
   <title>
     {% block title %}Sonikara électronique - Gestion de stock et facture{% endblock %}
   </title>
@@ -155,6 +162,28 @@
       });
 
   });
+
+
+    // enregistrement du service worker
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register(
+                "{% static 'js/service-worker.js' %}"
+            )
+            .then(registration => {
+                console.log(
+                    "Service Worker enregistré :",
+                    registration.scope
+                );
+            })
+            .catch(error => {
+                console.error(
+                    "Erreur Service Worker :",
+                    error
+                );
+            });
+        });
+    }
   </script>
 </body>
 
