@@ -1,4 +1,5 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="none">
+ <rect width="512" height="512" fill="#FFFFFF"/>
   <!-- Oiseau stylisé -->
   <path
     d="M146 190
