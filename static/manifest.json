@@ -1,6 +1,6 @@
 {
-    "name": "Sonikara Électronique",
-    "short_name": "Sonikara",
+    "name": "Kalaponi",
+    "short_name": "Kalaponi",
     "description": "Gestion de stock, ventes, achats, devis et factures",
     "start_url": "/",
     "scope": "/",
