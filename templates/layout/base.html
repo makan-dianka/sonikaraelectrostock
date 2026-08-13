@@ -112,6 +112,32 @@
 
 
   <script>
+    // enregistrement du service worker
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register(
+                "{% static 'js/service-worker.js' %}"
+            )
+            .then(registration => {
+                console.log(
+                    "Service Worker enregistré :",
+                    registration.scope
+                );
+            })
+            .catch(error => {
+                console.error(
+                    "Erreur Service Worker :",
+                    error
+                );
+            });
+        });
+    }
+    // FIN enregistrement du service worker
+
+
+
+
+
     document.querySelectorAll('.close-message').forEach((btn) => {
           btn.addEventListener('click', () => {
               btn.parentElement.remove()
@@ -162,28 +188,6 @@
       });
 
   });
-
-
-    // enregistrement du service worker
-    if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-            navigator.serviceWorker.register(
-                "{% static 'js/service-worker.js' %}"
-            )
-            .then(registration => {
-                console.log(
-                    "Service Worker enregistré :",
-                    registration.scope
-                );
-            })
-            .catch(error => {
-                console.error(
-                    "Erreur Service Worker :",
-                    error
-                );
-            });
-        });
-    }
   </script>
 </body>
 
