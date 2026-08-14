@@ -200,6 +200,21 @@ class CompanyForm(forms.ModelForm):
 
 class SubscriptionForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.pk:
+
+            if self.instance.start_date:
+                self.initial["start_date"] = (
+                    self.instance.start_date.strftime("%Y-%m-%d")
+                )
+
+            if self.instance.end_date:
+                self.initial["end_date"] = (
+                    self.instance.end_date.strftime("%Y-%m-%d")
+                )
+
     class Meta:
 
         model = Subscription
@@ -225,17 +240,13 @@ class SubscriptionForm(forms.ModelForm):
             }),
 
             "start_date": forms.DateInput(
-                attrs={
-                    "class": "form-control",
-                    "type": "date"
-                }
+                format="%Y-%m-%d",
+                attrs={"type": "date"}
             ),
 
             "end_date": forms.DateInput(
-                attrs={
-                    "class": "form-control",
-                    "type": "date"
-                }
+                format="%Y-%m-%d",
+                attrs={"type": "date"}
             ),
 
             "status": forms.Select(attrs={
@@ -278,6 +289,19 @@ class SubscriptionForm(forms.ModelForm):
 
 class PaymentForm(forms.ModelForm):
 
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.pk:
+            self.fields["subscription"].disabled = True
+            self.fields["period_month"].disabled = True
+
+            if self.instance.payment_date:
+                self.initial["payment_date"] = (
+                    self.instance.payment_date.strftime("%Y-%m-%d")
+                )
+
     class Meta:
 
         model = Payment
@@ -302,10 +326,8 @@ class PaymentForm(forms.ModelForm):
             }),
 
             "payment_date": forms.DateInput(
-                attrs={
-                    "class": "form-control",
-                    "type": "date"
-                }
+                format="%Y-%m-%d",
+                attrs={"type": "date"}
             ),
 
             "period_month": forms.NumberInput(attrs={

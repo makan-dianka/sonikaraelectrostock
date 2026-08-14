@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from .models import Company, Subscription, SubscriptionPlan, Payment, Address
@@ -165,21 +165,45 @@ def subscription_create(request):
 @login_required(login_url="accounts:login")
 def subscription_list(request):
     if not request.user.is_superuser:
-        return HttpResponseForbidden()
+        return HttpResponseForbidden("Accès refusé.")
 
-    subscriptions = Subscription.objects.order_by("name")
+    subscriptions = (
+        Subscription.objects
+        .select_related("company", "plan")
+        .order_by("-end_date")
+    )
 
-    return render(request, "subscriptions/subscription_list.html", {"subscriptions": subscriptions})
+    return render(
+        request,
+        "subscriptions/subscription_list.html",
+        {"subscriptions": subscriptions}
+    )
 
 
 @login_required(login_url="accounts:login")
 def payment_list(request):
+
     if not request.user.is_superuser:
-        return HttpResponseForbidden()
+        return HttpResponseForbidden("Accès refusé.")
 
-    payments = Payment.objects.order_by("name")
+    payments = (
+        Payment.objects
+        .select_related("subscription__company")
+        .order_by("-payment_date")
+    )
 
-    return render(request, "subscriptions/payment_list.html", {"payments": payments})
+    total = payments.aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
+    return render(
+        request,
+        "subscriptions/payment_list.html",
+        {
+            "payments": payments,
+            "total": total,
+        }
+    )
 
 
 
@@ -215,3 +239,83 @@ def payment_create(request):
         return redirect("subscriptions:dashboard")
 
     return render(request, "subscriptions/payment_form.html", {"form": form})
+
+
+
+
+@login_required(login_url="accounts:login")
+def subscription_update(request, pk):
+
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Accès refusé.")
+
+    subscription = get_object_or_404(
+        Subscription.objects.select_related(
+            "company",
+            "plan"
+        ),
+        pk=pk
+    )
+
+    form = SubscriptionForm(
+        request.POST or None,
+        instance=subscription
+    )
+
+    if form.is_valid():
+
+        form.save()
+
+        return redirect(
+            "subscriptions:subscription_list"
+        )
+
+    return render(
+        request,
+        "subscriptions/subscription_form.html",
+        {
+            "form": form,
+            "subscription": subscription,
+            "is_update": True,
+        }
+    )
+
+
+
+
+
+@login_required(login_url="accounts:login")
+def payment_update(request, pk):
+
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Accès refusé.")
+
+    payment = get_object_or_404(
+        Payment.objects.select_related(
+            "subscription__company"
+        ),
+        pk=pk
+    )
+
+    form = PaymentForm(
+        request.POST or None,
+        instance=payment
+    )
+
+    if form.is_valid():
+
+        form.save()
+
+        return redirect(
+            "subscriptions:payment_list"
+        )
+
+    return render(
+        request,
+        "subscriptions/payment_form.html",
+        {
+            "form": form,
+            "payment": payment,
+            "is_update": True,
+        }
+    )
