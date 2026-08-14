@@ -65,7 +65,11 @@
                             <td>{{ purchase.store }}</td>
                             <td>{{ purchase.reference }}</td>
                             <td>{{ purchase.total|intcomma }} FCFA</td>
-                            <td>{{ purchase.remaining_amount|intcomma }} FCFA</td>
+                            {% if purchase.remaining_amount %}
+                                <td class="text-danger">{{ purchase.remaining_amount|intcomma }} FCFA</td>
+                            {% else %}
+                                <td>{{ purchase.remaining_amount|intcomma }} FCFA</td>
+                            {% endif %}
                             <td>
                                 {% if purchase.status == 'draft' %}
                                     <a href="{% url 'purchases:update' purchase.id %}" style="text-decoration: none;">
@@ -100,9 +104,15 @@
                                         Annuler
                                     </a>
                                 {% else %}
-                                    <a class="btn btn-primary" href="{% url 'purchases:print_purchase' purchase.id %}" target="_blank">
-                                        🖨 Imprimer
-                                    </a>
+                                    {% if purchase.remaining_amount %}
+                                        <a class="btn btn-danger" href="{% url 'purchases:print_purchase' purchase.id %}" target="_blank">
+                                            🖨 Imprimer
+                                        </a>
+                                    {% else %}
+                                        <a class="btn btn-primary" href="{% url 'purchases:print_purchase' purchase.id %}" target="_blank">
+                                            🖨 Imprimer
+                                        </a>
+                                    {% endif %}
                                 {% endif %}
                             </td>
                             <td>
@@ -116,7 +126,7 @@
                                             Annulé
                                         </span>
                                     {% elif purchase.status == 'received' %}
-                                        <a class="pay" href="{% url 'payments:create' %}?type=purchase&id={{ purchase.id }}">
+                                        <a class="pay text-danger" href="{% url 'payments:create' %}?type=purchase&id={{ purchase.id }}">
                                             Payer
                                         </a>
                                     {% endif %}
