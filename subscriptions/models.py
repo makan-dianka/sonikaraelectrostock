@@ -137,7 +137,7 @@ class Subscription(models.Model):
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.PROTECT)
     start_date = models.DateField()
     end_date = models.DateField()
-    period_month = models.PositiveIntegerField()
+    period_month = models.PositiveIntegerField(default=1)
     status = models.CharField(max_length=20, choices=STATUS,  default="trial")
     trial = models.BooleanField(default=True)
     notes = models.TextField(blank=True)
