@@ -26,7 +26,8 @@ class Sale(TimeStampedModel, CompanyOwnedModel):
 
     store = models.ForeignKey(
         "stores.Store",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='sales'
     )
 
     user = models.ForeignKey(

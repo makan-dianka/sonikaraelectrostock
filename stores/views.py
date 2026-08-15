@@ -12,6 +12,7 @@ from stocks.models import Stock
 @login_required(login_url='accounts:login')
 def store_list(request):
     stores = Store.objects.for_company(request.user.company).filter(is_deleted=False).order_by('-created_at')
+
     context = {
         'stores': stores,
         'has_store': stores.exists(),
@@ -64,6 +65,16 @@ def delete_store(request, pk):
     if request.user.role not in ['owner']:
         return HttpResponseForbidden("Vous n'avez pas la permission de supprimer un Magasin.")
     store = get_object_or_404(Store.objects.for_company(request.user.company), id=pk)
+
+    has_stock = store.stocks.filter(quantity__gt=0).exists()
+    has_sales = store.sales.exists()
+    has_purchases = store.purchases.exists()
+
+    if has_stock or has_sales or has_purchases:
+        messages.error(request, "Impossible de supprimer ce magasin : il contient du stock ou possède un historique de ventes/achats.")
+        return redirect('stores:store_list')
+
+
     store.is_deleted = True
     store.save()
     return redirect('stores:store_list')
