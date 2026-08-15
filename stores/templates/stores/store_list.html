@@ -10,7 +10,9 @@
     <div class="page">
         <div class="top">
             <h1> 🏪 Magasins </h1>
-            <a href="{% url 'stores:create' %}" class="btn-add"> + Ajouter un magasin</a>
+            {% if not has_store %}
+                <a href="{% url 'stores:create' %}" class="btn-add"> + Ajouter un magasin</a>
+            {% endif %}
         </div>
 
 
