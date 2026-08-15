@@ -8,6 +8,7 @@ urlpatterns=[
     path('expired/', views.expired, name='expired'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('subscription_plan/', views.subscription_plan, name='plan'),
+    path('subscription/payment/info', views.subscription_payment_info, name='payment_info'),
     path('subscription_create/', views.subscription_create, name='subscription_create'),
     path('subscription_list/', views.subscription_list, name='subscription_list'),
     path('company_create/', views.company_create, name='company_create'),

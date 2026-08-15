@@ -21,6 +21,10 @@ def expired(request):
 def subscription_plan(request):
     return render(request, 'subscriptions/subscription_plan.html')
 
+@login_required(login_url='accounts:login')
+def subscription_payment_info(request):
+    return render(request, 'subscriptions/subscription_payment_info.html')
+
 
 
 @login_required(login_url="accounts:login")
@@ -207,7 +211,6 @@ def payment_list(request):
 
 
 
-
 @login_required(login_url="accounts:login")
 def payment_create(request):
     if not request.user.is_superuser:
@@ -216,30 +219,47 @@ def payment_create(request):
     form = PaymentForm(request.POST or None)
 
     if form.is_valid():
+
         payment = form.save(commit=False)
         payment.reference = generate_reference("PYT", Payment)
         payment.save()
 
         subscription = payment.subscription
+        today = timezone.localdate()
 
-        today = date.today()
+        # Nombre de jours restant
+        remaining_days = (subscription.end_date - today).days
 
-        # Si l'abonnement est encore actif
-        if subscription.end_date >= today:
-            subscription.end_date = subscription.end_date + relativedelta(months=payment.period_month)
+        # --------------------------------------------------
+        # ABONNEMENT EXPIRÉ OU ARRIVE À ÉCHÉANCE
+        # --------------------------------------------------
+        if remaining_days <= 2:
 
-        # Sinon on repart d'aujourd'hui
-        else:
-            subscription.start_date = today
-            subscription.end_date = today + relativedelta(months=payment.period_month)
+            if subscription.end_date >= today:
+                # L'abonnement est encore valide,
+                # mais il reste 2 jours ou moins.
+                subscription.end_date = (
+                    subscription.end_date + relativedelta(months=payment.period_month)
+                )
 
-        subscription.status = "active"
-        subscription.trial = False
-        subscription.save()
+            else:
+                # L'abonnement est déjà expiré.
+                subscription.start_date = today
+                subscription.end_date = (today + relativedelta(months=payment.period_month))
+
+            subscription.status = "active"
+            subscription.trial = False
+            subscription.save()
+
+        # --------------------------------------------------
+        # ABONNEMENT ENCORE LARGEMENT VALIDE
+        # --------------------------------------------------
+        # On enregistre uniquement le paiement.
+        # Aucune modification de l'abonnement.
+
         return redirect("subscriptions:dashboard")
 
     return render(request, "subscriptions/payment_form.html", {"form": form})
-
 
 
 

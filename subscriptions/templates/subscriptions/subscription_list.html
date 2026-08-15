@@ -379,6 +379,7 @@ Abonnements - Administration
                             <th>Plan</th>
                             <th>Début</th>
                             <th>Fin</th>
+                            <th>Mise à jour</th>
                             <th>Statut</th>
                             <th>Temps restant</th>
                             <th>Action</th>
@@ -418,12 +419,16 @@ Abonnements - Administration
 
 
                             <td>
-                                {{ subscription.start_date|date:"d/m/Y" }}
+                                {{ subscription.start_date }}
                             </td>
 
 
                             <td>
-                                {{ subscription.end_date|date:"d/m/Y" }}
+                                {{ subscription.end_date }}
+                            </td>
+
+                            <td>
+                                {{ subscription.updated_at }}
                             </td>
 
 

@@ -14,23 +14,24 @@
         <div>
             <h1>Administration SaaS</h1>
             <p>Gestion des abonnements</p>
+            <a href="{% url 'subscriptions:plan' %}">Tarifs</a>
         </div>
 
         <div class="actions">
 
-            <a href="{% url 'accounts:register' %}" class="btn blue">
+            <a href="{% url 'accounts:register' %}" class="btn btn-primary">
                 + Utilisateur
             </a>
 
-            <a href="{% url 'subscriptions:company_create' %}" class="btn orange">
+            <a href="{% url 'subscriptions:company_create' %}" class="btn btn-warning text-white">
                 + Entreprise
             </a>
 
-            <a href="{% url 'subscriptions:subscription_create' %}" class="btn green">
+            <a href="{% url 'subscriptions:subscription_create' %}" class="btn btn-success">
                 + Abonnement
             </a>
 
-            <a href="{% url 'subscriptions:payment_create' %}" class="btn blue">
+            <a href="{% url 'subscriptions:payment_create' %}" class="btn btn-primary">
                 + Paiement
             </a>
 
