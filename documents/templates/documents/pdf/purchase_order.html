@@ -576,8 +576,8 @@
         {% endif %}
 
         {% if purchase.created_by.company.website and purchase.created_by.company.email %}
-            <span><strong>Site internet :</strong> {{ quote.user.company.website }}</span> <br />
-            <span><strong>Adresse email :</strong> {{ quote.user.company.email }}</span>
+            <span><strong>Site internet :</strong> {{ purchase.created_by.company.website }}</span> <br />
+            <span><strong>Adresse email :</strong> {{ purchase.created_by.company.email }}</span>
         {% endif %}
     </div>
 </body>
