@@ -146,7 +146,7 @@ class SaleItemForm(forms.ModelForm):
 
             if unit_price <= purchase_price:
                 raise forms.ValidationError(
-                    f"Le prix de vente ({unit_price} FCFA) doit être supérieur au prix d'achat ({purchase_price} FCFA)."
+                    f"{product} : Le prix de vente ({unit_price} FCFA) doit être supérieur au prix d'achat ({purchase_price} FCFA)."
                 )
 
         return cleaned_data
