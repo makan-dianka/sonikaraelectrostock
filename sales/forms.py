@@ -140,9 +140,15 @@ class SaleItemForm(forms.ModelForm):
 
         product = cleaned_data.get('product')
         unit_price = cleaned_data.get('unit_price')
+        quantity = cleaned_data.get('quantity')
 
         if product and unit_price is not None:
             purchase_price = product.purchase_price
+
+            if quantity <= 0:
+                raise forms.ValidationError(
+                    f"{product} : La quantité doit être à zero (0) "
+                )
 
             if unit_price <= purchase_price:
                 raise forms.ValidationError(
