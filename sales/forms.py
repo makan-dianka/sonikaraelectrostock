@@ -147,7 +147,7 @@ class SaleItemForm(forms.ModelForm):
 
             if quantity <= 0:
                 raise forms.ValidationError(
-                    f"{product} : La quantité doit être à zero (0) "
+                    f"{product} : La quantité doit être supérieure à zero (0) "
                 )
 
             if unit_price <= purchase_price:
