@@ -177,7 +177,7 @@ def create_product(request):
         product.company = request.user.company
         product.save()
 
-        if store and quantity:
+        if store and quantity is not None:
             Stock.objects.create(
                 company=request.user.company,
                 product=product,
