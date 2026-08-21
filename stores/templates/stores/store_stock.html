@@ -53,8 +53,10 @@
                             </td>
                             <td>{{ stock.alert_threshold }}</td>
                             <td>
-                                {% if stock.quantity <= stock.alert_threshold %} 
-                                    <span class="danger">⚠ Stock faible</span>
+                                {% if stock.quantity == 0  %}
+                                    <span class="danger">⚠ En rupture</span>
+                                {% elif stock.quantity < stock.alert_threshold %} 
+                                    <span class="text-warning">⚠ Stock faible</span>
                                 {% else %}
                                     <span class="success">Disponible</span>
                                 {% endif %}

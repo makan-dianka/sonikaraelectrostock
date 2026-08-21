@@ -630,9 +630,13 @@ function renderStocks(stocks){
     }
 
     const stockStatus = (stock) => {
-        if (stock.quantity <= stock.alert_threshold) {
-            return `<span class="danger">⚠ Stock faible</span>`
-        }else{
+        if (stock.quantity === 0) {
+            return `<span class="danger">⚠ En rupture</span>`
+        }
+        else if (stock.quantity < stock.alert_threshold) {
+            return `<span class="text-warning">⚠ Stock faible</span>`
+        }
+        else{
             return `<span class="success">Disponible</span>`
         }
     }
