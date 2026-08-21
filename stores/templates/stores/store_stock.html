@@ -14,11 +14,12 @@
                 <h1>{{ store.name }}</h1>
                 <p>Liste des produits disponibles</p>
             </div>
-
             <a href="{% url 'stores:store_list' %}" class="back">← Retour</a>
         </div>
 
-
+        <!-- bar de rechercher -->
+        {% include "components/search_bar.html" with id="stock-search" placeholder="Rechercher un produit par nom" %}
+        <!-- fin de bar de recherche -->
 
         <div class="table-card">
 
@@ -34,7 +35,7 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="stock-table">
                     {% for stock in stocks %}
                         <tr>
                             <td>
@@ -70,4 +71,20 @@
     </div>
 
     {% include "components/pagination.html" %}
+{% endblock %}
+
+
+
+{% block scripts %}
+    <script src="{% static 'js/search.js' %}"></script>
+    <script>
+        // script pour bar de recherche de vente
+        const STOCK_URL = "{% url 'stocks:search_api' 'stocks' %}";
+        new LiveSearch({
+            input:"#stock-search",
+            table:"#stock-table",
+            url:STOCK_URL,
+            renderer:this.renderStocks
+        });
+    </script>
 {% endblock %}

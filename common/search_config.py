@@ -5,6 +5,7 @@ from products.models import Product
 from credits.models import Credit
 from payments.models import Payment
 from sales.models import Sale
+from stocks.models import Stock
 from purchases.models import Purchase
 
 from customers.serializers import CustomerSearchSerializer
@@ -15,6 +16,7 @@ from credits.serializers import CreditSearchSerializer
 from payments.serializers import PaymentSearchSerializer
 from sales.serializers import SaleSearchSerializer
 from purchases.serializers import PurchaseSearchSerializer
+from stocks.serializers import StockSearchSerializer
 
 SEARCH_CONFIG = {
 
@@ -25,6 +27,15 @@ SEARCH_CONFIG = {
         "serializer": CustomerSearchSerializer,
         "search_fields": ["name", "phone"],
         "order_by": "name",
+    },
+
+    "stocks": {
+        "queryset": lambda request: Stock.objects.for_company(
+            request.user.company
+        ),
+        "serializer": StockSearchSerializer,
+        "search_fields": ["product__name"],
+        "order_by": "product__name",
     },
 
     "suppliers": {

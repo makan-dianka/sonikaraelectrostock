@@ -614,3 +614,38 @@ function renderPurchaseOptions(purchases){
         </div>
     `).join("");
 }
+
+
+
+
+function renderStocks(stocks){
+    if(stocks.length===0){
+        return `
+            <tr>
+                <td colspan="6">
+                    Aucun produit trouvé
+                </td>
+            </tr>
+        `;
+    }
+
+    const stockStatus = (stock) => {
+        if (stock.quantity <= stock.alert_threshold) {
+            return `<span class="danger">⚠ Stock faible</span>`
+        }else{
+            return `<span class="success">Disponible</span>`
+        }
+    }
+
+    return stocks.map(stock=>`
+
+        <tr>
+            <td> — </td>
+            <td>${stock.product_name}</td>
+            <td>${stock.product_categ}</td>
+            <td>${stock.quantity}</td>
+            <td>${stock.alert_threshold}</td>
+            <td>${stockStatus(stock)}</td>
+        </tr>
+    `).join("");
+}
