@@ -6,6 +6,8 @@ from django.contrib import messages
 from .models import Store
 from .forms import StoreForm
 from stocks.models import Stock
+from common.pagination import paginate_queryset
+
 
 
 # Liste de magasins
@@ -87,17 +89,16 @@ def store_stock(request, pk):
     store = get_object_or_404(Store.objects.for_company(request.user.company), id=pk)
     stocks = (
         Stock.objects.for_company(request.user.company)
-        .filter(
-            store=store
-        )
-        .select_related(
-            'product',
-            'product__category'
-        )
-        .order_by(
-            'product__name'
-        )
+        .filter(store=store)
+        .select_related('product', 'product__category')
+        .order_by('product__name')
     )
 
-    context = {'store': store, 'stocks': stocks}
+    page_obj = paginate_queryset(request, stocks)
+
+    context = {
+        'store': store, 
+        'stocks': page_obj, 
+        'page_obj': page_obj,
+        }
     return render(request, 'stores/store_stock.html', context)
